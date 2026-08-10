@@ -1,0 +1,19 @@
+[package]
+name = "carp-cli-rust"
+version = "0.1.0"
+description = "CARP Cli in Rust"
+authors = ["Alireza Hajebrahimi <6937697+iarata@users.noreply.github.com>"]
+license = "MIT"
+edition = "2024"
+
+[dependencies]
+color-eyre = "0.6.5"
+crossterm = "0.29.0"
+ratatui = "0.30.2"
+
+# Read the optimization guideline for more details: https://ratatui.rs/recipes/apps/release-your-app/#optimizations
+[profile.release]
+codegen-units = 1   # Allows compiler to perform better optimization.
+lto = true          # Enables Link-time Optimization.
+opt-level = "s"     # Prioritizes small binary size. Use `3` if you prefer speed.
+strip = true        # Ensures debug symbols are removed.
