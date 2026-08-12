@@ -1,0 +1,22 @@
+[package]
+name = "carp-catalog"
+description = "Sync and versioning of the upstream CARP study configurations, and the vocabulary derived from them"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+edition.workspace = true
+repository.workspace = true
+
+[dependencies]
+carp-protocol = { path = "../carp-protocol" }
+serde.workspace = true
+serde_json.workspace = true
+chrono.workspace = true
+thiserror.workspace = true
+reqwest = { version = "0.12", default-features = false, features = [
+    "json",
+    "rustls-tls",
+    "charset",
+    "http2",
+] }
+tokio = { version = "1", features = ["fs", "macros", "rt"] }
