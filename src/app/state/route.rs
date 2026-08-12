@@ -8,7 +8,6 @@
 
 //! Which screen is on top, and which tab of it.
 
-
 /// Which screen is on top.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Route {

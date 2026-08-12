@@ -15,8 +15,18 @@ fn protocol() -> StudyProtocol {
     let mut protocol = StudyProtocol::new("Test", "979b408d-784e-4b1b-bb1e-ff9204e072f3");
     let phone = builder::add_device(&mut protocol, DeviceKind::Smartphone);
     builder::add_device(&mut protocol, DeviceKind::PolarDevice);
-    builder::add_task(&mut protocol, TaskKind::RpApp, &phone, TriggerKind::Immediate);
-    builder::add_task(&mut protocol, TaskKind::Background, &phone, TriggerKind::NoOp);
+    builder::add_task(
+        &mut protocol,
+        TaskKind::RpApp,
+        &phone,
+        TriggerKind::Immediate,
+    );
+    builder::add_task(
+        &mut protocol,
+        TaskKind::Background,
+        &phone,
+        TriggerKind::NoOp,
+    );
     builder::add_participant_role(&mut protocol, "Participant");
     protocol
 }
@@ -69,7 +79,10 @@ fn devices_are_indexed_primary_first() {
     let mut lists = Lists::default();
     lists.sync(&protocol, None);
 
-    assert_eq!(lists.selected_device_role(&protocol).unwrap(), "Primary Phone");
+    assert_eq!(
+        lists.selected_device_role(&protocol).unwrap(),
+        "Primary Phone"
+    );
     lists.devices.select(Some(1));
     assert_eq!(
         lists.selected_device_role(&protocol).unwrap(),

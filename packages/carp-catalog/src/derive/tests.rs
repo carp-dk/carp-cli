@@ -21,12 +21,30 @@ fn snapshot() -> Snapshot {
     // and the CAMS 2.0 study, which is the only one using the newer
     // device namespace.
     let studies: [(&str, &str); 6] = [
-        ("neuropathy", include_str!("../../../carp-protocol/tests/corpus/neuropathy.json")),
-        ("demo", include_str!("../../../carp-protocol/tests/corpus/demo.json")),
-        ("catch", include_str!("../../../carp-protocol/tests/corpus/catch.json")),
-        ("icat", include_str!("../../../carp-protocol/tests/corpus/icat.json")),
-        ("app_store", include_str!("../../../carp-protocol/tests/corpus/app_store.json")),
-        ("test", include_str!("../../../carp-protocol/tests/corpus/test.json")),
+        (
+            "neuropathy",
+            include_str!("../../../carp-protocol/tests/corpus/neuropathy.json"),
+        ),
+        (
+            "demo",
+            include_str!("../../../carp-protocol/tests/corpus/demo.json"),
+        ),
+        (
+            "catch",
+            include_str!("../../../carp-protocol/tests/corpus/catch.json"),
+        ),
+        (
+            "icat",
+            include_str!("../../../carp-protocol/tests/corpus/icat.json"),
+        ),
+        (
+            "app_store",
+            include_str!("../../../carp-protocol/tests/corpus/app_store.json"),
+        ),
+        (
+            "test",
+            include_str!("../../../carp-protocol/tests/corpus/test.json"),
+        ),
     ];
 
     Snapshot::new(
@@ -48,7 +66,10 @@ fn snapshot() -> Snapshot {
 }
 
 fn values(vocabulary: &[CatalogEntry]) -> Vec<&str> {
-    vocabulary.iter().map(|entry| entry.value.as_str()).collect()
+    vocabulary
+        .iter()
+        .map(|entry| entry.value.as_str())
+        .collect()
 }
 
 /// The point of the crate: the vocabulary comes from the protocols, so
@@ -62,7 +83,10 @@ fn the_vocabulary_comes_from_the_protocols() {
 
     let measures = values(&catalog.measure_types);
     assert!(measures.contains(&"dk.cachet.carp.survey"), "{measures:?}");
-    assert!(measures.contains(&"dk.cachet.carp.location"), "{measures:?}");
+    assert!(
+        measures.contains(&"dk.cachet.carp.location"),
+        "{measures:?}"
+    );
     assert!(
         measures.contains(&"dk.cachet.carp.completedtask"),
         "{measures:?}"
@@ -75,7 +99,10 @@ fn the_vocabulary_comes_from_the_protocols() {
     );
 
     let question_types = values(&catalog.question_types);
-    assert!(question_types.contains(&"SingleChoice"), "{question_types:?}");
+    assert!(
+        question_types.contains(&"SingleChoice"),
+        "{question_types:?}"
+    );
 
     assert!(values(&catalog.upload_methods).contains(&"stream"));
     assert!(values(&catalog.user_task_conditions).contains(&"done"));
@@ -90,7 +117,10 @@ fn health_metrics_are_gathered_from_everywhere_they_appear() {
 
     assert!(metrics.contains(&"STEPS"), "{metrics:?}");
     assert!(metrics.contains(&"SLEEP_SESSION"), "{metrics:?}");
-    assert!(metrics.len() > 10, "expected the full metric list, got {metrics:?}");
+    assert!(
+        metrics.len() > 10,
+        "expected the full metric list, got {metrics:?}"
+    );
 }
 
 /// A device class this build cannot construct must still reach the
@@ -123,7 +153,10 @@ fn entries_know_which_studies_use_them() {
         .expect("three of the four studies run surveys");
 
     assert!(survey.studies.contains(&"demo".to_owned()), "{survey:?}");
-    assert!(!survey.studies.contains(&"icat".to_owned()), "ICAT is web-only");
+    assert!(
+        !survey.studies.contains(&"icat".to_owned()),
+        "ICAT is web-only"
+    );
     assert!(survey.occurrences >= survey.studies.len());
 }
 

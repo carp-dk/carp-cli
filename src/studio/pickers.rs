@@ -21,7 +21,6 @@ pub mod create;
 
 use create::{create, device_rows, step_rows, task_rows, template_rows, trigger_rows};
 
-
 use crate::app::form::FieldValue;
 use crate::app::form::picker::{Picker, PickerKind, Row};
 
@@ -45,7 +44,11 @@ pub fn open_add(studio: &mut Studio) -> Option<String> {
         Section::Tasks => (Creating::Task, "add a task", task_rows()),
         Section::Triggers => (Creating::Trigger, "add a trigger", trigger_rows()),
         Section::Survey => (Creating::SurveyStep, "add a step", step_rows()),
-        Section::Catalog => (Creating::Template, "start from a study", template_rows(studio)),
+        Section::Catalog => (
+            Creating::Template,
+            "start from a study",
+            template_rows(studio),
+        ),
         Section::Participants => return actions::add_role(studio),
         Section::Overview | Section::Checks => {
             return Some("nothing to add here".to_owned());
@@ -78,8 +81,7 @@ pub fn open_for_field(studio: &mut Studio) -> bool {
             let rows = Picker::rows_from_catalog(vocabulary.entries(&studio.catalog));
             // A new measure type has to be enterable somewhere, and the
             // picker is where the known ones are.
-            Picker::new(vocabulary.title(), PickerKind::Single, rows, value)
-                .allowing_free_text()
+            Picker::new(vocabulary.title(), PickerKind::Single, rows, value).allowing_free_text()
         }
         FieldValue::CatalogSet { vocabulary, values } => {
             let rows = Picker::rows_from_catalog(vocabulary.entries(&studio.catalog));
@@ -128,4 +130,3 @@ pub fn resolve(studio: &mut Studio) -> Option<String> {
 
     create(studio, creating, &value)
 }
-

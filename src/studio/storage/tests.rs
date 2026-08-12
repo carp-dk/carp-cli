@@ -11,8 +11,7 @@
 use super::*;
 
 fn protocol() -> StudyProtocol {
-    let mut protocol =
-        StudyProtocol::new("Sleep and Mood", "979b408d-784e-4b1b-bb1e-ff9204e072f3");
+    let mut protocol = StudyProtocol::new("Sleep and Mood", "979b408d-784e-4b1b-bb1e-ff9204e072f3");
     carp_protocol::builder::add_device(&mut protocol, carp_protocol::DeviceKind::Smartphone);
     protocol
 }

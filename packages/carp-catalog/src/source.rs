@@ -47,7 +47,11 @@ pub struct Commit {
 impl Commit {
     /// The seven-character form used in the interface.
     pub fn short_sha(&self) -> &str {
-        let end = self.sha.char_indices().nth(7).map_or(self.sha.len(), |(index, _)| index);
+        let end = self
+            .sha
+            .char_indices()
+            .nth(7)
+            .map_or(self.sha.len(), |(index, _)| index);
         &self.sha[..end]
     }
 }
@@ -103,7 +107,7 @@ impl GitHubSource {
 
     /// The commit `reference` currently points at.
     ///
-    /// `reference` may be a branch, a tag or a SHA; [`UPSTREAM_BRANCH`] is
+    /// `reference` may be a branch, a tag or a SHA; [`crate::UPSTREAM_BRANCH`] is
     /// what a plain sync uses.
     pub async fn head(&self, reference: &str) -> Result<Commit> {
         #[derive(Deserialize)]

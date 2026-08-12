@@ -15,7 +15,7 @@
 //!
 //! Nothing in the JSON checks that the three names resolve. A control naming a
 //! deleted task is perfectly valid JSON and a broken protocol, which is why
-//! [`crate::validate`] checks them and [`crate::builder`] maintains them.
+//! [`mod@crate::validate`] checks them and [`crate::builder`] maintains them.
 
 use serde::{Deserialize, Serialize};
 
@@ -81,11 +81,7 @@ pub struct TaskControl {
 impl TaskControl {
     /// A control starting `task_name` on `device` when trigger `trigger_id`
     /// fires.
-    pub fn start(
-        trigger_id: u32,
-        task_name: impl Into<String>,
-        device: impl Into<String>,
-    ) -> Self {
+    pub fn start(trigger_id: u32, task_name: impl Into<String>, device: impl Into<String>) -> Self {
         Self {
             trigger_id,
             task_name: task_name.into(),

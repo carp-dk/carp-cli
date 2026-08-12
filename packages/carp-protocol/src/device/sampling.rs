@@ -118,9 +118,17 @@ impl SamplingConfiguration {
                 past,
                 health_data_types,
                 ..
-            }) => format!("{} health types, {} back", health_data_types.len(), past.human()),
+            }) => format!(
+                "{} health types, {} back",
+                health_data_types.len(),
+                past.human()
+            ),
             Self::Known(KnownSamplingConfiguration::Location { once }) => {
-                if *once { "single fix".to_owned() } else { "continuous".to_owned() }
+                if *once {
+                    "single fix".to_owned()
+                } else {
+                    "continuous".to_owned()
+                }
             }
             Self::Known(KnownSamplingConfiguration::Periodic { interval, duration }) => {
                 format!("{} every {}", duration.human(), interval.human())
@@ -136,7 +144,11 @@ impl SamplingConfiguration {
                 } else {
                     format!("{} service(s)", with_services.len())
                 };
-                format!("scan {} every {}, {scope}", duration.human(), interval.human())
+                format!(
+                    "scan {} every {}, {scope}",
+                    duration.human(),
+                    interval.human()
+                )
             }
             Self::Unknown(node) => node.short_type().to_owned(),
         }

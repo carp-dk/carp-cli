@@ -212,12 +212,12 @@ impl RpTask {
                     steps,
                 },
             ) => {
-                *task = Box::new(KnownRpTask::Navigable {
+                **task = KnownRpTask::Navigable {
                     identifier: std::mem::take(identifier),
                     close_after_finished: *close_after_finished,
                     steps: std::mem::take(steps),
                     step_navigation_rules: BTreeMap::new(),
-                });
+                };
             }
             (
                 false,
@@ -228,11 +228,11 @@ impl RpTask {
                     ..
                 },
             ) => {
-                *task = Box::new(KnownRpTask::Ordered {
+                **task = KnownRpTask::Ordered {
                     identifier: std::mem::take(identifier),
                     close_after_finished: *close_after_finished,
                     steps: std::mem::take(steps),
-                });
+                };
             }
             _ => {}
         }

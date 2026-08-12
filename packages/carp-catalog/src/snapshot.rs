@@ -108,8 +108,12 @@ impl Snapshot {
 
         let contents = serde_json::to_vec(self)?;
         let temporary = path.with_extension("json.tmp");
-        tokio::fs::write(&temporary, &contents).await.map_err(storage)?;
-        tokio::fs::rename(&temporary, &path).await.map_err(storage)?;
+        tokio::fs::write(&temporary, &contents)
+            .await
+            .map_err(storage)?;
+        tokio::fs::rename(&temporary, &path)
+            .await
+            .map_err(storage)?;
         Ok(())
     }
 
@@ -131,7 +135,9 @@ impl Snapshot {
             .documents
             .iter()
             .find(|document| document.study == study)
-            .ok_or_else(|| Error::Unexpected(format!("no study named {study:?} in the catalogue")))?;
+            .ok_or_else(|| {
+                Error::Unexpected(format!("no study named {study:?} in the catalogue"))
+            })?;
         Ok(serde_json::from_str(&document.json)?)
     }
 

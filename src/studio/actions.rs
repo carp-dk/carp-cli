@@ -200,7 +200,10 @@ pub fn remove_selected_expected(studio: &mut Studio) -> Option<String> {
     studio.checkpoint();
     let removed = studio.protocol.expected_participant_data.remove(index);
     studio.changed();
-    Some(format!("no longer asking for {}", removed.input_data_type()))
+    Some(format!(
+        "no longer asking for {}",
+        removed.input_data_type()
+    ))
 }
 
 /// Add a measure to the selected task, opening a picker for its type.
@@ -239,13 +242,12 @@ pub fn add_expected(studio: &mut Studio) -> Option<String> {
 
     studio.checkpoint();
     let role = studio.protocol.participant_roles[0].role.clone();
-    studio
-        .protocol
-        .expected_participant_data
-        .push(carp_protocol::participant::ExpectedParticipantData::for_roles(
+    studio.protocol.expected_participant_data.push(
+        carp_protocol::participant::ExpectedParticipantData::for_roles(
             "dk.carp.webservices.input.informed_consent",
             vec![role],
-        ));
+        ),
+    );
     let index = studio.protocol.expected_participant_data.len() - 1;
     studio.lists.expected.select(Some(index));
     studio.changed();
@@ -265,4 +267,3 @@ pub fn add_role(studio: &mut Studio) -> Option<String> {
     studio.changed();
     edit_selected(studio)
 }
-

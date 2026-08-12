@@ -19,7 +19,9 @@ use super::Removal;
 /// Add a trigger of `kind` on `device`, returning its id.
 pub fn add_trigger(protocol: &mut StudyProtocol, kind: TriggerKind, device: &str) -> u32 {
     let id = protocol.next_trigger_id();
-    protocol.triggers.insert(id, kind.instantiate(device.to_owned()));
+    protocol
+        .triggers
+        .insert(id, kind.instantiate(device.to_owned()));
     id
 }
 

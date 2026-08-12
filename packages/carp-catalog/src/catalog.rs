@@ -48,7 +48,11 @@ impl CatalogVersion {
         format!(
             "{} · {} · {} stud{}",
             self.commit.short_sha(),
-            self.commit.date.split('T').next().unwrap_or(&self.commit.date),
+            self.commit
+                .date
+                .split('T')
+                .next()
+                .unwrap_or(&self.commit.date),
             self.studies,
             if self.studies == 1 { "y" } else { "ies" }
         )

@@ -54,7 +54,10 @@ fn a_created_device_reads_back_unchanged() {
 /// would resolve a document to the wrong class.
 #[test]
 fn type_names_are_unique() {
-    let mut names: Vec<&str> = DeviceKind::ALL.iter().map(|kind| kind.type_name()).collect();
+    let mut names: Vec<&str> = DeviceKind::ALL
+        .iter()
+        .map(|kind| kind.type_name())
+        .collect();
     names.sort_unstable();
     let count = names.len();
     names.dedup();

@@ -26,7 +26,7 @@
 //! - [`survey`] - the Research Package survey tree carried by `RPAppTask`
 //! - [`participant`] - participant roles and the data expected of them
 //! - [`control`] - the trigger/task/device wiring
-//! - [`validate`] - referential and semantic checks
+//! - [`mod@validate`] - referential and semantic checks
 //! - [`builder`] - the mutation API the interactive editor drives
 //! - [`version`] - protocol revisions and version tags
 //!
@@ -105,7 +105,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 /// Parse a `protocol.json` document.
 ///
 /// Unknown `__type` values are preserved rather than rejected, so a protocol
-/// authored against a newer CARP release still loads; [`validate`] reports
+/// authored against a newer CARP release still loads; [`mod@validate`] reports
 /// them as warnings.
 pub fn parse(json: &str) -> Result<StudyProtocol> {
     Ok(serde_json::from_str(json)?)

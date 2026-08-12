@@ -13,8 +13,8 @@ use std::collections::HashMap;
 use ratatui::widgets::TableState;
 
 use crate::api::models::{
-    Account, Export, ParticipantGroup, ParticipantGroupStatus, ParticipantSummary,
-    StudyFile, StudyOverview,
+    Account, Export, ParticipantGroup, ParticipantGroupStatus, ParticipantSummary, StudyFile,
+    StudyOverview,
 };
 
 use super::{ParticipantsState, StudyTab, clamp_selection, short};

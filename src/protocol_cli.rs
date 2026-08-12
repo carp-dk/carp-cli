@@ -21,9 +21,9 @@
 
 use std::path::Path;
 
+use carp_protocol::validate::Severity;
 use color_eyre::Result;
 use color_eyre::eyre::bail;
-use carp_protocol::validate::Severity;
 
 use crate::config::Config;
 
@@ -39,7 +39,10 @@ pub async fn sync(config: &Config) -> Result<()> {
     println!("{}", report.summary());
 
     if let Some(version) = report.catalog.version.as_ref() {
-        println!("  commit    {} - {}", version.commit.sha, version.commit.subject);
+        println!(
+            "  commit    {} - {}",
+            version.commit.sha, version.commit.subject
+        );
         println!("  dated     {}", version.commit.date);
     }
     println!(
@@ -142,7 +145,11 @@ pub fn show(path: &Path) -> Result<()> {
 
     println!("\ndevices");
     for device in protocol.devices() {
-        let placement = if device.is_primary() { "primary" } else { "connected" };
+        let placement = if device.is_primary() {
+            "primary"
+        } else {
+            "connected"
+        };
         println!(
             "  {:<28} {:<24} {placement}",
             device.role_name(),
@@ -164,7 +171,10 @@ pub fn show(path: &Path) -> Result<()> {
                 .get(&control.trigger_id)
                 .map(carp_protocol::Trigger::schedule_label)
                 .unwrap_or_else(|| "a missing trigger".to_owned());
-            println!("      {schedule}, on {}", control.destination_device_role_name);
+            println!(
+                "      {schedule}, on {}",
+                control.destination_device_role_name
+            );
         }
     }
 
@@ -178,7 +188,7 @@ pub fn show(path: &Path) -> Result<()> {
                     expected
                         .assigned_to
                         .role_names()
-                        .is_none_or(|names| names.iter().any(|name| *name == role.role))
+                        .is_none_or(|names| names.contains(&role.role))
                 })
                 .map(|expected| carp_protocol::node::short_type(expected.input_data_type()))
                 .collect();
@@ -186,7 +196,8 @@ pub fn show(path: &Path) -> Result<()> {
         }
     }
 
-    let (errors, warnings, _) = carp_protocol::validate::counts(&carp_protocol::validate(&protocol));
+    let (errors, warnings, _) =
+        carp_protocol::validate::counts(&carp_protocol::validate(&protocol));
     println!("\n{errors} error(s), {warnings} warning(s) - `carp protocol check` for detail");
     Ok(())
 }

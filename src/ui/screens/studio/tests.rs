@@ -36,7 +36,10 @@ pub(super) fn loaded() -> Studio {
     ))
     .expect("the vendored corpus parses");
 
-    let mut studio = Studio::opened(protocol, Some(std::path::PathBuf::from("demo/protocol.json")));
+    let mut studio = Studio::opened(
+        protocol,
+        Some(std::path::PathBuf::from("demo/protocol.json")),
+    );
     studio.catalog = catalog();
     studio.catalog_state = CatalogState::Ready;
     studio.survey_task = studio.survey_task_name();
@@ -124,7 +127,10 @@ fn the_tab_bar_shows_the_check_summary() {
     let mut studio = blank();
     let rendered = draw(&mut studio, (120, 32));
     assert!(rendered.contains("Overview"), "{rendered}");
-    assert!(rendered.contains("no findings"), "a blank protocol is sound");
+    assert!(
+        rendered.contains("no findings"),
+        "a blank protocol is sound"
+    );
 
     // Removing the only primary device makes it unsound, which the bar says.
     carp_protocol::builder::remove_device(&mut studio.protocol, "Primary Phone");
@@ -163,7 +169,10 @@ fn the_catalog_tab_names_its_version() {
     let rendered = draw(&mut studio, (140, 40));
 
     assert!(rendered.contains("74f543e"), "the short commit: {rendered}");
-    assert!(rendered.contains("carp_study_app_configurations"), "{rendered}");
+    assert!(
+        rendered.contains("carp_study_app_configurations"),
+        "{rendered}"
+    );
     assert!(rendered.contains("demo"), "the study it learned from");
 }
 
@@ -193,15 +202,16 @@ fn the_hints_follow_the_overlay() {
 #[test]
 fn an_unmodelled_device_renders_with_an_explanation() {
     let mut studio = blank();
-    studio.protocol.connected_devices.push(carp_protocol::Device::Unknown(
-        carp_protocol::UnknownNode {
+    studio
+        .protocol
+        .connected_devices
+        .push(carp_protocol::Device::Unknown(carp_protocol::UnknownNode {
             type_name: "dk.carp.cams.devices.FutureSensor".to_owned(),
             fields: serde_json::Map::from_iter([(
                 "roleName".to_owned(),
                 serde_json::Value::String("Future Sensor".to_owned()),
             )]),
-        },
-    ));
+        }));
     studio.changed();
     studio.section = Section::Devices;
     studio.lists.devices.select(Some(1));

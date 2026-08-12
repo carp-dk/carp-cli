@@ -43,11 +43,7 @@ pub fn expected_data(
     expected: &ExpectedParticipantData,
     protocol: &StudyProtocol,
 ) -> Form {
-    let mut options = vec![Choice::described(
-        "",
-        "everyone",
-        "Whatever role they play",
-    )];
+    let mut options = vec![Choice::described("", "everyone", "Whatever role they play")];
     options.extend(
         protocol
             .participant_roles

@@ -69,11 +69,8 @@ pub fn devices(protocol: &StudyProtocol, out: &mut Vec<Diagnostic>) {
         }
         if device.kind().is_some_and(|kind| kind.needs_api_key()) && api_key(device).is_none() {
             out.push(
-                Diagnostic::warning(
-                    format!("device {:?}", device.role_name()),
-                    "has no API key",
-                )
-                .with_hint("the service returns nothing without one"),
+                Diagnostic::warning(format!("device {:?}", device.role_name()), "has no API key")
+                    .with_hint("the service returns nothing without one"),
             );
         }
     }

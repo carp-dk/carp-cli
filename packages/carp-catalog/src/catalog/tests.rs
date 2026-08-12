@@ -20,7 +20,10 @@ fn a_vocabulary_is_ordered_by_use_then_name() {
     builder.record("also-rare", "catch");
 
     let vocabulary = builder.build();
-    let values: Vec<&str> = vocabulary.iter().map(|entry| entry.value.as_str()).collect();
+    let values: Vec<&str> = vocabulary
+        .iter()
+        .map(|entry| entry.value.as_str())
+        .collect();
     assert_eq!(values, ["common", "also-rare", "rare"]);
     assert_eq!(vocabulary[0].occurrences, 3);
     assert_eq!(vocabulary[0].studies, ["catch", "demo", "ubilife"]);

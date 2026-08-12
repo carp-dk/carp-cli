@@ -8,7 +8,6 @@
 
 //! Whether the protocol says who and what it is.
 
-
 use super::super::Diagnostic;
 use crate::protocol::StudyProtocol;
 
@@ -42,7 +41,10 @@ pub fn identity(protocol: &StudyProtocol, out: &mut Vec<Diagnostic>) {
     if chrono::DateTime::parse_from_rfc3339(&protocol.created_on).is_err() {
         out.push(Diagnostic::error(
             "protocol",
-            format!("created-on {:?} is not an ISO-8601 instant", protocol.created_on),
+            format!(
+                "created-on {:?} is not an ISO-8601 instant",
+                protocol.created_on
+            ),
         ));
     }
 }

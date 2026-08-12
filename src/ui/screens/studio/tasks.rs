@@ -147,10 +147,7 @@ fn task_lines(task: &Task, studio: &Studio) -> Vec<Line<'static>> {
                 .map(carp_protocol::Trigger::schedule_label)
                 .unwrap_or_else(|| "a missing trigger".to_owned());
             lines.push(detail::bullet(
-                format!(
-                    "{schedule}, on {}",
-                    control.destination_device_role_name
-                ),
+                format!("{schedule}, on {}", control.destination_device_role_name),
                 theme::value(),
             ));
         }
@@ -182,7 +179,10 @@ fn render_measures(frame: &mut Frame, area: Rect, studio: &mut Studio) {
 
     if measures.is_empty() {
         frame.render_widget(
-            table::placeholder("collects nothing - press m to add a measure", theme::block(&title)),
+            table::placeholder(
+                "collects nothing - press m to add a measure",
+                theme::block(&title),
+            ),
             area,
         );
         return;

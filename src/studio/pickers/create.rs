@@ -147,11 +147,9 @@ fn build_step(type_name: &str, identifier: &str) -> Option<RpStep> {
         "RPTextQuestionStep" => {
             RpStep::question(identifier, "Question", RpAnswerFormat::text(None))
         }
-        "RPIntegerQuestionStep" => RpStep::question(
-            identifier,
-            "Question",
-            RpAnswerFormat::integer(0, 100, ""),
-        ),
+        "RPIntegerQuestionStep" => {
+            RpStep::question(identifier, "Question", RpAnswerFormat::integer(0, 100, ""))
+        }
         "RPDateTimeQuestionStep" => RpStep::question(
             identifier,
             "Question",
@@ -213,12 +211,28 @@ pub(super) fn trigger_rows() -> Vec<Row> {
 /// are one class on the wire but four different things to author.
 pub(super) fn step_rows() -> Vec<Row> {
     vec![
-        Row::new("RPQuestionStep", "Choice question", "Pick one of a list of options"),
-        Row::new("RPScaleQuestionStep", "Scale question", "A slider over a range"),
+        Row::new(
+            "RPQuestionStep",
+            "Choice question",
+            "Pick one of a list of options",
+        ),
+        Row::new(
+            "RPScaleQuestionStep",
+            "Scale question",
+            "A slider over a range",
+        ),
         Row::new("RPTextQuestionStep", "Text question", "Free text"),
         Row::new("RPIntegerQuestionStep", "Number question", "A whole number"),
-        Row::new("RPDateTimeQuestionStep", "Date/time question", "A date, a time, or both"),
-        Row::new("RPInstructionStep", "Instructions", "A page of text before the questions"),
+        Row::new(
+            "RPDateTimeQuestionStep",
+            "Date/time question",
+            "A date, a time, or both",
+        ),
+        Row::new(
+            "RPInstructionStep",
+            "Instructions",
+            "A page of text before the questions",
+        ),
         Row::new("RPCompletionStep", "Completion", "The closing page"),
     ]
 }

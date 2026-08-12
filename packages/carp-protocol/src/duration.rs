@@ -34,9 +34,7 @@ const PER_DAY: i64 = 24 * PER_HOUR;
 ///
 /// Serialises as a plain integer, so `Micros::from_days(1)` writes
 /// `86400000000`.
-#[derive(
-    Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize,
-)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(transparent)]
 pub struct Micros(pub i64);
 

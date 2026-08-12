@@ -33,12 +33,12 @@ fn protocol() -> StudyProtocol {
         TriggerKind::RecurrentScheduled,
     );
     add_participant_role(&mut protocol, "Participant");
-    protocol
-        .expected_participant_data
-        .push(crate::participant::ExpectedParticipantData::for_roles(
+    protocol.expected_participant_data.push(
+        crate::participant::ExpectedParticipantData::for_roles(
             "dk.carp.webservices.input.informed_consent",
             vec!["Participant".to_owned()],
-        ));
+        ),
+    );
     protocol
 }
 
@@ -246,12 +246,12 @@ fn renaming_a_role_moves_its_expected_data() {
 fn removing_a_role_prunes_its_expected_data() {
     let mut protocol = protocol();
     add_participant_role(&mut protocol, "Clinician");
-    protocol
-        .expected_participant_data
-        .push(crate::participant::ExpectedParticipantData::for_roles(
+    protocol.expected_participant_data.push(
+        crate::participant::ExpectedParticipantData::for_roles(
             "dk.cachet.carp.input.sex",
             vec!["Participant".to_owned(), "Clinician".to_owned()],
-        ));
+        ),
+    );
 
     remove_participant_role(&mut protocol, "Clinician");
 
@@ -289,7 +289,12 @@ fn a_sequence_of_edits_never_breaks_the_graph() {
     let mut protocol = protocol();
 
     let watch = add_device(&mut protocol, DeviceKind::MovesenseDevice);
-    add_task(&mut protocol, TaskKind::Background, &watch, TriggerKind::Immediate);
+    add_task(
+        &mut protocol,
+        TaskKind::Background,
+        &watch,
+        TriggerKind::Immediate,
+    );
     rename_device(&mut protocol, &watch, "Chest Sensor");
     rename_task(&mut protocol, "Survey", "Morning Diary");
     add_task(

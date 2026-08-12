@@ -61,10 +61,7 @@ impl Measure {
     }
 
     /// A measure of `data_type` with its own sampling configuration.
-    pub fn with_sampling(
-        data_type: impl Into<String>,
-        sampling: SamplingConfiguration,
-    ) -> Self {
+    pub fn with_sampling(data_type: impl Into<String>, sampling: SamplingConfiguration) -> Self {
         Self::Known(KnownMeasure::DataStream {
             r#type: data_type.into(),
             override_sampling_configuration: Some(sampling),

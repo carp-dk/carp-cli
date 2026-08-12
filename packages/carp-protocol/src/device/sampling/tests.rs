@@ -17,7 +17,10 @@ fn the_health_window_uses_the_wire_units() {
     let configuration = SamplingConfiguration::health(vec!["STEPS".to_owned()]);
     let json = serde_json::to_value(&configuration).unwrap();
 
-    assert_eq!(json["past"], 2_592_000_000_000i64, "30 days in microseconds");
+    assert_eq!(
+        json["past"], 2_592_000_000_000i64,
+        "30 days in microseconds"
+    );
     assert_eq!(json["future"], 86_400_000_000i64, "1 day in microseconds");
     assert_eq!(json["healthDataTypes"], serde_json::json!(["STEPS"]));
 }

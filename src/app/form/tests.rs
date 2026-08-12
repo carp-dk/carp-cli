@@ -15,9 +15,17 @@ fn form() -> Form {
     Form::new(
         Subject::Device("Primary Phone".to_owned()),
         vec![
-            Field::new("role", "Role name", FieldValue::Text("Primary Phone".to_owned())),
+            Field::new(
+                "role",
+                "Role name",
+                FieldValue::Text("Primary Phone".to_owned()),
+            ),
             Field::new("optional", "Optional", FieldValue::Toggle(false)),
-            Field::new("interval", "Interval", FieldValue::Duration(Micros::from_seconds(60))),
+            Field::new(
+                "interval",
+                "Interval",
+                FieldValue::Duration(Micros::from_seconds(60)),
+            ),
             Field::new(
                 "accuracy",
                 "Accuracy",

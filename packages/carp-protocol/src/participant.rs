@@ -56,9 +56,7 @@ impl ExpectedParticipantData {
     pub fn for_roles(input_data_type: impl Into<String>, roles: Vec<String>) -> Self {
         Self {
             attribute: ParticipantAttribute::new(input_data_type),
-            assigned_to: AssignedTo::Known(KnownAssignedTo::Roles {
-                role_names: roles,
-            }),
+            assigned_to: AssignedTo::Known(KnownAssignedTo::Roles { role_names: roles }),
         }
     }
 
@@ -73,9 +71,9 @@ impl ExpectedParticipantData {
     /// The input type asked for, e.g. `dk.cachet.carp.input.sex`.
     pub fn input_data_type(&self) -> &str {
         match &self.attribute {
-            ParticipantAttribute::Known(KnownParticipantAttribute::Default {
-                input_data_type,
-            }) => input_data_type,
+            ParticipantAttribute::Known(KnownParticipantAttribute::Default { input_data_type }) => {
+                input_data_type
+            }
             ParticipantAttribute::Unknown(node) => node
                 .field("inputDataType")
                 .and_then(serde_json::Value::as_str)

@@ -43,7 +43,10 @@ fn corpus() -> Vec<(String, String)> {
         .expect("the corpus directory is part of the crate")
         .filter_map(Result::ok)
         .map(|entry| entry.path())
-        .filter(|path| path.extension().is_some_and(|extension| extension == "json"))
+        .filter(|path| {
+            path.extension()
+                .is_some_and(|extension| extension == "json")
+        })
         .map(|path| {
             let name = path
                 .file_stem()
@@ -83,7 +86,10 @@ fn every_protocol_round_trips() {
             .unwrap_or_else(|error| panic!("{name}: did not serialise: {error}"));
 
         if written != original {
-            panic!("{name} changed on a round trip\n{}", difference(&original, &written));
+            panic!(
+                "{name} changed on a round trip\n{}",
+                difference(&original, &written)
+            );
         }
     }
 }

@@ -80,10 +80,7 @@ fn hints(app: &App) -> Line<'static> {
     if app.route == Route::Studio
         && let Some(studio) = app.studio.as_ref()
     {
-        return Line::styled(
-            crate::ui::screens::studio::hints(studio),
-            theme::dim(),
-        );
+        return Line::styled(crate::ui::screens::studio::hints(studio), theme::dim());
     }
 
     let keys: Vec<(&str, &str)> = match app.route {

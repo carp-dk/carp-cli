@@ -75,13 +75,9 @@ fn render_tabs(frame: &mut Frame, area: Rect, studio: &Studio) {
         spans.push(Span::raw(" "));
     }
 
-    let [left, right] =
-        Layout::horizontal([Constraint::Fill(3), Constraint::Fill(1)]).areas(area);
+    let [left, right] = Layout::horizontal([Constraint::Fill(3), Constraint::Fill(1)]).areas(area);
     frame.render_widget(Paragraph::new(Line::from(spans)), left);
-    frame.render_widget(
-        Paragraph::new(check_summary(studio)).right_aligned(),
-        right,
-    );
+    frame.render_widget(Paragraph::new(check_summary(studio)).right_aligned(), right);
 }
 
 /// `2 errors · 1 warning`, or a tick when the protocol is sound.

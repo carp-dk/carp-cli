@@ -227,7 +227,10 @@ mod tests {
         });
 
         let device: Device = serde_json::from_value(original.clone()).unwrap();
-        assert!(!device.is_primary(), "a location service is reached through a phone");
+        assert!(
+            !device.is_primary(),
+            "a location service is reached through a phone"
+        );
         assert!(device.is_optional());
         assert_eq!(serde_json::to_value(&device).unwrap(), original);
     }

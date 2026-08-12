@@ -71,15 +71,21 @@ pub enum Command {
     Help,
     Version,
     /// Open the editor, on `path` when one was given.
-    Protocol { path: Option<PathBuf> },
+    Protocol {
+        path: Option<PathBuf>,
+    },
     /// Download the upstream configurations.
     ProtocolSync,
     /// Report what the stored catalogue holds.
     ProtocolCatalog,
     /// Validate a protocol and exit non-zero when it has errors.
-    ProtocolCheck { path: PathBuf },
+    ProtocolCheck {
+        path: PathBuf,
+    },
     /// Print a protocol's shape.
-    ProtocolShow { path: PathBuf },
+    ProtocolShow {
+        path: PathBuf,
+    },
 }
 
 #[derive(Debug, Clone)]

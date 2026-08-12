@@ -143,7 +143,8 @@ fn apply_application_data(protocol: &mut StudyProtocol, form: &Form) -> Applied 
     ]
     .iter()
     .any(|field| !field.trim().is_empty());
-    description.responsible = (had_responsible || responsible_says_something).then_some(responsible);
+    description.responsible =
+        (had_responsible || responsible_says_something).then_some(responsible);
 
     let description_says_something = description.responsible.is_some()
         || [

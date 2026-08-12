@@ -36,7 +36,10 @@ pub fn render(frame: &mut Frame, area: Rect, studio: &mut Studio) {
     let block = theme::block("role");
     match studio.lists.selected_role(&studio.protocol) {
         Some(role) => {
-            frame.render_widget(detail::panel(block, role_lines(&role.role, studio)), detail_area);
+            frame.render_widget(
+                detail::panel(block, role_lines(&role.role, studio)),
+                detail_area,
+            );
         }
         None => frame.render_widget(
             detail::empty(block, "no roles yet - press a to add one"),
@@ -66,7 +69,12 @@ fn render_roles(frame: &mut Frame, area: Rect, studio: &mut Studio) {
             Row::new(vec![
                 Line::styled(role.role.clone(), theme::value()),
                 Line::styled(
-                    if role.is_optional { "optional" } else { "required" }.to_owned(),
+                    if role.is_optional {
+                        "optional"
+                    } else {
+                        "required"
+                    }
+                    .to_owned(),
                     theme::dim(),
                 ),
             ])
@@ -126,7 +134,11 @@ fn render_expected(frame: &mut Frame, area: Rect, studio: &mut Studio) {
                 ),
                 Line::styled(
                     assigned,
-                    if resolves { theme::dim() } else { theme::error() },
+                    if resolves {
+                        theme::dim()
+                    } else {
+                        theme::error()
+                    },
                 ),
             ])
         })
@@ -195,8 +207,16 @@ fn role_lines(role: &str, studio: &Studio) -> Vec<Line<'static>> {
     lines.push(detail::blank());
     lines.push(detail::field_styled(
         "informed consent",
-        if has_consent { "expected" } else { "not expected" },
-        if has_consent { theme::ok() } else { theme::warn() },
+        if has_consent {
+            "expected"
+        } else {
+            "not expected"
+        },
+        if has_consent {
+            theme::ok()
+        } else {
+            theme::warn()
+        },
     ));
     if !has_consent {
         lines.push(detail::note(

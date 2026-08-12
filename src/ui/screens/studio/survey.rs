@@ -57,7 +57,9 @@ pub fn render(frame: &mut Frame, area: Rect, studio: &mut Studio) {
         .and_then(|index| survey.steps().get(index));
 
     match selected {
-        Some(step) => frame.render_widget(detail::panel(block, step_lines(step, &survey)), detail_area),
+        Some(step) => {
+            frame.render_widget(detail::panel(block, step_lines(step, &survey)), detail_area)
+        }
         None => frame.render_widget(detail::empty(block, "no step selected"), detail_area),
     }
 }
@@ -145,7 +147,11 @@ fn step_lines(step: &RpStep, survey: &RpTask) -> Vec<Line<'static>> {
                 .any(|identifier| identifier == destination);
             lines.push(detail::bullet(
                 destination.to_owned(),
-                if exists { theme::value() } else { theme::error() },
+                if exists {
+                    theme::value()
+                } else {
+                    theme::error()
+                },
             ));
         }
     }

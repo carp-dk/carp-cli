@@ -129,7 +129,9 @@ pub fn remove_device(protocol: &mut StudyProtocol, role_name: &str) -> Removal {
     for id in doomed {
         protocol.triggers.remove(&id);
         let before = protocol.task_controls.len();
-        protocol.task_controls.retain(|control| control.trigger_id != id);
+        protocol
+            .task_controls
+            .retain(|control| control.trigger_id != id);
         removal.task_controls += before - protocol.task_controls.len();
     }
 

@@ -35,7 +35,7 @@ use crate::trigger::Trigger;
 /// - a [`DeviceConnection`] names two devices by role name
 ///
 /// Nothing in the JSON enforces that those names resolve, which is why
-/// [`crate::validate`] exists and why [`crate::builder`] renames and deletes
+/// [`mod@crate::validate`] exists and why [`crate::builder`] renames and deletes
 /// through methods that fix up the references.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -126,17 +126,23 @@ impl StudyProtocol {
 
     /// Role names of every device, in the same order.
     pub fn device_role_names(&self) -> Vec<String> {
-        self.devices().map(|device| device.role_name().to_owned()).collect()
+        self.devices()
+            .map(|device| device.role_name().to_owned())
+            .collect()
     }
 
     /// The device with this role name, primary or connected.
     pub fn device(&self, role_name: &str) -> Option<&Device> {
-        self.devices().find(|device| device.role_name() == role_name)
+        self.devices()
+            .find(|device| device.role_name() == role_name)
     }
 
     /// Names of every task, in document order.
     pub fn task_names(&self) -> Vec<String> {
-        self.tasks.iter().map(|task| task.name().to_owned()).collect()
+        self.tasks
+            .iter()
+            .map(|task| task.name().to_owned())
+            .collect()
     }
 
     pub fn task(&self, name: &str) -> Option<&Task> {
@@ -148,7 +154,9 @@ impl StudyProtocol {
     /// Ids are dense in the reference protocols but nothing requires it, so
     /// this fills a gap left by a deletion rather than always appending.
     pub fn next_trigger_id(&self) -> u32 {
-        (0u32..).find(|id| !self.triggers.contains_key(id)).unwrap_or(0)
+        (0u32..)
+            .find(|id| !self.triggers.contains_key(id))
+            .unwrap_or(0)
     }
 
     /// The task controls that reference `trigger_id`.

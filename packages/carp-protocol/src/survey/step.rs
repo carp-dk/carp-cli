@@ -16,7 +16,7 @@
 //!
 //! Every step has an `identifier`, unique within its survey, which is the key
 //! its answer is recorded under and what
-//! [`super::navigation::RpStepJumpRule`] points at.
+//! [`super::navigation::KnownNavigationRule::Jump`] points at.
 
 pub mod access;
 

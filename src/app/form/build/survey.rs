@@ -74,7 +74,11 @@ fn kind_fields(step: &KnownStep) -> Vec<Field> {
                 },
             )
             .with_help("Seconds before moving on regardless; 0 disables it"),
-            Field::new("auto_focus", "Focus on open", FieldValue::Toggle(*auto_focus)),
+            Field::new(
+                "auto_focus",
+                "Focus on open",
+                FieldValue::Toggle(*auto_focus),
+            ),
         ],
 
         KnownStep::Form { optional, .. } => vec![optional_field(*optional)],

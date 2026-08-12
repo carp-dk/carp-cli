@@ -9,8 +9,8 @@
 //! Tests for [`super`].
 
 use super::*;
-use crate::api::models::{ParticipantSummary, StudyOverview};
 use crate::api::models::deployment::{EXAMPLE_GROUPS, EXAMPLE_MEMBER_ID};
+use crate::api::models::{ParticipantSummary, StudyOverview};
 
 fn study_with_one_deployed_participant() -> StudyState {
     let mut state = StudyState::new(StudyOverview::default());

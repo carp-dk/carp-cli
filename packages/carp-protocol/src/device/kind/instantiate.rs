@@ -14,7 +14,7 @@ use super::DeviceKind;
 use crate::duration::Micros;
 
 impl DeviceKind {
-/// Build a device of this kind, with the defaults each class ships with.
+    /// Build a device of this kind, with the defaults each class ships with.
     ///
     /// Connected devices are created optional: a study should still deploy
     /// when a participant has no chest strap paired yet.
