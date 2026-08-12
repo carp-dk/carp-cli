@@ -18,7 +18,7 @@
 
 use std::path::PathBuf;
 
-use carp_protocol::version::{UploadCheck, next_revision};
+use carp_protocol::version::UploadCheck;
 
 use crate::app::state::{Prompt, PromptKind, Route, Status};
 use crate::app::{App, studio_tasks};
@@ -163,13 +163,12 @@ impl App {
             return;
         }
 
-        // Each upload is a new revision of the same protocol, so the counter
-        // moves before it is sent rather than after: what CAWS stores and
-        // what the editor shows must be the same document.
+        // The protocol's `version` counter is CARP's, not the client's: every
+        // upstream protocol carries 0, including ones on their third published
+        // version. Versioning is done by tag, so the document is sent exactly
+        // as it sits on disk and only the tag moves - and only once CAWS has
+        // accepted it, so a failed upload leaves nothing changed.
         let tag = studio.version_tag.to_string();
-        next_revision(&mut studio.protocol);
-        studio.dirty = true;
-
         let protocol = studio.protocol.clone();
         studio_tasks::upload_protocol(self.client.clone(), protocol, tag.clone(), self.sender());
         self.status = Some(Status::info(format!("uploading as {tag}…")));
