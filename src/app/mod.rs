@@ -112,7 +112,14 @@ impl App {
         // suggestions, and upstream is asked once whether it has moved.
         studio_tasks::load_catalog(self.config.data_dir.clone(), self.tx.clone());
         studio_tasks::check_for_updates(self.config.data_dir.clone(), self.tx.clone());
-        self.refresh_studies();
+
+        // Starting in the editor means there may be no CARP session at all, so
+        // the study list is left until it is actually looked at. Loading it
+        // here would put an authentication error over the editor for someone
+        // who only wanted to edit a file.
+        if self.route != Route::Studio {
+            self.refresh_studies();
+        }
 
         while !self.should_quit {
             terminal.draw(|frame| ui::draw(frame, &mut self))?;
