@@ -55,9 +55,9 @@ async fn main() -> Result<()> {
 
     let config = config::Config::load(&args)?;
 
-    // The protocol commands work on local files and the public upstream
-    // repository, so they run before authentication: checking a protocol in CI
-    // must not need a CARP session.
+    // These work on local files and on GitHub, never on CAWS, so they run
+    // before the CARP session is set up: validating a protocol in CI must not
+    // need one. `sync` authenticates to GitHub separately, with GITHUB_TOKEN.
     match &args.command {
         cli::Command::ProtocolSync => return protocol_cli::sync(&config).await,
         cli::Command::ProtocolCatalog => return protocol_cli::catalog_status(&config).await,
