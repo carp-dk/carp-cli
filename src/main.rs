@@ -89,9 +89,19 @@ async fn main() -> Result<()> {
         _ => {}
     }
 
-    // Log in before taking over the terminal: the flow prints a URL and waits
-    // for the browser.
-    authenticator.ensure_session().await?;
+    // `carp protocol [path]` starts in the editor rather than the study list.
+    let opening = match &args.command {
+        cli::Command::Protocol { path } => Some(path.clone()),
+        _ => None,
+    };
+
+    // The protocol editor works on local files and needs the server only to
+    // upload, so it does not demand a browser login on the way in. Everything
+    // else does: taking over the terminal first would hide the URL the flow
+    // prints while it waits.
+    if opening.is_none() {
+        authenticator.ensure_session().await?;
+    }
     let account = authenticator.account_label().await;
 
     let client = api::CarpClient::new(&config, authenticator)?;
@@ -105,12 +115,6 @@ async fn main() -> Result<()> {
     };
 
     ui::icons::use_set(config.icons);
-
-    // `carp protocol [path]` starts in the editor rather than the study list.
-    let opening = match &args.command {
-        cli::Command::Protocol { path } => Some(path.clone()),
-        _ => None,
-    };
 
     let mut app = app::App::new(config, client, cache, account);
     if let Some(path) = opening {

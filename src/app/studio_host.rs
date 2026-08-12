@@ -77,14 +77,25 @@ impl App {
             self.prompt = Some(Prompt::confirm(PromptKind::ConfirmDiscardProtocol));
             return;
         }
-        self.route = Route::Studies;
+        self.leave_to_studies();
     }
 
     /// Leave without saving, once the warning has been accepted.
     pub fn discard_protocol(&mut self) {
         self.studio = None;
-        self.route = Route::Studies;
+        self.leave_to_studies();
         self.status = Some(Status::info("left without saving"));
+    }
+
+    /// Land on the study list, loading it if this session never has.
+    ///
+    /// `carp protocol` skips the startup load, so arriving here may be the
+    /// first time the list is wanted - and the first time a session is needed.
+    pub(super) fn leave_to_studies(&mut self) {
+        self.route = Route::Studies;
+        if self.studies.items.is_empty() && !self.studies.loading {
+            self.refresh_studies();
+        }
     }
 
     /// Write the protocol to its path, choosing one when it has none.
