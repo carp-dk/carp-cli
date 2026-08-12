@@ -1,0 +1,16 @@
+These files are the `carp/resources/protocol.json` of each study in
+
+    https://github.com/carp-dk/carp_study_app_configurations
+
+vendored so the round-trip tests are hermetic: they must run on a machine with
+no network and no clone of that repository. The repository is private, so a
+`GITHUB_TOKEN` with access to it is needed to refresh them.
+
+    commit  74f543e65bc18300c61a967cf6c3f13e228eabf9
+    date    2026-08-11T12:38:39Z
+    subject Merge pull request #45 from carp-dk/feat/test-protocol-cams2
+
+Refresh them by running `carp protocol sync` and copying the documents out of
+the snapshot it writes. Do not edit them by hand: they are a fixture of what
+CARP produces, and a hand-edit would make the tests agree with a document CARP
+never wrote.

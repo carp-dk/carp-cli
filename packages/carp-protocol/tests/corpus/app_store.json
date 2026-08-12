@@ -1,0 +1,1376 @@
+{
+ "applicationData": {
+  "studyDescription": {
+   "__type": "StudyDescription",
+   "title": "study.description.title",
+   "description": "study.description.description",
+   "purpose": "study.description.purpose",
+   "studyDescriptionUrl": "study.description.url",
+   "privacyPolicyUrl": "study.description.privacy",
+   "responsible": {
+    "__type": "StudyResponsible",
+    "id": "study.responsible.id",
+    "name": "study.responsible.name",
+    "title": "study.responsible.title",
+    "email": "study.responsible.email",
+    "address": "study.responsible.address",
+    "affiliation": "study.responsible.affiliation"
+   }
+  },
+  "dataEndPoint": {
+   "__type": "CarpDataEndPoint",
+   "type": "CAWS",
+   "dataFormat": "dk.cachet.carp",
+   "uploadMethod": "stream",
+   "name": "CARP Service",
+   "onlyUploadOnWiFi": false,
+   "uploadInterval": 10,
+   "deleteWhenUploaded": true,
+   "compress": true
+  }
+ },
+ "id": "f523d8e5-ee5e-49a8-ac06-aa99bbecab0c",
+ "createdOn": "2025-03-27T13:45:50.240011Z",
+ "version": 0,
+ "description": "study.description.description",
+ "ownerId": "979b408d-784e-4b1b-bb1e-ff9204e072f3",
+ "name": "CARP App Store Protocol",
+ "participantRoles": [
+  {
+   "role": "Participant",
+   "isOptional": false
+  }
+ ],
+ "primaryDevices": [
+  {
+   "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+   "roleName": "Primary Phone",
+   "isOptional": false,
+   "defaultSamplingConfiguration": {},
+   "isPrimaryDevice": true
+  }
+ ],
+ "connectedDevices": [
+  {
+   "__type": "dk.cachet.carp.common.application.devices.PolarDevice",
+   "roleName": "Polar HR Device",
+   "isOptional": true,
+   "defaultSamplingConfiguration": {}
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.devices.HealthService",
+   "roleName": "Health Service",
+   "isOptional": true,
+   "defaultSamplingConfiguration": {}
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.devices.LocationService",
+   "roleName": "Location Service",
+   "isOptional": true,
+   "defaultSamplingConfiguration": {},
+   "accuracy": "balanced",
+   "distance": 10.0,
+   "interval": 60000000,
+   "notificationOnTapBringToFront": false
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.devices.WeatherService",
+   "roleName": "Weather Service",
+   "isOptional": true,
+   "defaultSamplingConfiguration": {},
+   "apiKey": "12b6e28582eb9298577c734a31ba9f4f"
+  }
+ ],
+ "connections": [
+  {
+   "roleName": "Polar HR Device",
+   "connectedToRoleName": "Primary Phone"
+  },
+  {
+   "roleName": "Health Service",
+   "connectedToRoleName": "Primary Phone"
+  },
+  {
+   "roleName": "Location Service",
+   "connectedToRoleName": "Primary Phone"
+  },
+  {
+   "roleName": "Weather Service",
+   "connectedToRoleName": "Primary Phone"
+  }
+ ],
+ "assignedDevices": {},
+ "tasks": [
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #7",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #8",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #9",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #10",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #11",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #12",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.ambientlight"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.stepcount"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.freememory"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.batterystate"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.screenevent"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.activity"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #13",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.location"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.mobility"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #14",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.health",
+     "overrideSamplingConfiguration": {
+      "__type": "dk.cachet.carp.common.application.sampling.HealthSamplingConfiguration",
+      "past": 2592000000000,
+      "future": 86400000000,
+      "healthDataTypes": [
+       "WEIGHT",
+       "HEIGHT",
+       "BODY_FAT_PERCENTAGE",
+       "STEPS",
+       "BODY_TEMPERATURE",
+       "EXERCISE_TIME",
+       "DISTANCE_WALKING_RUNNING",
+       "DISTANCE_CYCLING",
+       "TOTAL_CALORIES_BURNED",
+       "BASAL_ENERGY_BURNED",
+       "ACTIVE_ENERGY_BURNED",
+       "FLIGHTS_CLIMBED",
+       "RESPIRATORY_RATE",
+       "NUTRITION",
+       "HEART_RATE",
+       "RESTING_HEART_RATE",
+       "BLOOD_GLUCOSE",
+       "BLOOD_PRESSURE_DIASTOLIC",
+       "BLOOD_PRESSURE_SYSTOLIC",
+       "SLEEP_SESSION",
+       "ELECTRODERMAL_ACTIVITY"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #15",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.polar.hr"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #16",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.location"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.demographics.title",
+   "description": "survey.demographics.description",
+   "instructions": "",
+   "minutesToComplete": 2,
+   "expire": 432000000000,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "demo_survey",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.demographics.1",
+      "title": "survey.demographics.question.sex",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.demographics.femal",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.demographics.male",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.demographics.other",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.demographics.prefer_not",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.demographics.2",
+      "title": "survey.demographics.question.age",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.demographics.under_20",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "20-29",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "30-39",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "40-49",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "50-59",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "60-69",
+         "value": 6,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "70-79",
+         "value": 7,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "80-89",
+         "value": 8,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.demographics.90_above",
+         "value": 9,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.demographics.prefer_not",
+         "value": 10,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.demographics.3",
+      "title": "survey.demographics.question.smoke",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.demographics.smoke.never",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.demographics.smoke.ex",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.demographics.smoke.1",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.demographics.smoke.1-10",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.demographics.smoke.11-20",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.demographics.smoke.21+",
+         "value": 6,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.demographics.prefer_not",
+         "value": 7,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #17",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.location"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "Symptoms",
+   "description": "A short 1-item survey on your daily symptoms.",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "expire": 86400000000,
+   "notification": true,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "symptoms_survey",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "sym_1",
+      "title": "Do you have any of the following symptoms today?",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "MultipleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "None",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Fever (warmer than usual)",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Dry cough",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Wet cough",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Sore throat, runny or blocked nose",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Loss of taste and smell",
+         "value": 6,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Difficulty breathing or feeling short of breath",
+         "value": 7,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Tightness in your chest",
+         "value": 8,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Dizziness, confusion or vertigo",
+         "value": 9,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Headache",
+         "value": 10,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Muscle aches",
+         "value": 11,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Chills",
+         "value": 12,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Prefer not to say",
+         "value": 13,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "MultipleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #20",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.location"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "Cardiovascular Event",
+   "description": "Please provide details on any heart event you may have experienced.",
+   "instructions": "",
+   "minutesToComplete": 2,
+   "expire": 14400000000,
+   "notification": true,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "cvd_symptoms_survey",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPInstructionStep",
+      "identifier": "cvd_instruction",
+      "title": "Cardiovascular Event",
+      "text": "In the following pages, you will be able to report on any cardiovascular event you may have experienced.\nThis event is based on you tapping the device.",
+      "optional": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "cvd_timestamp",
+      "title": "When did you experience this event?",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPDateTimeAnswerFormat",
+       "questionType": "DateAndTime",
+       "dateTimeAnswerStyle": "DateAndTime"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "cvd_symptoms",
+      "title": "Which symptom(s) did you experience when you tapped the device?",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "MultipleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "None",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Palpitation",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Dizziness",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Shortness of Breath",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Chest Pain",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Sweating",
+         "value": 6,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Heart Burn",
+         "value": 7,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "MultipleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "cvd_duration",
+      "title": "For how long time did you experience the symptom(s)?",
+      "optional": true,
+      "answerFormat": {
+       "__type": "RPIntegerAnswerFormat",
+       "minValue": 0,
+       "maxValue": 20,
+       "suffix": "minutes",
+       "questionType": "Integer"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "cvd_activity",
+      "title": "What activity were you doing when experienced these symptom(s)?",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "Running",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Walking",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Cycling",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Climbing Stairs",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Bathing",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Watching TV",
+         "value": 6,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Reading",
+         "value": 7,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "Talking",
+         "value": 8,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "None of the above",
+         "value": 9,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "cvd_note",
+      "title": "Additional notes",
+      "optional": true,
+      "answerFormat": {
+       "__type": "RPTextAnswerFormat",
+       "hintText": "Add note...",
+       "autoFocus": false,
+       "disableHelpers": false,
+       "questionType": "Text"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.AppTask",
+   "name": "Task #18",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.audio"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.location"
+    }
+   ],
+   "type": "audio",
+   "title": "reading.title",
+   "description": "reading.description",
+   "instructions": "reading.instructions",
+   "minutesToComplete": 3,
+   "notification": false
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.AppTask",
+   "name": "Task #19",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.image"
+    }
+   ],
+   "type": "image",
+   "title": "wound.title",
+   "description": "wound.description",
+   "instructions": "wound.instructions",
+   "minutesToComplete": 3,
+   "notification": false
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #21",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "cognition",
+   "title": "Cognitive Assessment",
+   "description": "A task assessing cognitive functioning and finger tapping speed.",
+   "instructions": "",
+   "minutesToComplete": 3,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "cognition_assessment",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPInstructionStep",
+      "identifier": "cognition_instruction",
+      "title": "Cognitive Assessment",
+      "text": "In the following pages, you will be asked to solve two simple test which will help assess your cognitive abilities. Each test has an instruction page, which you should read carefully before starting the test.\n\nPlease sit down comfortably and hold the phone in one hand while performing the test with the other.",
+      "optional": false
+     },
+     {
+      "__type": "RPFlankerActivity",
+      "identifier": "flanker_1",
+      "title": "RPActivityStep",
+      "optional": false,
+      "includeInstructions": true,
+      "includeResults": true,
+      "lengthOfTest": 30,
+      "numberOfCards": 10
+     },
+     {
+      "__type": "RPTappingActivity",
+      "identifier": "tapping_1",
+      "title": "RPActivityStep",
+      "optional": false,
+      "includeInstructions": true,
+      "includeResults": true,
+      "lengthOfTest": 10
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.HealthAppTask",
+   "name": "Task #22",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.health",
+     "overrideSamplingConfiguration": {
+      "__type": "dk.cachet.carp.common.application.sampling.HealthSamplingConfiguration",
+      "past": 2592000000000,
+      "future": 86400000000,
+      "healthDataTypes": [
+       "WEIGHT",
+       "HEIGHT",
+       "BODY_FAT_PERCENTAGE",
+       "BODY_TEMPERATURE"
+      ]
+     }
+    }
+   ],
+   "type": "health",
+   "title": "Physical Health Data",
+   "description": "This task will collect your weight, height, and other bodily data from the Health database on the phone.",
+   "instructions": "",
+   "notification": false,
+   "types": [
+    "WEIGHT",
+    "HEIGHT",
+    "BODY_FAT_PERCENTAGE",
+    "BODY_TEMPERATURE"
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.HealthAppTask",
+   "name": "Task #23",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.health",
+     "overrideSamplingConfiguration": {
+      "__type": "dk.cachet.carp.common.application.sampling.HealthSamplingConfiguration",
+      "past": 2592000000000,
+      "future": 86400000000,
+      "healthDataTypes": [
+       "HEART_RATE",
+       "BLOOD_GLUCOSE",
+       "BLOOD_PRESSURE_DIASTOLIC",
+       "BLOOD_PRESSURE_SYSTOLIC",
+       "BLOOD_OXYGEN",
+       "RESTING_HEART_RATE",
+       "ELECTRODERMAL_ACTIVITY"
+      ]
+     }
+    }
+   ],
+   "type": "health",
+   "title": "Cardiovascular Health Data",
+   "description": "This task will collect your heart rate and other heart-related data from the Health database on the phone.",
+   "instructions": "",
+   "notification": false,
+   "types": [
+    "HEART_RATE",
+    "BLOOD_GLUCOSE",
+    "BLOOD_PRESSURE_DIASTOLIC",
+    "BLOOD_PRESSURE_SYSTOLIC",
+    "BLOOD_OXYGEN",
+    "RESTING_HEART_RATE",
+    "ELECTRODERMAL_ACTIVITY"
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.HealthAppTask",
+   "name": "Task #24",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.health",
+     "overrideSamplingConfiguration": {
+      "__type": "dk.cachet.carp.common.application.sampling.HealthSamplingConfiguration",
+      "past": 2592000000000,
+      "future": 86400000000,
+      "healthDataTypes": [
+       "STEPS",
+       "EXERCISE_TIME",
+       "DISTANCE_WALKING_RUNNING",
+       "DISTANCE_CYCLING",
+       "TOTAL_CALORIES_BURNED",
+       "ACTIVE_ENERGY_BURNED",
+       "FLIGHTS_CLIMBED",
+       "BASAL_ENERGY_BURNED",
+       "RESPIRATORY_RATE",
+       "NUTRITION",
+       "SLEEP_SESSION"
+      ]
+     }
+    }
+   ],
+   "type": "health",
+   "title": "Activity Health Data",
+   "description": "This task will collect your step, exercises, energy expenditure, respiration rate, sleep, and nutrition data from the Health database on the phone.",
+   "instructions": "",
+   "notification": false,
+   "types": [
+    "STEPS",
+    "EXERCISE_TIME",
+    "DISTANCE_WALKING_RUNNING",
+    "DISTANCE_CYCLING",
+    "TOTAL_CALORIES_BURNED",
+    "ACTIVE_ENERGY_BURNED",
+    "FLIGHTS_CLIMBED",
+    "BASAL_ENERGY_BURNED",
+    "RESPIRATORY_RATE",
+    "NUTRITION",
+    "SLEEP_SESSION"
+   ]
+  }
+ ],
+ "triggers": {
+  "0": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "1": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Polar HR Device"
+  },
+  "2": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Health Service"
+  },
+  "3": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Location Service"
+  },
+  "4": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Weather Service"
+  },
+  "5": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "6": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Location Service"
+  },
+  "7": {
+   "__type": "dk.cachet.carp.common.application.triggers.PeriodicTrigger",
+   "sourceDeviceRoleName": "Health Service",
+   "period": 60000000
+  },
+  "8": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Polar HR Device"
+  },
+  "9": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "10": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "11": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "12": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #18"
+  },
+  "13": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "14": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "15": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "16": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "17": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "18": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #16"
+  },
+  "19": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #17"
+  },
+  "20": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #20"
+  },
+  "21": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #18"
+  },
+  "22": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #19"
+  },
+  "23": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #21"
+  },
+  "24": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #22"
+  },
+  "25": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #23"
+  },
+  "26": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #24"
+  }
+ },
+ "taskControls": [
+  {
+   "triggerId": 0,
+   "taskName": "Task #7",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 1,
+   "taskName": "Task #8",
+   "destinationDeviceRoleName": "Polar HR Device",
+   "control": "Start"
+  },
+  {
+   "triggerId": 2,
+   "taskName": "Task #9",
+   "destinationDeviceRoleName": "Health Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 3,
+   "taskName": "Task #10",
+   "destinationDeviceRoleName": "Location Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 4,
+   "taskName": "Task #11",
+   "destinationDeviceRoleName": "Weather Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 5,
+   "taskName": "Task #12",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 6,
+   "taskName": "Task #13",
+   "destinationDeviceRoleName": "Location Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 7,
+   "taskName": "Task #14",
+   "destinationDeviceRoleName": "Health Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 8,
+   "taskName": "Task #15",
+   "destinationDeviceRoleName": "Polar HR Device",
+   "control": "Start"
+  },
+  {
+   "triggerId": 9,
+   "taskName": "Task #16",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 10,
+   "taskName": "Task #17",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 11,
+   "taskName": "Task #20",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 12,
+   "taskName": "Task #18",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 13,
+   "taskName": "Task #19",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 14,
+   "taskName": "Task #21",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 15,
+   "taskName": "Task #22",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 16,
+   "taskName": "Task #23",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 17,
+   "taskName": "Task #24",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 18,
+   "taskName": "Task #16",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 19,
+   "taskName": "Task #17",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 20,
+   "taskName": "Task #20",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 21,
+   "taskName": "Task #18",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 22,
+   "taskName": "Task #19",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 23,
+   "taskName": "Task #21",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 24,
+   "taskName": "Task #22",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 25,
+   "taskName": "Task #23",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 26,
+   "taskName": "Task #24",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  }
+ ],
+ "expectedParticipantData": [
+  {
+   "attribute": {
+    "__type": "dk.cachet.carp.common.application.users.ParticipantAttribute.DefaultParticipantAttribute",
+    "inputDataType": "dk.carp.webservices.input.full_name"
+   },
+   "assignedTo": {
+    "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+    "roleNames": [
+     "Participant"
+    ]
+   }
+  },
+  {
+   "attribute": {
+    "__type": "dk.cachet.carp.common.application.users.ParticipantAttribute.DefaultParticipantAttribute",
+    "inputDataType": "dk.cachet.carp.input.sex"
+   },
+   "assignedTo": {
+    "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+    "roleNames": [
+     "Participant"
+    ]
+   }
+  },
+  {
+   "attribute": {
+    "__type": "dk.cachet.carp.common.application.users.ParticipantAttribute.DefaultParticipantAttribute",
+    "inputDataType": "dk.carp.webservices.input.ssn"
+   },
+   "assignedTo": {
+    "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+    "roleNames": [
+     "Participant"
+    ]
+   }
+  },
+  {
+   "attribute": {
+    "__type": "dk.cachet.carp.common.application.users.ParticipantAttribute.DefaultParticipantAttribute",
+    "inputDataType": "dk.carp.webservices.input.informed_consent"
+   },
+   "assignedTo": {
+    "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+    "roleNames": [
+     "Participant"
+    ]
+   }
+  }
+ ]
+}

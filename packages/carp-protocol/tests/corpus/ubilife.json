@@ -1,0 +1,3390 @@
+{
+ "applicationData": {
+  "studyDescription": {
+   "__type": "StudyDescription",
+   "title": "study.description.title",
+   "description": "study.description.description",
+   "purpose": "study.description.purpose",
+   "responsible": {
+    "__type": "StudyResponsible",
+    "id": "study.responsible.id",
+    "name": "study.responsible.name",
+    "title": "study.responsible.title",
+    "email": "study.responsible.email",
+    "address": "study.responsible.address",
+    "affiliation": "study.responsible.affiliation"
+   }
+  },
+  "dataEndPoint": {
+   "__type": "CarpDataEndPoint",
+   "type": "CAWS",
+   "dataFormat": "dk.cachet.carp",
+   "uploadMethod": "stream",
+   "name": "CARP Web Service (CAWS)",
+   "onlyUploadOnWiFi": false,
+   "uploadInterval": 10,
+   "deleteWhenUploaded": false,
+   "compress": true
+  }
+ },
+ "id": "e6390b8b-8070-4f80-94e0-ec58bf0e61e6",
+ "createdOn": "2025-10-22T09:59:50.852300Z",
+ "version": 0,
+ "description": "study.description.description",
+ "ownerId": "979b408d-784e-4b1b-bb1e-ff9204e072f3",
+ "name": "UbiLife Protocol v. 1.1",
+ "participantRoles": [
+  {
+   "role": "Participant",
+   "isOptional": false
+  }
+ ],
+ "primaryDevices": [
+  {
+   "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+   "roleName": "Primary Phone",
+   "isOptional": false,
+   "defaultSamplingConfiguration": {},
+   "isPrimaryDevice": true
+  }
+ ],
+ "connectedDevices": [
+  {
+   "__type": "dk.cachet.carp.common.application.devices.LocationService",
+   "roleName": "Location Service",
+   "isOptional": true,
+   "defaultSamplingConfiguration": {},
+   "accuracy": "balanced",
+   "distance": 10.0,
+   "interval": 60000000,
+   "notificationOnTapBringToFront": false
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.devices.WeatherService",
+   "roleName": "Weather Service",
+   "isOptional": true,
+   "defaultSamplingConfiguration": {},
+   "apiKey": "12b6e28582eb9298577c734a31ba9f4f"
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.devices.AirQualityService",
+   "roleName": "Air Quality Service",
+   "isOptional": true,
+   "defaultSamplingConfiguration": {},
+   "apiKey": "9e538456b2b85c92647d8b65090e29f957638c77"
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.devices.HealthService",
+   "roleName": "Health Service",
+   "isOptional": true,
+   "defaultSamplingConfiguration": {}
+  }
+ ],
+ "connections": [
+  {
+   "roleName": "Location Service",
+   "connectedToRoleName": "Primary Phone"
+  },
+  {
+   "roleName": "Weather Service",
+   "connectedToRoleName": "Primary Phone"
+  },
+  {
+   "roleName": "Air Quality Service",
+   "connectedToRoleName": "Primary Phone"
+  },
+  {
+   "roleName": "Health Service",
+   "connectedToRoleName": "Primary Phone"
+  }
+ ],
+ "assignedDevices": {},
+ "tasks": [
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #7",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedapptask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #8",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedapptask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #9",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedapptask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #10",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedapptask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #11",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedapptask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #12",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.deviceinformation"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.stepcount"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.location"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.batterystate"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.screenevent"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.ambientlight"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.activity"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #13",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.connectivity"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.wifi"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.bluetooth"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #14",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.health",
+     "overrideSamplingConfiguration": {
+      "__type": "dk.cachet.carp.common.application.sampling.HealthSamplingConfiguration",
+      "past": 2592000000000,
+      "future": 86400000000,
+      "healthDataTypes": [
+       "WEIGHT",
+       "BODY_MASS_INDEX",
+       "BIRTH_DATE",
+       "GENDER",
+       "STEPS",
+       "HEART_RATE",
+       "HEART_RATE_VARIABILITY_RMSSD",
+       "HEART_RATE_VARIABILITY_SDNN",
+       "SLEEP_ASLEEP",
+       "SLEEP_IN_BED",
+       "SLEEP_AWAKE",
+       "SLEEP_ASLEEP",
+       "SLEEP_DEEP",
+       "SLEEP_REM",
+       "SLEEP_LIGHT"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #15",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.weather"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #16",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.airquality"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.AppTask",
+   "name": "Task #17",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.image"
+    }
+   ],
+   "type": "image",
+   "title": "task.image.demo.title",
+   "description": "task.image.demo.description",
+   "instructions": "task.image.demo.instructions",
+   "minutesToComplete": 3,
+   "notification": false
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.AppTask",
+   "name": "Task #18",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.image"
+    }
+   ],
+   "type": "image",
+   "title": "task.image.gadget.title",
+   "description": "task.image.gadget.description",
+   "instructions": "task.image.gadget.instructions",
+   "minutesToComplete": 3,
+   "notification": false
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #19",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "cognition",
+   "title": "task.cognition.flanker.title",
+   "description": "task.cognition.flanker.description",
+   "instructions": "",
+   "minutesToComplete": 3,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "task.cognition.flanker",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPFlankerActivity",
+      "identifier": "task.cognition.flanker",
+      "title": "RPActivityStep",
+      "optional": false,
+      "includeInstructions": true,
+      "includeResults": true,
+      "lengthOfTest": 30,
+      "numberOfCards": 10
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #20",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "cognition",
+   "title": "task.cognition.reaction_time.title",
+   "description": "task.cognition.reaction_time.description",
+   "instructions": "",
+   "minutesToComplete": 3,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "task.cognition.reaction_time",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPReactionTimeActivity",
+      "identifier": "task.cognition.reaction_time",
+      "title": "RPActivityStep",
+      "optional": false,
+      "includeInstructions": true,
+      "includeResults": true,
+      "lengthOfTest": 24,
+      "switchInterval": 4
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #21",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.keynote.title",
+   "description": "survey.keynote.1.question",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "survey.keynote.1.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.keynote.1.step",
+      "title": "survey.keynote.1.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option5",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option6",
+         "value": 5,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #22",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.keynote.title",
+   "description": "survey.keynote.2.question",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "survey.keynote.2.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.keynote.2.step",
+      "title": "survey.keynote.2.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option5",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option6",
+         "value": 5,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #23",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.keynote.title",
+   "description": "survey.keynote.3.question",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "survey.keynote.3.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.keynote.3.step",
+      "title": "survey.keynote.3.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option5",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option6",
+         "value": 5,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #24",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.session.title",
+   "description": "survey.session.description",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "survey.session.A.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.attending.question.A.step",
+      "title": "survey.session.attending.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "MultipleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.A.1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.A.2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.A.3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.A.4",
+         "value": 3,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "MultipleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.rating.question.A.step",
+      "title": "survey.session.rating.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option5",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option6",
+         "value": 5,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #25",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.session.title",
+   "description": "survey.session.description",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "survey.session.B.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.attending.question.B.step",
+      "title": "survey.session.attending.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "MultipleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.B.1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.B.2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.B.3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.B.4",
+         "value": 3,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "MultipleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.rating.question.B.step",
+      "title": "survey.session.rating.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option5",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option6",
+         "value": 5,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #26",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.session.title",
+   "description": "survey.session.description",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "survey.session.C.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.attending.question.C.step",
+      "title": "survey.session.attending.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "MultipleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.C.1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.C.2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.C.3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.C.4",
+         "value": 3,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "MultipleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.rating.question.C.step",
+      "title": "survey.session.rating.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option5",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option6",
+         "value": 5,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #27",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.session.title",
+   "description": "survey.session.description",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "survey.session.D.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.attending.question.D.step",
+      "title": "survey.session.attending.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "MultipleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.D.1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.D.2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.D.3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.D.4",
+         "value": 3,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "MultipleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.rating.question.D.step",
+      "title": "survey.session.rating.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option5",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option6",
+         "value": 5,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #28",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.session.title",
+   "description": "survey.session.description",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "survey.session.E.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.attending.question.E.step",
+      "title": "survey.session.attending.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "MultipleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.E.1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.E.2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.E.3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.E.4",
+         "value": 3,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "MultipleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.rating.question.E.step",
+      "title": "survey.session.rating.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option5",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option6",
+         "value": 5,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #29",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.session.title",
+   "description": "survey.session.description",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "survey.session.F.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.attending.question.F.step",
+      "title": "survey.session.attending.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "MultipleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.F.1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.F.2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.F.3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.F.4",
+         "value": 3,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "MultipleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.rating.question.F.step",
+      "title": "survey.session.rating.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option5",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option6",
+         "value": 5,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #30",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.session.title",
+   "description": "survey.session.description",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "survey.session.G.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.attending.question.G.step",
+      "title": "survey.session.attending.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "MultipleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.G.1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.G.2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.G.3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.G.4",
+         "value": 3,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "MultipleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.rating.question.G.step",
+      "title": "survey.session.rating.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option5",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option6",
+         "value": 5,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #31",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.session.title",
+   "description": "survey.session.description",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "survey.session.H.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.attending.question.H.step",
+      "title": "survey.session.attending.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "MultipleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.H.1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.H.2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.H.3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.H.4",
+         "value": 3,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "MultipleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.session.rating.question.H.step",
+      "title": "survey.session.rating.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.session.option5",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.keynote.option6",
+         "value": 5,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #32",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "onboarding.title",
+   "description": "onboarding.description",
+   "instructions": "",
+   "minutesToComplete": 4,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPNavigableOrderedTask",
+    "identifier": "onboarding.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPInstructionStep",
+      "identifier": "onboarding.instruction.step",
+      "title": "onboarding.instruction.title",
+      "text": "onboarding.instruction.text",
+      "optional": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "onboarding.age.step",
+      "title": "onboarding.age.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPIntegerAnswerFormat",
+       "minValue": 0,
+       "maxValue": 100,
+       "suffix": "onboarding.age.unit",
+       "questionType": "Integer"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "onboarding.gender.step",
+      "title": "onboarding.gender.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.gender.female",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.gender.male",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.gender.other",
+         "value": 2,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "onboarding.academic.step",
+      "title": "onboarding.academic.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.academic.student",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.academic.researcher",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.academic.postdoc",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.academic.professor",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.academic.other",
+         "value": 5,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "onboarding.presenter.step",
+      "title": "onboarding.presenter.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "MultipleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.presenter.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.presenter.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.presenter.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.presenter.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.presenter.option5",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.presenter.option6",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.presenter.option7",
+         "value": 6,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.presenter.option8",
+         "value": 7,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "MultipleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "onboarding.prior.step",
+      "title": "onboarding.prior.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.prior.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.prior.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.prior.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.prior.option4",
+         "value": 3,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPCompletionStep",
+      "identifier": "onboarding.completion.step",
+      "title": "survey.completion",
+      "text": "survey.completion.thanks",
+      "optional": false
+     }
+    ],
+    "stepNavigationRules": {}
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #35",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "offboarding.title",
+   "description": "offboarding.description",
+   "instructions": "",
+   "minutesToComplete": 4,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPNavigableOrderedTask",
+    "identifier": "onboarding.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPInstructionStep",
+      "identifier": "offboarding.instruction.step",
+      "title": "offboarding.instruction.title",
+      "text": "offboarding.instruction.text",
+      "optional": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "offboarding.friends.step",
+      "title": "offboarding.friends.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "MultipleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.friends.option1",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.friends.option2",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.friends.option3",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.friends.option4",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "MultipleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "offboarding.social.step",
+      "title": "offboarding.social.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "MultipleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.social.option1",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.social.option2",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.social.option3",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.social.option4",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.social.option5",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.social.option6",
+         "value": 6,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.social.option7",
+         "value": 7,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.social.option8",
+         "value": 8,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.social.option9",
+         "value": 9,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.social.option10",
+         "value": 10,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.social.option11",
+         "value": 11,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.social.option12",
+         "value": 12,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.social.option13",
+         "value": 13,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "MultipleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPInstructionStep",
+      "identifier": "offboarding.retro.step",
+      "title": "offboarding.retro.title",
+      "text": "offboarding.retro.text",
+      "optional": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "offboarding.retro.keep.step",
+      "title": "offboarding.retro.keep",
+      "optional": true,
+      "answerFormat": {
+       "__type": "RPTextAnswerFormat",
+       "autoFocus": false,
+       "disableHelpers": false,
+       "questionType": "Text"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "offboarding.retro.stop.step",
+      "title": "offboarding.retro.stop",
+      "optional": true,
+      "answerFormat": {
+       "__type": "RPTextAnswerFormat",
+       "autoFocus": false,
+       "disableHelpers": false,
+       "questionType": "Text"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "offboarding.retro.start.step",
+      "title": "offboarding.retro.start",
+      "optional": true,
+      "answerFormat": {
+       "__type": "RPTextAnswerFormat",
+       "autoFocus": false,
+       "disableHelpers": false,
+       "questionType": "Text"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "offboarding.finland.step",
+      "title": "offboarding.finland.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "MultipleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.finland.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.finland.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.finland.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.finland.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.finland.option5",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.finland.option6",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.finland.option7",
+         "value": 6,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.finland.option8",
+         "value": 7,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "offboarding.finland.option9",
+         "value": 8,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "MultipleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPCompletionStep",
+      "identifier": "offboarding.completion.step",
+      "title": "offboarding.completion.title",
+      "text": "offboarding.completion.thanks",
+      "optional": false
+     }
+    ],
+    "stepNavigationRules": {}
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #33",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.who5.title",
+   "description": "survey.who5.description",
+   "instructions": "",
+   "minutesToComplete": 2,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "who5.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPInstructionStep",
+      "identifier": "survey.who5.instructions",
+      "title": "survey.who5.instructions.title",
+      "text": "survey.who5.instructions.description",
+      "optional": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.who5.question.1",
+      "title": "survey.who5.question.1",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.always",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.most",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.more_half",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.less_half",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.some",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.never",
+         "value": 0,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.who5.question.2",
+      "title": "survey.who5.question.2",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.always",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.most",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.more_half",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.less_half",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.some",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.never",
+         "value": 0,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.who5.question.3",
+      "title": "survey.who5.question.3",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.always",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.most",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.more_half",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.less_half",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.some",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.never",
+         "value": 0,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.who5.question.4",
+      "title": "survey.who5.question.4",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.always",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.most",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.more_half",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.less_half",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.some",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.never",
+         "value": 0,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.who5.question.5",
+      "title": "survey.who5.question.5",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.always",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.most",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.more_half",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.less_half",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.some",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.never",
+         "value": 0,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPCompletionStep",
+      "identifier": "survey.who5.completion",
+      "title": "survey.who5.completion.title",
+      "text": "survey.who5.completion.description",
+      "optional": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #34",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.bfi.title",
+   "description": "survey.bfi.description",
+   "instructions": "",
+   "minutesToComplete": 3,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "bfi10.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question1",
+      "title": "survey.bfi.question1",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question2",
+      "title": "survey.bfi.question2",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question3",
+      "title": "survey.bfi.question3",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question4",
+      "title": "survey.bfi.question4",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question5",
+      "title": "survey.bfi.question5",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question6",
+      "title": "survey.bfi.question6",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question7",
+      "title": "survey.bfi.question7",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question8",
+      "title": "survey.bfi.question8",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question9",
+      "title": "survey.bfi.question9",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question10",
+      "title": "survey.bfi.question10",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPCompletionStep",
+      "identifier": "bfi10.completion",
+      "title": "survey.bfi.completion.title",
+      "text": "survey.bfi.completion.description",
+      "optional": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #36",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.sleep.title",
+   "description": "survey.sleep.description",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "expire": 172800000000,
+   "notification": true,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "daily.sleep.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "daily.sleep.step",
+      "title": "survey.sleep.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "daily.sleep.hours.step",
+      "title": "survey.sleep.question_hours",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.choice1",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.choice2",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.choice3",
+         "value": 1,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Task #37",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.stress.title",
+   "description": "survey.stress.description",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "expire": 172800000000,
+   "notification": true,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "daily.stress.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "daily.stress.step",
+      "title": "survey.stress.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPSliderAnswerFormat",
+       "minValue": 0.0,
+       "maxValue": 10.0,
+       "divisions": 10,
+       "prefix": "",
+       "suffix": "",
+       "questionType": "Scale"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  }
+ ],
+ "triggers": {
+  "0": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "1": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Location Service"
+  },
+  "2": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Weather Service"
+  },
+  "3": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Air Quality Service"
+  },
+  "4": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Health Service"
+  },
+  "5": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "6": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "7": {
+   "__type": "dk.cachet.carp.common.application.triggers.PeriodicTrigger",
+   "sourceDeviceRoleName": "Health Service",
+   "period": 3600000000
+  },
+  "8": {
+   "__type": "dk.cachet.carp.common.application.triggers.PeriodicTrigger",
+   "sourceDeviceRoleName": "Weather Service",
+   "period": 1800000000
+  },
+  "9": {
+   "__type": "dk.cachet.carp.common.application.triggers.PeriodicTrigger",
+   "sourceDeviceRoleName": "Air Quality Service",
+   "period": 1800000000
+  },
+  "10": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #17"
+  },
+  "11": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #18"
+  },
+  "12": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #19"
+  },
+  "13": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #20"
+  },
+  "14": {
+   "__type": "dk.cachet.carp.common.application.triggers.OneTimeTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "15": {
+   "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #21",
+   "triggerCondition": "done"
+  },
+  "16": {
+   "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #22",
+   "triggerCondition": "done"
+  },
+  "17": {
+   "__type": "dk.cachet.carp.common.application.triggers.OneTimeTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "18": {
+   "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #24",
+   "triggerCondition": "done"
+  },
+  "19": {
+   "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #25",
+   "triggerCondition": "done"
+  },
+  "20": {
+   "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #26",
+   "triggerCondition": "done"
+  },
+  "21": {
+   "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #27",
+   "triggerCondition": "done"
+  },
+  "22": {
+   "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #28",
+   "triggerCondition": "done"
+  },
+  "23": {
+   "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #29",
+   "triggerCondition": "done"
+  },
+  "24": {
+   "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #30",
+   "triggerCondition": "done"
+  },
+  "25": {
+   "__type": "dk.cachet.carp.common.application.triggers.OneTimeTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "26": {
+   "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Task #32",
+   "triggerCondition": "done"
+  },
+  "27": {
+   "__type": "dk.cachet.carp.common.application.triggers.OneTimeTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "28": {
+   "__type": "dk.cachet.carp.common.application.triggers.OneTimeTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "29": {
+   "__type": "dk.cachet.carp.common.application.triggers.CronScheduledTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "cronExpression": "0 10 * * *"
+  },
+  "30": {
+   "__type": "dk.cachet.carp.common.application.triggers.CronScheduledTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "cronExpression": "0 16 * * *"
+  }
+ },
+ "taskControls": [
+  {
+   "triggerId": 0,
+   "taskName": "Task #7",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 1,
+   "taskName": "Task #8",
+   "destinationDeviceRoleName": "Location Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 2,
+   "taskName": "Task #9",
+   "destinationDeviceRoleName": "Weather Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 3,
+   "taskName": "Task #10",
+   "destinationDeviceRoleName": "Air Quality Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 4,
+   "taskName": "Task #11",
+   "destinationDeviceRoleName": "Health Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 5,
+   "taskName": "Task #12",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 6,
+   "taskName": "Task #13",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 7,
+   "taskName": "Task #14",
+   "destinationDeviceRoleName": "Health Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 8,
+   "taskName": "Task #15",
+   "destinationDeviceRoleName": "Weather Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 9,
+   "taskName": "Task #16",
+   "destinationDeviceRoleName": "Air Quality Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 10,
+   "taskName": "Task #17",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 11,
+   "taskName": "Task #18",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 12,
+   "taskName": "Task #19",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 13,
+   "taskName": "Task #20",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 14,
+   "taskName": "Task #21",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 15,
+   "taskName": "Task #22",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 16,
+   "taskName": "Task #23",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 17,
+   "taskName": "Task #24",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 18,
+   "taskName": "Task #25",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 19,
+   "taskName": "Task #26",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 20,
+   "taskName": "Task #27",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 21,
+   "taskName": "Task #28",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 22,
+   "taskName": "Task #29",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 23,
+   "taskName": "Task #30",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 24,
+   "taskName": "Task #31",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 25,
+   "taskName": "Task #32",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 26,
+   "taskName": "Task #35",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 27,
+   "taskName": "Task #33",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 28,
+   "taskName": "Task #34",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 29,
+   "taskName": "Task #36",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 30,
+   "taskName": "Task #37",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  }
+ ],
+ "expectedParticipantData": []
+}

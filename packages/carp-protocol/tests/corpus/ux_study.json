@@ -1,0 +1,1853 @@
+{
+ "applicationData": {
+  "studyDescription": {
+   "__type": "StudyDescription",
+   "title": "study.description.title",
+   "description": "study.description.description",
+   "purpose": "study.description.purpose",
+   "responsible": {
+    "__type": "StudyResponsible",
+    "id": "study.responsible.id",
+    "name": "study.responsible.name",
+    "title": "study.responsible.title",
+    "email": "study.responsible.email",
+    "address": "study.responsible.address",
+    "affiliation": "study.responsible.affiliation"
+   }
+  },
+  "dataEndPoint": {
+   "__type": "CarpDataEndPoint",
+   "type": "CAWS",
+   "dataFormat": "dk.cachet.carp",
+   "uploadMethod": "stream",
+   "name": "CARP Web Service (CAWS)",
+   "onlyUploadOnWiFi": false,
+   "uploadInterval": 10,
+   "deleteWhenUploaded": false,
+   "compress": true
+  }
+ },
+ "id": "e4482a53-c1ea-404d-bb1e-e2066ea6a253",
+ "createdOn": "2025-11-27T07:38:42.920731Z",
+ "version": 0,
+ "description": "study.description.description",
+ "ownerId": "979b408d-784e-4b1b-bb1e-ff9204e072f3",
+ "name": "CARP Studies UX Study",
+ "participantRoles": [
+  {
+   "role": "Participant",
+   "isOptional": false
+  }
+ ],
+ "primaryDevices": [
+  {
+   "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+   "roleName": "Primary Phone",
+   "isOptional": false,
+   "defaultSamplingConfiguration": {},
+   "isPrimaryDevice": true
+  }
+ ],
+ "connectedDevices": [
+  {
+   "__type": "dk.cachet.carp.common.application.devices.LocationService",
+   "roleName": "Location Service",
+   "isOptional": true,
+   "defaultSamplingConfiguration": {},
+   "accuracy": "balanced",
+   "distance": 10.0,
+   "interval": 60000000,
+   "notificationOnTapBringToFront": false
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.devices.PolarDevice",
+   "roleName": "Polar HR Device",
+   "isOptional": true,
+   "defaultSamplingConfiguration": {}
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.devices.WeatherService",
+   "roleName": "Weather Service",
+   "isOptional": true,
+   "defaultSamplingConfiguration": {},
+   "apiKey": "12b6e28582eb9298577c734a31ba9f4f"
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.devices.AirQualityService",
+   "roleName": "Air Quality Service",
+   "isOptional": true,
+   "defaultSamplingConfiguration": {},
+   "apiKey": "9e538456b2b85c92647d8b65090e29f957638c77"
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.devices.HealthService",
+   "roleName": "Health Service",
+   "isOptional": true,
+   "defaultSamplingConfiguration": {}
+  }
+ ],
+ "connections": [
+  {
+   "roleName": "Location Service",
+   "connectedToRoleName": "Primary Phone"
+  },
+  {
+   "roleName": "Polar HR Device",
+   "connectedToRoleName": "Primary Phone"
+  },
+  {
+   "roleName": "Weather Service",
+   "connectedToRoleName": "Primary Phone"
+  },
+  {
+   "roleName": "Air Quality Service",
+   "connectedToRoleName": "Primary Phone"
+  },
+  {
+   "roleName": "Health Service",
+   "connectedToRoleName": "Primary Phone"
+  }
+ ],
+ "assignedDevices": {},
+ "tasks": [
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #7",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedapptask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #8",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedapptask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #9",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedapptask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #10",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedapptask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #11",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedapptask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Task #12",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.error"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.triggeredtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedtask"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.heartbeat"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.completedapptask"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Background Sensing",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.deviceinformation"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.stepcount"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.location"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.batterystate"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.screenevent"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.ambientlight"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.activity"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Connectivity",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.connectivity"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.wifi"
+    },
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.bluetooth"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Polar HR",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.polar.hr"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Health Data",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.health",
+     "overrideSamplingConfiguration": {
+      "__type": "dk.cachet.carp.common.application.sampling.HealthSamplingConfiguration",
+      "past": 2592000000000,
+      "future": 86400000000,
+      "healthDataTypes": [
+       "WEIGHT",
+       "BODY_MASS_INDEX",
+       "BIRTH_DATE",
+       "GENDER",
+       "STEPS",
+       "HEART_RATE",
+       "HEART_RATE_VARIABILITY_RMSSD",
+       "HEART_RATE_VARIABILITY_SDNN",
+       "SLEEP_ASLEEP",
+       "SLEEP_IN_BED",
+       "SLEEP_AWAKE",
+       "SLEEP_ASLEEP",
+       "SLEEP_DEEP",
+       "SLEEP_REM",
+       "SLEEP_LIGHT"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Weather",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.weather"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+   "name": "Air Quality",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.airquality"
+    }
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.AppTask",
+   "name": "Image Task - Best Gadget",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.image"
+    }
+   ],
+   "type": "image",
+   "title": "task.image.gadget.title",
+   "description": "task.image.gadget.description",
+   "instructions": "task.image.gadget.instructions",
+   "minutesToComplete": 3,
+   "notification": false
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.HealthAppTask",
+   "name": "Health Task",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.health",
+     "overrideSamplingConfiguration": {
+      "__type": "dk.cachet.carp.common.application.sampling.HealthSamplingConfiguration",
+      "past": 2592000000000,
+      "future": 86400000000,
+      "healthDataTypes": [
+       "WEIGHT",
+       "HEIGHT",
+       "BODY_FAT_PERCENTAGE",
+       "BODY_TEMPERATURE"
+      ]
+     }
+    }
+   ],
+   "type": "health",
+   "title": "task.health.title",
+   "description": "task.health.description",
+   "instructions": "",
+   "notification": false,
+   "types": [
+    "WEIGHT",
+    "HEIGHT",
+    "BODY_FAT_PERCENTAGE",
+    "BODY_TEMPERATURE"
+   ]
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Flanker Task",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "cognition",
+   "title": "task.cognition.flanker.title",
+   "description": "task.cognition.flanker.description",
+   "instructions": "",
+   "minutesToComplete": 3,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "task.cognition.flanker",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPFlankerActivity",
+      "identifier": "task.cognition.flanker",
+      "title": "RPActivityStep",
+      "optional": false,
+      "includeInstructions": true,
+      "includeResults": true,
+      "lengthOfTest": 30,
+      "numberOfCards": 10
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Reaction Time Task",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "cognition",
+   "title": "task.cognition.reaction_time.title",
+   "description": "task.cognition.reaction_time.description",
+   "instructions": "",
+   "minutesToComplete": 3,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "task.cognition.reaction_time",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPReactionTimeActivity",
+      "identifier": "task.cognition.reaction_time",
+      "title": "RPActivityStep",
+      "optional": false,
+      "includeInstructions": true,
+      "includeResults": true,
+      "lengthOfTest": 24,
+      "switchInterval": 4
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Onboarding Survey",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "onboarding.title",
+   "description": "onboarding.description",
+   "instructions": "",
+   "minutesToComplete": 4,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPNavigableOrderedTask",
+    "identifier": "onboarding.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPInstructionStep",
+      "identifier": "onboarding.instruction.step",
+      "title": "onboarding.instruction.title",
+      "text": "onboarding.instruction.text",
+      "optional": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "onboarding.age.step",
+      "title": "onboarding.age.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPIntegerAnswerFormat",
+       "minValue": 0,
+       "maxValue": 100,
+       "suffix": "onboarding.age.unit",
+       "questionType": "Integer"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "onboarding.gender.step",
+      "title": "onboarding.gender.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.gender.female",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.gender.male",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.gender.other",
+         "value": 2,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "onboarding.academic.step",
+      "title": "onboarding.academic.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.academic.student",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.academic.researcher",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.academic.postdoc",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.academic.professor",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "onboarding.academic.other",
+         "value": 5,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "onboarding.research.step",
+      "title": "onboarding.research.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPTextAnswerFormat",
+       "autoFocus": true,
+       "disableHelpers": false,
+       "questionType": "Text"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPCompletionStep",
+      "identifier": "onboarding.completion.step",
+      "title": "survey.completion",
+      "text": "survey.completion.thanks",
+      "optional": false
+     }
+    ],
+    "stepNavigationRules": {}
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "WHO5 Survey",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.who5.title",
+   "description": "survey.who5.description",
+   "instructions": "",
+   "minutesToComplete": 2,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "who5.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPInstructionStep",
+      "identifier": "survey.who5.instructions",
+      "title": "survey.who5.instructions.title",
+      "text": "survey.who5.instructions.description",
+      "optional": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.who5.question.1",
+      "title": "survey.who5.question.1",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.always",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.most",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.more_half",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.less_half",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.some",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.never",
+         "value": 0,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.who5.question.2",
+      "title": "survey.who5.question.2",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.always",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.most",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.more_half",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.less_half",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.some",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.never",
+         "value": 0,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.who5.question.3",
+      "title": "survey.who5.question.3",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.always",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.most",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.more_half",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.less_half",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.some",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.never",
+         "value": 0,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.who5.question.4",
+      "title": "survey.who5.question.4",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.always",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.most",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.more_half",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.less_half",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.some",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.never",
+         "value": 0,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "survey.who5.question.5",
+      "title": "survey.who5.question.5",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.always",
+         "value": 5,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.most",
+         "value": 4,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.more_half",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.less_half",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.some",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.who5.never",
+         "value": 0,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPCompletionStep",
+      "identifier": "survey.who5.completion",
+      "title": "survey.who5.completion.title",
+      "text": "survey.who5.completion.description",
+      "optional": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "BFI Survey",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.bfi.title",
+   "description": "survey.bfi.description",
+   "instructions": "",
+   "minutesToComplete": 3,
+   "notification": false,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "bfi10.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question1",
+      "title": "survey.bfi.question1",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question2",
+      "title": "survey.bfi.question2",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question3",
+      "title": "survey.bfi.question3",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question4",
+      "title": "survey.bfi.question4",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question5",
+      "title": "survey.bfi.question5",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question6",
+      "title": "survey.bfi.question6",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question7",
+      "title": "survey.bfi.question7",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question8",
+      "title": "survey.bfi.question8",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question9",
+      "title": "survey.bfi.question9",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "bfi10.question10",
+      "title": "survey.bfi.question10",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.bfi.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPCompletionStep",
+      "identifier": "bfi10.completion",
+      "title": "survey.bfi.completion.title",
+      "text": "survey.bfi.completion.description",
+      "optional": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Sleep Survey",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.sleep.title",
+   "description": "survey.sleep.description",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "expire": 172800000000,
+   "notification": true,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "daily.sleep.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "daily.sleep.step",
+      "title": "survey.sleep.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.option1",
+         "value": 0,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.option2",
+         "value": 1,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.option3",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.option4",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.option5",
+         "value": 4,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     },
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "daily.sleep.hours.step",
+      "title": "survey.sleep.question_hours",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPChoiceAnswerFormat",
+       "questionType": "SingleChoice",
+       "choices": [
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.choice1",
+         "value": 3,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.choice2",
+         "value": 2,
+         "isFreeText": false
+        },
+        {
+         "__type": "RPChoice",
+         "text": "survey.sleep.choice3",
+         "value": 1,
+         "isFreeText": false
+        }
+       ],
+       "answerStyle": "SingleChoice"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  },
+  {
+   "__type": "dk.cachet.carp.common.application.tasks.RPAppTask",
+   "name": "Stress Survey",
+   "measures": [
+    {
+     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+     "type": "dk.cachet.carp.survey"
+    }
+   ],
+   "type": "survey",
+   "title": "survey.stress.title",
+   "description": "survey.stress.description",
+   "instructions": "",
+   "minutesToComplete": 1,
+   "expire": 172800000000,
+   "notification": true,
+   "rpTask": {
+    "__type": "RPOrderedTask",
+    "identifier": "daily.stress.task",
+    "closeAfterFinished": true,
+    "steps": [
+     {
+      "__type": "RPQuestionStep",
+      "identifier": "daily.stress.step",
+      "title": "survey.stress.question",
+      "optional": false,
+      "answerFormat": {
+       "__type": "RPSliderAnswerFormat",
+       "minValue": 0.0,
+       "maxValue": 10.0,
+       "divisions": 10,
+       "prefix": "",
+       "suffix": "",
+       "questionType": "Scale"
+      },
+      "autoSkip": false,
+      "timeout": 0,
+      "autoFocus": false
+     }
+    ]
+   }
+  }
+ ],
+ "triggers": {
+  "0": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "1": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Location Service"
+  },
+  "2": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Polar HR Device"
+  },
+  "3": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Weather Service"
+  },
+  "4": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Air Quality Service"
+  },
+  "5": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+   "sourceDeviceRoleName": "Health Service"
+  },
+  "6": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "7": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "8": {
+   "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+   "sourceDeviceRoleName": "Polar HR Device"
+  },
+  "9": {
+   "__type": "dk.cachet.carp.common.application.triggers.PeriodicTrigger",
+   "sourceDeviceRoleName": "Health Service",
+   "period": 3600000000
+  },
+  "10": {
+   "__type": "dk.cachet.carp.common.application.triggers.PeriodicTrigger",
+   "sourceDeviceRoleName": "Weather Service",
+   "period": 1800000000
+  },
+  "11": {
+   "__type": "dk.cachet.carp.common.application.triggers.PeriodicTrigger",
+   "sourceDeviceRoleName": "Air Quality Service",
+   "period": 1800000000
+  },
+  "12": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Image Task - Best Gadget"
+  },
+  "13": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Health Task"
+  },
+  "14": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Flanker Task"
+  },
+  "15": {
+   "__type": "dk.cachet.carp.common.application.triggers.NoUserTaskTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "taskName": "Reaction Time Task"
+  },
+  "16": {
+   "__type": "dk.cachet.carp.common.application.triggers.OneTimeTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "17": {
+   "__type": "dk.cachet.carp.common.application.triggers.OneTimeTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "18": {
+   "__type": "dk.cachet.carp.common.application.triggers.OneTimeTrigger",
+   "sourceDeviceRoleName": "Primary Phone"
+  },
+  "19": {
+   "__type": "dk.cachet.carp.common.application.triggers.CronScheduledTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "cronExpression": "0 10 * * *"
+  },
+  "20": {
+   "__type": "dk.cachet.carp.common.application.triggers.CronScheduledTrigger",
+   "sourceDeviceRoleName": "Primary Phone",
+   "cronExpression": "0 16 * * *"
+  }
+ },
+ "taskControls": [
+  {
+   "triggerId": 0,
+   "taskName": "Task #7",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 1,
+   "taskName": "Task #8",
+   "destinationDeviceRoleName": "Location Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 2,
+   "taskName": "Task #9",
+   "destinationDeviceRoleName": "Polar HR Device",
+   "control": "Start"
+  },
+  {
+   "triggerId": 3,
+   "taskName": "Task #10",
+   "destinationDeviceRoleName": "Weather Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 4,
+   "taskName": "Task #11",
+   "destinationDeviceRoleName": "Air Quality Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 5,
+   "taskName": "Task #12",
+   "destinationDeviceRoleName": "Health Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 6,
+   "taskName": "Background Sensing",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 7,
+   "taskName": "Connectivity",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 8,
+   "taskName": "Polar HR",
+   "destinationDeviceRoleName": "Polar HR Device",
+   "control": "Start"
+  },
+  {
+   "triggerId": 9,
+   "taskName": "Health Data",
+   "destinationDeviceRoleName": "Health Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 10,
+   "taskName": "Weather",
+   "destinationDeviceRoleName": "Weather Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 11,
+   "taskName": "Air Quality",
+   "destinationDeviceRoleName": "Air Quality Service",
+   "control": "Start"
+  },
+  {
+   "triggerId": 12,
+   "taskName": "Image Task - Best Gadget",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 13,
+   "taskName": "Health Task",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 14,
+   "taskName": "Flanker Task",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 15,
+   "taskName": "Reaction Time Task",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 16,
+   "taskName": "Onboarding Survey",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 17,
+   "taskName": "WHO5 Survey",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 18,
+   "taskName": "BFI Survey",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 19,
+   "taskName": "Sleep Survey",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  },
+  {
+   "triggerId": 20,
+   "taskName": "Stress Survey",
+   "destinationDeviceRoleName": "Primary Phone",
+   "control": "Start"
+  }
+ ],
+ "expectedParticipantData": [
+  {
+   "attribute": {
+    "__type": "dk.cachet.carp.common.application.users.ParticipantAttribute.DefaultParticipantAttribute",
+    "inputDataType": "dk.carp.webservices.input.full_name"
+   },
+   "assignedTo": {
+    "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+    "roleNames": [
+     "Participant"
+    ]
+   }
+  },
+  {
+   "attribute": {
+    "__type": "dk.cachet.carp.common.application.users.ParticipantAttribute.DefaultParticipantAttribute",
+    "inputDataType": "dk.cachet.carp.input.sex"
+   },
+   "assignedTo": {
+    "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+    "roleNames": [
+     "Participant"
+    ]
+   }
+  },
+  {
+   "attribute": {
+    "__type": "dk.cachet.carp.common.application.users.ParticipantAttribute.DefaultParticipantAttribute",
+    "inputDataType": "dk.carp.webservices.input.ssn"
+   },
+   "assignedTo": {
+    "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+    "roleNames": [
+     "Participant"
+    ]
+   }
+  },
+  {
+   "attribute": {
+    "__type": "dk.cachet.carp.common.application.users.ParticipantAttribute.DefaultParticipantAttribute",
+    "inputDataType": "dk.carp.webservices.input.informed_consent"
+   },
+   "assignedTo": {
+    "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+    "roleNames": [
+     "Participant"
+    ]
+   }
+  }
+ ]
+}

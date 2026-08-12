@@ -1,0 +1,129 @@
+{
+    "id": "bf9eb630-73f7-11ee-9063-9df29e0fafa1",
+    "createdOn": "2023-10-26T12:04:00.403400Z",
+    "version": 0,
+    "ownerId": "to_be_set_on_upload",
+    "name": "ICAT Study Protocol",
+    "description": "A CARP study protocol for the Internet Cognition Assessment Tool (ICAT).",
+    "participantRoles": [
+        {
+            "role": "Version 1",
+            "isOptional": true
+        },
+        {
+            "role": "Version 2",
+            "isOptional": true
+        }
+    ],
+    "primaryDevices": [
+        {
+            "__type": "dk.cachet.carp.common.application.devices.WebBrowser",
+            "roleName": "ICAT Web Browser",
+            "defaultSamplingConfiguration": {},
+            "isPrimaryDevice": true
+        }
+    ],
+    "connectedDevices": [],
+    "connections": [],
+    "assignedDevices": {},
+    "tasks": [
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.WebTask",
+            "name": "List Learning",
+            "measures": [],
+            "description": "Testing verbal memory (immediate recall).",
+            "url": "https://icat.cachet.dk"
+        },
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.WebTask",
+            "name": "Consonant Repetition",
+            "measures": [],
+            "description": "Testing working memory.",
+            "url": "https://icat.cachet.dk"
+        },
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.WebTask",
+            "name": "Wechsler Adult Intelligence Scale letter-number sequencing",
+            "measures": [],
+            "description": "Testing working memory.",
+            "url": "https://icat.cachet.dk"
+        },
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.WebTask",
+            "name": "Delayed List Learning",
+            "measures": [],
+            "description": "Testing delayed verbal memory (delayed recall).",
+            "url": "https://icat.cachet.dk"
+        },
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.WebTask",
+            "name": "Visuo-motor Tracking",
+            "measures": [],
+            "description": "Testing psychomotor speed.",
+            "url": "https://icat.cachet.dk"
+        }
+    ],
+    "triggers": {
+        "0": {
+            "__type": "dk.cachet.carp.common.application.triggers.OneTimeTrigger",
+            "sourceDeviceRoleName": "ICAT Web Browser"
+        },
+        "1": {
+            "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
+            "sourceDeviceRoleName": "ICAT Web Browser",
+            "taskName": "List Learning",
+            "triggerCondition": "done"
+        },
+        "2": {
+            "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
+            "sourceDeviceRoleName": "ICAT Web Browser",
+            "taskName": "Consonant Repetition",
+            "triggerCondition": "done"
+        },
+        "3": {
+            "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
+            "sourceDeviceRoleName": "ICAT Web Browser",
+            "taskName": "Wechsler Adult Intelligence Scale letter-number sequencing",
+            "triggerCondition": "done"
+        },
+        "4": {
+            "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
+            "sourceDeviceRoleName": "ICAT Web Browser",
+            "taskName": "Delayed List Learning",
+            "triggerCondition": "done"
+        }
+    },
+    "taskControls": [
+        {
+            "triggerId": 0,
+            "taskName": "List Learning",
+            "destinationDeviceRoleName": "ICAT Web Browser",
+            "control": "Start"
+        },
+        {
+            "triggerId": 1,
+            "taskName": "Consonant Repetition",
+            "destinationDeviceRoleName": "ICAT Web Browser",
+            "control": "Start"
+        },
+        {
+            "triggerId": 2,
+            "taskName": "Wechsler Adult Intelligence Scale letter-number sequencing",
+            "destinationDeviceRoleName": "ICAT Web Browser",
+            "control": "Start"
+        },
+        {
+            "triggerId": 3,
+            "taskName": "Delayed List Learning",
+            "destinationDeviceRoleName": "ICAT Web Browser",
+            "control": "Start"
+        },
+        {
+            "triggerId": 4,
+            "taskName": "Visuo-motor Tracking",
+            "destinationDeviceRoleName": "ICAT Web Browser",
+            "control": "Start"
+        }
+    ],
+    "expectedParticipantData": []
+}
