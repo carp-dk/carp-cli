@@ -94,7 +94,10 @@ pub(super) fn picker_key(studio: &mut Studio, key: KeyEvent) -> Request {
 
 /// Keys while a form is open.
 pub(super) fn form_key(studio: &mut Studio, key: KeyEvent) -> Request {
-    let typing = studio.form.as_ref().is_some_and(crate::app::form::Form::is_typing);
+    let typing = studio
+        .form
+        .as_ref()
+        .is_some_and(crate::app::form::Form::is_typing);
 
     if typing {
         return typing_key(studio, key);

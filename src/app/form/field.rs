@@ -182,9 +182,10 @@ impl FieldValue {
             Self::Integer { value, .. } => Some(value.to_string()),
             Self::Duration(duration) => Some(duration.human()),
             Self::Time(time) => Some(time.label()),
-            Self::Toggle(_) | Self::Choice { .. } | Self::Catalog { .. } | Self::CatalogSet { .. } => {
-                None
-            }
+            Self::Toggle(_)
+            | Self::Choice { .. }
+            | Self::Catalog { .. }
+            | Self::CatalogSet { .. } => None,
         }
     }
 
@@ -219,9 +220,10 @@ impl FieldValue {
                     .ok_or_else(|| format!("{text:?} is not a time, try 20:00"))?;
                 Ok(())
             }
-            Self::Toggle(_) | Self::Choice { .. } | Self::Catalog { .. } | Self::CatalogSet { .. } => {
-                Err("this field is not typed into".to_owned())
-            }
+            Self::Toggle(_)
+            | Self::Choice { .. }
+            | Self::Catalog { .. }
+            | Self::CatalogSet { .. } => Err("this field is not typed into".to_owned()),
         }
     }
 }

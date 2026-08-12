@@ -29,8 +29,8 @@
 pub mod apply;
 pub mod build;
 pub mod field;
-pub mod read;
 pub mod picker;
+pub mod read;
 
 pub use field::{Choice, Field, FieldValue, Vocabulary};
 
@@ -131,7 +131,9 @@ impl Form {
             return;
         }
         let last = self.fields.len() as isize - 1;
-        let next = (self.selected as isize).saturating_add(delta).clamp(0, last);
+        let next = (self.selected as isize)
+            .saturating_add(delta)
+            .clamp(0, last);
         self.selected = next as usize;
         self.error = None;
     }
@@ -253,7 +255,10 @@ impl Form {
     pub fn set_selected_many(&mut self, values: Vec<String>) {
         if let Some(FieldValue::CatalogSet {
             values: current, ..
-        }) = self.fields.get_mut(self.selected).map(|field| &mut field.value)
+        }) = self
+            .fields
+            .get_mut(self.selected)
+            .map(|field| &mut field.value)
         {
             *current = values;
             self.dirty = true;

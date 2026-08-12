@@ -27,7 +27,12 @@ fn a_number_outside_its_bounds_is_refused_with_a_reason() {
     assert_eq!(error, "must be between 0 and 10");
     assert_eq!(value.as_integer(), Some(7), "the old value is kept");
 
-    assert!(value.accept_text("four").unwrap_err().contains("whole number"));
+    assert!(
+        value
+            .accept_text("four")
+            .unwrap_err()
+            .contains("whole number")
+    );
 }
 
 /// Durations are where a wrong unit is invisible, so the field parses the
@@ -43,7 +48,12 @@ fn a_duration_is_typed_in_human_units() {
     assert!(value.accept_text("1h30m").is_ok());
     assert_eq!(value.as_duration(), Some(Micros::from_minutes(90)));
 
-    assert!(value.accept_text("soon").unwrap_err().contains("not a duration"));
+    assert!(
+        value
+            .accept_text("soon")
+            .unwrap_err()
+            .contains("not a duration")
+    );
 }
 
 #[test]
@@ -54,7 +64,12 @@ fn a_time_is_typed_as_hours_and_minutes() {
     assert_eq!(value.as_time(), Some(TimeOfDay::new(20, 0)));
     assert_eq!(value.display(), "20:00");
 
-    assert!(value.accept_text("25:00").unwrap_err().contains("not a time"));
+    assert!(
+        value
+            .accept_text("25:00")
+            .unwrap_err()
+            .contains("not a time")
+    );
     assert_eq!(value.as_time(), Some(TimeOfDay::new(20, 0)));
 }
 

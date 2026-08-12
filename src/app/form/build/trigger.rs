@@ -22,8 +22,13 @@ use super::device_choice;
 /// something that does not exist.
 pub fn trigger(id: u32, trigger: &Trigger, protocol: &StudyProtocol) -> Form {
     let mut fields = vec![
-        device_choice("source_device", "Fires on", trigger.source_device(), protocol)
-            .with_help("The device this trigger is evaluated on"),
+        device_choice(
+            "source_device",
+            "Fires on",
+            trigger.source_device(),
+            protocol,
+        )
+        .with_help("The device this trigger is evaluated on"),
     ];
 
     if let Trigger::Known(known) = trigger {
@@ -150,8 +155,12 @@ fn day_of_week_field(current: Option<u8>) -> Field {
         .position(|choice| choice.value == current.unwrap_or(1).to_string())
         .unwrap_or(0);
 
-    Field::new("day_of_week", "On", FieldValue::Choice { options, selected })
-        .with_help("Only used by a weekly or biweekly schedule")
+    Field::new(
+        "day_of_week",
+        "On",
+        FieldValue::Choice { options, selected },
+    )
+    .with_help("Only used by a weekly or biweekly schedule")
 }
 
 fn watched_task_field(current: &str, protocol: &StudyProtocol) -> Field {

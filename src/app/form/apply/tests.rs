@@ -36,8 +36,18 @@ pub(super) fn protocol() -> StudyProtocol {
         &phone,
         TriggerKind::RecurrentScheduled,
     );
-    builder::add_task(&mut protocol, TaskKind::HealthApp, &phone, TriggerKind::Periodic);
-    builder::add_task(&mut protocol, TaskKind::Background, &phone, TriggerKind::Immediate);
+    builder::add_task(
+        &mut protocol,
+        TaskKind::HealthApp,
+        &phone,
+        TriggerKind::Periodic,
+    );
+    builder::add_task(
+        &mut protocol,
+        TaskKind::Background,
+        &phone,
+        TriggerKind::Immediate,
+    );
 
     let watcher = builder::add_trigger(&mut protocol, TriggerKind::UserTask, &phone);
     protocol
@@ -48,12 +58,12 @@ pub(super) fn protocol() -> StudyProtocol {
     builder::add_task_control(&mut protocol, watcher, "Health Task", &phone);
 
     builder::add_participant_role(&mut protocol, "Participant");
-    protocol
-        .expected_participant_data
-        .push(carp_protocol::participant::ExpectedParticipantData::for_roles(
+    protocol.expected_participant_data.push(
+        carp_protocol::participant::ExpectedParticipantData::for_roles(
             "dk.carp.webservices.input.informed_consent",
             vec!["Participant".to_owned()],
-        ));
+        ),
+    );
 
     // Give the survey a step, so the step form has something to open.
     let survey = protocol
@@ -62,9 +72,14 @@ pub(super) fn protocol() -> StudyProtocol {
         .find(|task| task.name() == "Survey")
         .and_then(carp_protocol::task::Task::survey_mut)
         .unwrap();
-    survey.steps_mut().unwrap().push(
-        carp_protocol::survey::RpStep::instruction("intro", "Welcome", "Please answer honestly."),
-    );
+    survey
+        .steps_mut()
+        .unwrap()
+        .push(carp_protocol::survey::RpStep::instruction(
+            "intro",
+            "Welcome",
+            "Please answer honestly.",
+        ));
 
     protocol
 }
@@ -81,7 +96,12 @@ pub(super) fn all_forms(protocol: &StudyProtocol) -> Vec<crate::app::form::Form>
             .iter()
             .map(|(id, trigger)| build::trigger(*id, trigger, protocol)),
     );
-    forms.extend(protocol.participant_roles.iter().map(build::participant_role));
+    forms.extend(
+        protocol
+            .participant_roles
+            .iter()
+            .map(build::participant_role),
+    );
     forms.extend(
         protocol
             .expected_participant_data

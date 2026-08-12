@@ -78,7 +78,10 @@ fn a_placeholder_owner_blocks_upload_but_not_validation() {
     let check = UploadCheck::run(&protocol);
     assert!(!check.is_ready());
     assert!(
-        check.blockers.iter().any(|blocker| blocker.contains("owner id")),
+        check
+            .blockers
+            .iter()
+            .any(|blocker| blocker.contains("owner id")),
         "{:?}",
         check.blockers
     );

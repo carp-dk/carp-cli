@@ -119,9 +119,14 @@ fn renaming_a_survey_step_rewires_its_branches() {
         .and_then(carp_protocol::task::Task::survey_mut)
         .unwrap();
     survey.set_navigable(true);
-    survey.steps_mut().unwrap().push(
-        carp_protocol::survey::RpStep::instruction("outro", "Thanks", "All done."),
-    );
+    survey
+        .steps_mut()
+        .unwrap()
+        .push(carp_protocol::survey::RpStep::instruction(
+            "outro",
+            "Thanks",
+            "All done.",
+        ));
     survey.navigation_rules_mut().unwrap().insert(
         "intro".to_owned(),
         carp_protocol::survey::RpStepNavigationRule::jump(std::collections::BTreeMap::from([(
@@ -156,9 +161,14 @@ fn a_duplicate_step_identifier_is_refused() {
         .find(|task| task.name() == "Survey")
         .and_then(carp_protocol::task::Task::survey_mut)
         .unwrap();
-    survey.steps_mut().unwrap().push(
-        carp_protocol::survey::RpStep::instruction("outro", "Thanks", "All done."),
-    );
+    survey
+        .steps_mut()
+        .unwrap()
+        .push(carp_protocol::survey::RpStep::instruction(
+            "outro",
+            "Thanks",
+            "All done.",
+        ));
 
     let step = protocol.task("Survey").unwrap().survey().unwrap().steps()[1].clone();
     let mut form = build::survey_step("Survey", 1, &step);
@@ -193,7 +203,11 @@ fn zero_stands_for_absent_on_the_wire() {
     let mut form = build::task(protocol.task("Survey").unwrap());
 
     for key in ["minutes_to_complete", "expire"] {
-        form.selected = form.fields.iter().position(|field| field.key == key).unwrap();
+        form.selected = form
+            .fields
+            .iter()
+            .position(|field| field.key == key)
+            .unwrap();
         assert!(form.begin_typing());
         form.clear_buffer();
         for character in "0".chars() {
@@ -225,7 +239,10 @@ fn editing_study_app_settings_creates_the_block_when_absent() {
     form.set_selected("study.description.title".to_owned());
 
     assert_eq!(apply(&mut protocol, &form), Applied::Changed);
-    let data = protocol.application_data.as_ref().expect("the block was created");
+    let data = protocol
+        .application_data
+        .as_ref()
+        .expect("the block was created");
     assert_eq!(
         data.study_description.as_ref().unwrap().title,
         "study.description.title"
@@ -241,7 +258,11 @@ fn a_malformed_cron_expression_is_refused() {
     let trigger = protocol.triggers[&id].clone();
 
     let mut form = build::trigger(id, &trigger, &protocol);
-    form.selected = form.fields.iter().position(|field| field.key == "cron").unwrap();
+    form.selected = form
+        .fields
+        .iter()
+        .position(|field| field.key == "cron")
+        .unwrap();
     form.set_selected("0 10 *".to_owned());
 
     assert!(matches!(

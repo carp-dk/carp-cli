@@ -81,11 +81,10 @@ pub fn remove_participant_role(protocol: &mut StudyProtocol, name: &str) {
         if remaining.is_empty() {
             return false;
         }
-        expected.assigned_to = crate::participant::AssignedTo::Known(
-            crate::participant::KnownAssignedTo::Roles {
+        expected.assigned_to =
+            crate::participant::AssignedTo::Known(crate::participant::KnownAssignedTo::Roles {
                 role_names: remaining,
-            },
-        );
+            });
         true
     });
 }

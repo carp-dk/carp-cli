@@ -101,7 +101,9 @@ pub fn remove_task(protocol: &mut StudyProtocol, name: &str) -> Removal {
         .collect();
 
     let before = protocol.task_controls.len();
-    protocol.task_controls.retain(|control| control.task_name != name);
+    protocol
+        .task_controls
+        .retain(|control| control.task_name != name);
     removal.task_controls = before - protocol.task_controls.len();
 
     // A trigger that started only this task now starts nothing.

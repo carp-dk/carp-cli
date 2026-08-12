@@ -21,9 +21,9 @@
 
 use std::path::{Path, PathBuf};
 
+use carp_protocol::StudyProtocol;
 use color_eyre::Result;
 use color_eyre::eyre::{Context, bail};
-use carp_protocol::StudyProtocol;
 
 /// Where a protocol lives inside a study directory, matching the layout of
 /// `carp_study_app_configurations`.
@@ -35,8 +35,8 @@ pub const STUDY_RELATIVE_PATH: &str = "carp/resources/protocol.json";
 /// both are things someone would reasonably point at.
 pub fn read(path: &Path) -> Result<(StudyProtocol, PathBuf)> {
     let path = resolve(path);
-    let json = std::fs::read_to_string(&path)
-        .with_context(|| format!("reading {}", path.display()))?;
+    let json =
+        std::fs::read_to_string(&path).with_context(|| format!("reading {}", path.display()))?;
     let protocol = carp_protocol::parse(&json)
         .with_context(|| format!("{} is not a CARP protocol", path.display()))?;
     Ok((protocol, path))
@@ -58,8 +58,7 @@ pub fn write(protocol: &StudyProtocol, path: &Path) -> Result<()> {
     let temporary = path.with_extension("json.tmp");
     std::fs::write(&temporary, json.as_bytes())
         .with_context(|| format!("writing {}", temporary.display()))?;
-    std::fs::rename(&temporary, path)
-        .with_context(|| format!("replacing {}", path.display()))?;
+    std::fs::rename(&temporary, path).with_context(|| format!("replacing {}", path.display()))?;
     Ok(())
 }
 
@@ -85,7 +84,9 @@ pub fn resolve(path: &Path) -> PathBuf {
 /// and placed under `download_dir` because that is the directory the CLI
 /// already owns and the user already knows about.
 pub fn default_path(protocol: &StudyProtocol, base: &Path) -> PathBuf {
-    base.join("protocols").join(slug(&protocol.name)).join(STUDY_RELATIVE_PATH)
+    base.join("protocols")
+        .join(slug(&protocol.name))
+        .join(STUDY_RELATIVE_PATH)
 }
 
 /// A file-name-safe form of `name`: lower case, words joined by hyphens.
@@ -105,7 +106,11 @@ fn slug(name: &str) -> String {
         }
     }
 
-    if slug.is_empty() { "protocol".to_owned() } else { slug }
+    if slug.is_empty() {
+        "protocol".to_owned()
+    } else {
+        slug
+    }
 }
 
 /// Read a protocol, failing with a clear message when the path is a

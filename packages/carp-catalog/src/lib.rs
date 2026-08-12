@@ -27,7 +27,7 @@
 //!    repository, then for the `protocol.json` of every study in it.
 //! 2. [`snapshot`] stores those documents on disk, tagged with the commit they
 //!    came from.
-//! 3. [`derive`] reads the snapshot and counts what it finds: every measure
+//! 3. [`mod@derive`] reads the snapshot and counts what it finds: every measure
 //!    type, every device class, every health metric, every question type, and
 //!    which studies use each.
 //! 4. [`catalog`] is the result - the lists the editor offers, each entry

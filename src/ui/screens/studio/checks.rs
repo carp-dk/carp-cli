@@ -43,10 +43,7 @@ pub fn render(frame: &mut Frame, area: Rect, studio: &mut Studio) {
         Some(diagnostic) => {
             frame.render_widget(detail::panel(block, finding_lines(diagnostic)), detail_area);
         }
-        None => frame.render_widget(
-            detail::empty(block, "nothing to report"),
-            detail_area,
-        ),
+        None => frame.render_widget(detail::empty(block, "nothing to report"), detail_area),
     }
 }
 
@@ -72,7 +69,10 @@ fn render_findings(frame: &mut Frame, area: Rect, studio: &mut Studio) {
         .iter()
         .map(|diagnostic| {
             Row::new(vec![
-                Line::styled(diagnostic.severity.label(), severity_style(diagnostic.severity)),
+                Line::styled(
+                    diagnostic.severity.label(),
+                    severity_style(diagnostic.severity),
+                ),
                 Line::styled(diagnostic.location.clone(), theme::label()),
                 Line::styled(diagnostic.message.clone(), theme::value()),
             ])

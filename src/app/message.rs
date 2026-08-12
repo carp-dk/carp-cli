@@ -116,7 +116,10 @@ pub enum Message {
         path: PathBuf,
     },
     /// A protocol reached CAWS, or was refused by it.
-    ProtocolUploaded { message: String, stored: bool },
+    ProtocolUploaded {
+        message: String,
+        stored: bool,
+    },
 
     /// Transient success/info line for the status bar.
     Notice(String),

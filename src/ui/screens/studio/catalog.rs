@@ -179,6 +179,8 @@ fn catalog_lines(studio: &Studio) -> Vec<Line<'static>> {
     }
 
     lines.push(detail::blank());
-    lines.push(detail::note("Enter starts a new protocol from the selected study"));
+    lines.push(detail::note(
+        "Enter starts a new protocol from the selected study",
+    ));
     lines
 }

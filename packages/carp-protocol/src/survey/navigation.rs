@@ -8,14 +8,14 @@
 
 //! Branching inside a survey.
 //!
-//! An [`super::RpTask::Navigable`] survey attaches rules to steps: after the
+//! An [`super::KnownRpTask::Navigable`] survey attaches rules to steps: after the
 //! participant answers *this* step, jump to *that* one depending on what they
 //! answered. That is how "do you smoke?" skips the three follow-up questions
 //! when the answer is no.
 //!
 //! The rule is keyed by the answer's *value* rendered as a string - the
 //! `value` of the [`crate::survey::RpChoice`] they picked, not its label - so
-//! renumbering choices silently rewires the survey. [`crate::validate`] checks
+//! renumbering choices silently rewires the survey. [`mod@crate::validate`] checks
 //! that every target exists, which catches the commoner mistake of renaming a
 //! step and leaving the rule behind.
 

@@ -149,7 +149,7 @@ pub fn fork(protocol: &mut StudyProtocol, name: impl Into<String>) {
 
 /// Why a protocol cannot be uploaded to CAWS.
 ///
-/// Stricter than [`validate`], which judges a protocol as a document. This
+/// Stricter than [`crate::validate()`], which judges a protocol as a document. This
 /// judges it as an upload payload, where CAWS' own requirements apply: it
 /// rejects a non-UUID owner, and a protocol with no primary device produces a
 /// study nothing can deploy.

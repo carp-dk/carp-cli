@@ -47,7 +47,9 @@ pub async fn store(
 ) -> ApiResult<StoreOutcome> {
     // A protocol CAWS has never seen answers with an empty history rather
     // than an error, so a failure here is a real one and is propagated.
-    let history = version_history(client, &protocol.id).await.unwrap_or_default();
+    let history = version_history(client, &protocol.id)
+        .await
+        .unwrap_or_default();
 
     if history.iter().any(|version| version.tag == version_tag) {
         return Ok(StoreOutcome::TagTaken {
@@ -89,9 +91,7 @@ impl StoreOutcome {
     pub fn message(&self) -> String {
         match self {
             Self::Stored {
-                tag,
-                first: true,
-                ..
+                tag, first: true, ..
             } => format!("uploaded as a new protocol, tagged {tag}"),
             Self::Stored { tag, revisions, .. } => {
                 format!("uploaded as {tag} - CAWS now holds {revisions} revisions")

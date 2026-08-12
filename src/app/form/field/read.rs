@@ -13,7 +13,7 @@ use carp_protocol::duration::Micros;
 use carp_protocol::trigger::TimeOfDay;
 
 impl FieldValue {
-/// The stored string of a text-like or picked field.
+    /// The stored string of a text-like or picked field.
     pub fn as_str(&self) -> Option<&str> {
         match self {
             Self::Text(text) | Self::Catalog { value: text, .. } => Some(text),

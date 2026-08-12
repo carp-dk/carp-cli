@@ -65,7 +65,11 @@ pub struct SyncReport {
 impl SyncReport {
     /// A sentence for the status line.
     pub fn summary(&self) -> String {
-        let studies = self.catalog.version.as_ref().map_or(0, |version| version.studies);
+        let studies = self
+            .catalog
+            .version
+            .as_ref()
+            .map_or(0, |version| version.studies);
         match self.outcome {
             SyncOutcome::AlreadyCurrent => format!(
                 "{} at {} ({studies} studies)",
@@ -123,11 +127,17 @@ pub async fn sync(data_dir: &Path) -> Result<SyncReport> {
 pub async fn sync_reference(data_dir: &Path, reference: &str) -> Result<SyncReport> {
     let source = source()?;
     let head = source.head(reference).await?;
-    let previous = Snapshot::load(data_dir).await.ok().map(|snapshot| snapshot.commit);
+    let previous = Snapshot::load(data_dir)
+        .await
+        .ok()
+        .map(|snapshot| snapshot.commit);
 
     // Nothing to do, but the catalogue is still derived and returned so the
     // caller has one either way.
-    if previous.as_ref().is_some_and(|commit| commit.sha == head.sha) {
+    if previous
+        .as_ref()
+        .is_some_and(|commit| commit.sha == head.sha)
+    {
         let snapshot = Snapshot::load(data_dir).await?;
         return Ok(SyncReport {
             outcome: SyncOutcome::AlreadyCurrent,

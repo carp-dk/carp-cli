@@ -48,7 +48,10 @@ fn a_question_step_round_trips_with_its_format() {
     });
 
     let step: RpStep = serde_json::from_value(original.clone()).unwrap();
-    assert_eq!(step.answer_format().unwrap().label(), "SingleChoice, 1 options");
+    assert_eq!(
+        step.answer_format().unwrap().label(),
+        "SingleChoice, 1 options"
+    );
     assert_eq!(serde_json::to_value(&step).unwrap(), original);
 }
 
@@ -99,7 +102,10 @@ fn absent_form_flags_stay_absent() {
     let step: RpStep = serde_json::from_value(original.clone()).unwrap();
     let written = serde_json::to_value(&step).unwrap();
     assert!(written.get("forceWait").is_none(), "got {written}");
-    assert!(written.get("saveResultsOnAutoSkip").is_none(), "got {written}");
+    assert!(
+        written.get("saveResultsOnAutoSkip").is_none(),
+        "got {written}"
+    );
     assert_eq!(written, original);
 }
 

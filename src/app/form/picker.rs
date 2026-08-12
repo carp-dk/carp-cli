@@ -31,7 +31,11 @@ pub struct Row {
 }
 
 impl Row {
-    pub fn new(value: impl Into<String>, label: impl Into<String>, detail: impl Into<String>) -> Self {
+    pub fn new(
+        value: impl Into<String>,
+        label: impl Into<String>,
+        detail: impl Into<String>,
+    ) -> Self {
         Self {
             value: value.into(),
             label: label.into(),
@@ -147,7 +151,9 @@ impl Picker {
             return;
         }
         let last = self.visible.len() as isize - 1;
-        let next = (self.selected as isize).saturating_add(delta).clamp(0, last);
+        let next = (self.selected as isize)
+            .saturating_add(delta)
+            .clamp(0, last);
         self.selected = next as usize;
     }
 

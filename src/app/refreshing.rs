@@ -13,7 +13,6 @@ use crate::app::state::{Route, StudyTab};
 use crate::app::tasks;
 
 impl App {
-
     /// Reload whatever the current screen shows.
     pub fn refresh(&mut self) {
         match self.route {

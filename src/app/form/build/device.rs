@@ -22,7 +22,7 @@ use crate::app::form::{Field, FieldValue, Form, Subject, Vocabulary};
 ///
 /// An unmodelled device gets the two common rows and nothing else: its own
 /// fields are preserved on save but cannot be shown, because this build does
-/// not know what they mean. [`carp_protocol::validate`] says so explicitly.
+/// not know what they mean. [`carp_protocol::validate()`] says so explicitly.
 pub fn device(device: &Device) -> Form {
     let mut fields = vec![
         // Typed rather than picked: a role name is chosen, not looked up.
@@ -118,8 +118,12 @@ fn class_fields(device: &KnownDevice) -> Vec<Field> {
 
     match device {
         KnownDevice::MovesenseDevice { device_type, .. } => fields.push(
-            Field::new("device_type", "Model", FieldValue::Text(device_type.clone()))
-                .with_help("Movesense model code, or UNKNOWN to accept any"),
+            Field::new(
+                "device_type",
+                "Model",
+                FieldValue::Text(device_type.clone()),
+            )
+            .with_help("Movesense model code, or UNKNOWN to accept any"),
         ),
 
         KnownDevice::Cams2PolarDevice { name_prefix, .. } => fields.push(
@@ -137,7 +141,11 @@ fn class_fields(device: &KnownDevice) -> Vec<Field> {
             sampling_rate,
             ..
         } => fields.extend([
-            Field::new("device_type", "Model", FieldValue::Text(device_type.clone())),
+            Field::new(
+                "device_type",
+                "Model",
+                FieldValue::Text(device_type.clone()),
+            ),
             Field::new("name", "Serial number", FieldValue::Text(name.clone()))
                 .with_help("Serial of the specific unit, e.g. C3W150120"),
             Field::new(

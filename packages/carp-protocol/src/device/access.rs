@@ -12,8 +12,8 @@
 //! looking at a CARP core device or a CAMS 2.0 one: the same setting is
 //! reachable either way.
 
-use super::classes::{BluetoothScan, KnownDevice, LocationSettings};
 use super::DeviceCore;
+use super::classes::{BluetoothScan, KnownDevice, LocationSettings};
 
 impl KnownDevice {
     /// The fields shared by every device class.
@@ -66,18 +66,16 @@ impl KnownDevice {
     /// to care which generation it is looking at.
     pub fn location(&self) -> Option<&LocationSettings> {
         match self {
-            Self::LocationService { location, .. } | Self::Cams2LocationService { location, .. } => {
-                Some(location)
-            }
+            Self::LocationService { location, .. }
+            | Self::Cams2LocationService { location, .. } => Some(location),
             _ => None,
         }
     }
 
     pub fn location_mut(&mut self) -> Option<&mut LocationSettings> {
         match self {
-            Self::LocationService { location, .. } | Self::Cams2LocationService { location, .. } => {
-                Some(location)
-            }
+            Self::LocationService { location, .. }
+            | Self::Cams2LocationService { location, .. } => Some(location),
             _ => None,
         }
     }

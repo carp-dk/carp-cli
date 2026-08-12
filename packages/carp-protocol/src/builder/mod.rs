@@ -21,7 +21,7 @@
 //! - removing takes the now-dangling references with it, and says what it took
 //! - adding wires up what the new part needs to be reachable
 //!
-//! [`crate::validate`] still checks the result. This module is what stops the
+//! [`mod@crate::validate`] still checks the result. This module is what stops the
 //! editor creating a problem; the validator is what catches one that arrived
 //! by other means, such as a hand-edited file.
 
@@ -79,7 +79,11 @@ impl Removal {
 /// Names are what the protocol's references are built from, so a new part
 /// silently taking an existing name would re-point every reference to it.
 pub fn unique_name(base: &str, taken: &[String]) -> String {
-    let base = if base.trim().is_empty() { "Unnamed" } else { base };
+    let base = if base.trim().is_empty() {
+        "Unnamed"
+    } else {
+        base
+    };
     if !taken.iter().any(|name| name == base) {
         return base.to_owned();
     }

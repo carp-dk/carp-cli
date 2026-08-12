@@ -14,7 +14,7 @@
 use super::{FieldValue, Form};
 
 impl Form {
-/// A field's value by key, for reading a submitted form.
+    /// A field's value by key, for reading a submitted form.
     pub fn value(&self, key: &str) -> Option<&FieldValue> {
         self.fields
             .iter()
@@ -31,7 +31,9 @@ impl Form {
     }
 
     pub fn flag(&self, key: &str) -> bool {
-        self.value(key).and_then(FieldValue::as_bool).unwrap_or(false)
+        self.value(key)
+            .and_then(FieldValue::as_bool)
+            .unwrap_or(false)
     }
 
     pub fn integer(&self, key: &str) -> Option<i64> {
@@ -51,5 +53,5 @@ impl Form {
             .and_then(FieldValue::as_set)
             .unwrap_or_default()
             .to_vec()
-}
+    }
 }

@@ -101,6 +101,10 @@ fn kind_field(endpoint: &DataEndPoint) -> Field {
         .position(|option| option.value == current)
         .unwrap_or(0);
 
-    Field::new("kind", "Data goes to", FieldValue::Choice { options, selected })
-        .with_help("Switching to local storage means no data reaches the researchers")
+    Field::new(
+        "kind",
+        "Data goes to",
+        FieldValue::Choice { options, selected },
+    )
+    .with_help("Switching to local storage means no data reaches the researchers")
 }

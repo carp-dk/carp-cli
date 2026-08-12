@@ -8,13 +8,12 @@
 
 //! Moving between screens, and loading what a screen needs.
 
-use crate::app::App;
 use crate::api::models::{ParticipantSummary, StudyOverview};
+use crate::app::App;
 use crate::app::state::{ParticipantState, Route, StudyState, StudyTab};
 use crate::app::{state, tasks};
 
 impl App {
-
     pub fn open_study(&mut self, study: StudyOverview) {
         let study_id = study.study_id.to_string();
         let mut state = StudyState::new(study);

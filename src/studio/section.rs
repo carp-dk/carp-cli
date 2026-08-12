@@ -63,7 +63,9 @@ impl Section {
     /// hint cannot drift apart.
     pub fn hints(self) -> &'static str {
         match self {
-            Self::Overview => "e edit · A app settings · D data endpoint · v tag · s save · u upload",
+            Self::Overview => {
+                "e edit · A app settings · D data endpoint · v tag · s save · u upload"
+            }
             Self::Devices => "a add · e edit · x remove · c connect · s save",
             Self::Tasks => "a add · e edit · x remove · m measures · Enter survey · s save",
             Self::Triggers => "a add · e edit · x remove · t attach task · s save",
@@ -75,7 +77,10 @@ impl Section {
     }
 
     pub fn index(self) -> usize {
-        Self::ALL.iter().position(|section| *section == self).unwrap_or(0)
+        Self::ALL
+            .iter()
+            .position(|section| *section == self)
+            .unwrap_or(0)
     }
 
     pub fn next(self) -> Self {

@@ -81,13 +81,15 @@ fn an_unchanged_form_records_no_undo_step() {
 #[test]
 fn a_refused_submission_leaves_no_undo_step() {
     let mut studio = studio();
-    let mut form = crate::app::form::build::device(
-        studio.protocol.device("Primary Phone").unwrap(),
-    );
+    let mut form =
+        crate::app::form::build::device(studio.protocol.device("Primary Phone").unwrap());
     form.set_selected(String::new());
     studio.form = Some(form);
 
-    assert!(studio.submit_form().is_some(), "an empty role name is refused");
+    assert!(
+        studio.submit_form().is_some(),
+        "an empty role name is refused"
+    );
     assert!(studio.history.is_empty());
     assert!(studio.form.is_some(), "the form stays open");
 }

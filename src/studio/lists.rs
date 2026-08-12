@@ -115,12 +115,16 @@ impl Lists {
             .map(|device| device.role_name().to_owned())
     }
 
-    pub fn selected_task<'a>(&self, protocol: &'a StudyProtocol) -> Option<&'a carp_protocol::Task> {
+    pub fn selected_task<'a>(
+        &self,
+        protocol: &'a StudyProtocol,
+    ) -> Option<&'a carp_protocol::Task> {
         protocol.tasks.get(self.tasks.selected()?)
     }
 
     pub fn selected_task_name(&self, protocol: &StudyProtocol) -> Option<String> {
-        self.selected_task(protocol).map(|task| task.name().to_owned())
+        self.selected_task(protocol)
+            .map(|task| task.name().to_owned())
     }
 
     /// The trigger under the cursor, with its id.

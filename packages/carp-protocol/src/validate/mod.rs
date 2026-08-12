@@ -110,7 +110,11 @@ impl Diagnostic {
 
 impl fmt::Display for Diagnostic {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(formatter, "{}: {}: {}", self.severity, self.location, self.message)?;
+        write!(
+            formatter,
+            "{}: {}: {}",
+            self.severity, self.location, self.message
+        )?;
         if let Some(hint) = &self.hint {
             write!(formatter, " ({hint})")?;
         }

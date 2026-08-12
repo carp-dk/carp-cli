@@ -8,13 +8,12 @@
 
 //! Downloads, and the things this app opens outside the terminal.
 
-use crate::app::App;
 use crate::api::endpoints::{exports, files};
+use crate::app::App;
 use crate::app::state::{Route, Status, StudyState};
 use crate::app::tasks;
 
 impl App {
-
     /// Download the selected export archive.
     pub fn download_selected_export(&mut self) {
         let Some(study) = self.study.as_ref() else {

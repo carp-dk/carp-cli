@@ -8,7 +8,6 @@
 
 //! The prompt line at the bottom of the screen, and the study list's sort order.
 
-
 /// A prompt open at the bottom of the screen.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PromptKind {
@@ -65,7 +64,9 @@ impl Prompt {
             PromptKind::StudyFilter => "filter studies".to_owned(),
             PromptKind::ParticipantSearch => "search participants".to_owned(),
             PromptKind::ConfirmDeleteExport { name, .. } => format!("delete export {name}?"),
-            PromptKind::OpenProtocol => "open protocol (path to a file or study directory)".to_owned(),
+            PromptKind::OpenProtocol => {
+                "open protocol (path to a file or study directory)".to_owned()
+            }
             PromptKind::ConfirmDiscardProtocol => "leave without saving?".to_owned(),
             PromptKind::ProtocolVersionTag => "version tag for the next upload".to_owned(),
         }

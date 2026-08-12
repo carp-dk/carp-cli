@@ -83,12 +83,12 @@ pub fn render(frame: &mut Frame, area: Rect, studio: &mut Studio) {
     let block = theme::block("device");
     match studio.lists.selected_device(&studio.protocol) {
         Some(device) => {
-            frame.render_widget(detail::panel(block, device_lines(device, studio)), detail_area);
+            frame.render_widget(
+                detail::panel(block, device_lines(device, studio)),
+                detail_area,
+            );
         }
-        None => frame.render_widget(
-            detail::empty(block, "no device selected"),
-            detail_area,
-        ),
+        None => frame.render_widget(detail::empty(block, "no device selected"), detail_area),
     }
 }
 
@@ -145,7 +145,10 @@ fn device_lines(device: &Device, studio: &Studio) -> Vec<Line<'static>> {
     lines.push(detail::section("used by"));
     lines.push(detail::field(
         "triggers",
-        format!("{triggers} fire{} here", if triggers == 1 { "s" } else { "" }),
+        format!(
+            "{triggers} fire{} here",
+            if triggers == 1 { "s" } else { "" }
+        ),
     ));
     if tasks.is_empty() {
         lines.push(detail::note("  no tasks run on this device"));

@@ -18,9 +18,7 @@ use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel};
 
 use crate::api::CarpClient;
 use crate::app::message::{LoadTarget, Message};
-use crate::app::state::{
-    ParticipantState, Prompt, Route, Status, StudiesState, StudyState,
-};
+use crate::app::state::{ParticipantState, Prompt, Route, Status, StudiesState, StudyState};
 use crate::config::Config;
 use crate::db::{Cache, DownloadRecord};
 use crate::download::DownloadManager;

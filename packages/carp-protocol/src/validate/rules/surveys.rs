@@ -67,7 +67,9 @@ pub fn surveys(protocol: &StudyProtocol, out: &mut Vec<Diagnostic>) {
                 if !seen.contains(destination) {
                     out.push(Diagnostic::error(
                         &location,
-                        format!("a branch of {step:?} jumps to {destination:?}, which is not a step"),
+                        format!(
+                            "a branch of {step:?} jumps to {destination:?}, which is not a step"
+                        ),
                     ));
                 }
             }

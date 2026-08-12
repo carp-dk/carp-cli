@@ -85,11 +85,7 @@ impl ProtocolRequest {
     /// `first` selects between `Add` and `AddVersion`: CAWS rejects an `Add`
     /// for a protocol it already holds, and an `AddVersion` for one it does
     /// not, so the caller has to know which it is doing.
-    pub fn store(
-        protocol: carp_protocol::StudyProtocol,
-        version_tag: String,
-        first: bool,
-    ) -> Self {
+    pub fn store(protocol: carp_protocol::StudyProtocol, version_tag: String, first: bool) -> Self {
         if first {
             Self::Add {
                 protocol,

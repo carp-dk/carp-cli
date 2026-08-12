@@ -1,9 +1,7 @@
 //! Screen state. Rendering reads these structs and never mutates anything
 //! except the selection state ratatui needs.
 
-
 use ratatui::widgets::TableState;
-
 
 pub mod prompt;
 pub mod route;

@@ -17,8 +17,12 @@ fn form() -> Form {
     Form::new(
         Subject::Device("Primary Phone".to_owned()),
         vec![
-            Field::new("role", "Role name", FieldValue::Text("Primary Phone".to_owned()))
-                .with_help("How triggers refer to this device"),
+            Field::new(
+                "role",
+                "Role name",
+                FieldValue::Text("Primary Phone".to_owned()),
+            )
+            .with_help("How triggers refer to this device"),
             Field::new("optional", "Optional", FieldValue::Toggle(false)),
         ],
     )

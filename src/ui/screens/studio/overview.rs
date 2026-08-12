@@ -18,8 +18,7 @@ use crate::ui::widgets::detail;
 
 /// Draw the overview into `area`.
 pub fn render(frame: &mut Frame, area: Rect, studio: &Studio) {
-    let [left, right] =
-        Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)]).areas(area);
+    let [left, right] = Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)]).areas(area);
 
     frame.render_widget(
         detail::panel(theme::block("protocol"), identity_lines(studio)),
@@ -38,7 +37,10 @@ fn identity_lines(studio: &Studio) -> Vec<Line<'static>> {
         detail::field("name", protocol.name.clone()),
         detail::field(
             "description",
-            protocol.description.clone().unwrap_or_else(|| "—".to_owned()),
+            protocol
+                .description
+                .clone()
+                .unwrap_or_else(|| "—".to_owned()),
         ),
         detail::blank(),
         detail::section("identity"),
@@ -60,7 +62,11 @@ fn identity_lines(studio: &Studio) -> Vec<Line<'static>> {
             format!(
                 "{} role{}",
                 protocol.participant_roles.len(),
-                if protocol.participant_roles.len() == 1 { "" } else { "s" }
+                if protocol.participant_roles.len() == 1 {
+                    ""
+                } else {
+                    "s"
+                }
             ),
         ),
         detail::blank(),
@@ -93,11 +99,15 @@ fn application_lines(studio: &Studio) -> Vec<Line<'static>> {
     let mut lines = vec![
         detail::field(
             "api level",
-            data.protocol_api_level.clone().unwrap_or_else(|| "unset".to_owned()),
+            data.protocol_api_level
+                .clone()
+                .unwrap_or_else(|| "unset".to_owned()),
         ),
         detail::field(
             "application",
-            data.application_name.clone().unwrap_or_else(|| "—".to_owned()),
+            data.application_name
+                .clone()
+                .unwrap_or_else(|| "—".to_owned()),
         ),
         detail::blank(),
     ];
@@ -112,7 +122,10 @@ fn application_lines(studio: &Studio) -> Vec<Line<'static>> {
                 lines.push(detail::section("responsible"));
                 lines.push(detail::field("name", responsible.name.clone()));
                 lines.push(detail::field("email", responsible.email.clone()));
-                lines.push(detail::field("affiliation", responsible.affiliation.clone()));
+                lines.push(detail::field(
+                    "affiliation",
+                    responsible.affiliation.clone(),
+                ));
             }
         }
         None => lines.push(detail::note("no study description")),
@@ -126,6 +139,8 @@ fn application_lines(studio: &Studio) -> Vec<Line<'static>> {
     }
 
     lines.push(detail::blank());
-    lines.push(detail::note("e edits the protocol · A edits these settings"));
+    lines.push(detail::note(
+        "e edits the protocol · A edits these settings",
+    ));
     lines
 }

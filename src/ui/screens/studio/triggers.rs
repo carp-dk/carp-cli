@@ -90,7 +90,13 @@ fn render_list(frame: &mut Frame, area: Rect, studio: &mut Studio) {
         widths,
         theme::focused_block(&title),
     );
-    table::render(frame, area, list, &mut studio.lists.triggers, triggers.len());
+    table::render(
+        frame,
+        area,
+        list,
+        &mut studio.lists.triggers,
+        triggers.len(),
+    );
 }
 
 /// The selected trigger's schedule, source and effects.
@@ -121,7 +127,11 @@ fn trigger_lines(id: u32, trigger: &Trigger, studio: &Studio) -> Vec<Line<'stati
         lines.push(detail::field_styled(
             "watches",
             watched.to_owned(),
-            if exists { theme::value() } else { theme::error() },
+            if exists {
+                theme::value()
+            } else {
+                theme::error()
+            },
         ));
         if !exists {
             lines.push(detail::note("  that task is not in this protocol"));

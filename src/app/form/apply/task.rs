@@ -86,7 +86,9 @@ pub fn apply(protocol: &mut StudyProtocol, form: &Form, name: &str) -> Applied {
             rp_task.set_navigable(form.flag("survey_navigable"));
         }
         KnownTask::HealthApp {
-            notification, types, ..
+            notification,
+            types,
+            ..
         } => {
             *notification = form.flag("notification");
             *types = form.set("types");

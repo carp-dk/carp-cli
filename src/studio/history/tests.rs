@@ -35,10 +35,7 @@ fn the_history_is_bounded() {
 
     assert_eq!(history.depth(), DEPTH);
     // The most recent states are the ones kept.
-    assert_eq!(
-        history.pop().unwrap().name,
-        format!("state {}", DEPTH + 9)
-    );
+    assert_eq!(history.pop().unwrap().name, format!("state {}", DEPTH + 9));
 }
 
 #[test]

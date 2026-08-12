@@ -238,7 +238,10 @@ impl Studio {
     /// task that has one.
     pub fn survey_task_name(&self) -> Option<String> {
         if let Some(name) = &self.survey_task
-            && self.protocol.task(name).is_some_and(|task| task.survey().is_some())
+            && self
+                .protocol
+                .task(name)
+                .is_some_and(|task| task.survey().is_some())
         {
             return Some(name.clone());
         }
@@ -257,7 +260,11 @@ impl Studio {
                     .file_name()
                     .map(|name| name.to_string_lossy().into_owned())
                     .unwrap_or_else(|| path.display().to_string());
-                if self.dirty { format!("{name} *") } else { name }
+                if self.dirty {
+                    format!("{name} *")
+                } else {
+                    name
+                }
             }
             None => {
                 if self.dirty {

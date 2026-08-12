@@ -25,8 +25,8 @@ use ratatui::text::{Line, Span};
 use ratatui::widgets::{Clear, Paragraph, Wrap};
 
 use crate::app::form::{Form, Mode};
-use crate::ui::widgets::{centered, pad_to};
 use crate::ui::theme;
+use crate::ui::widgets::{centered, pad_to};
 
 /// Width reserved for the label column.
 const LABEL_WIDTH: usize = 22;
@@ -43,10 +43,7 @@ pub fn render(frame: &mut Frame, area: Rect, form: &Form) {
     let overlay = centered(area, width, height);
 
     frame.render_widget(Clear, overlay);
-    frame.render_widget(
-        theme::focused_block(&form.subject.title()),
-        overlay,
-    );
+    frame.render_widget(theme::focused_block(&form.subject.title()), overlay);
 
     let inner = overlay.inner(ratatui::layout::Margin {
         vertical: 1,
