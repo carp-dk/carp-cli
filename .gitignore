@@ -25,3 +25,4 @@ rustc-ice-*.txt
 carp.db
 carp.db-wal
 .env
+api-docs*
