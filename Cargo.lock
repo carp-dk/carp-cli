@@ -440,7 +440,7 @@ checksum = "fc652a48c352aef3ea3aed32080501cf3ef6ed5da78602a020c991775b0aff04"
 
 [[package]]
 name = "carp-catalog"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "carp-protocol",
  "chrono",
@@ -453,7 +453,7 @@ dependencies = [
 
 [[package]]
 name = "carp-client"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "base64",
  "carp-protocol",
@@ -474,7 +474,7 @@ dependencies = [
 
 [[package]]
 name = "carp-dk"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "carp-catalog",
  "carp-client",
@@ -501,7 +501,7 @@ dependencies = [
 
 [[package]]
 name = "carp-protocol"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "chrono",
  "serde",
@@ -512,7 +512,7 @@ dependencies = [
 
 [[package]]
 name = "carp-python"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "carp-client",
  "chrono",
