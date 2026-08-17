@@ -9,7 +9,7 @@ members = [
 # Settings every crate in the workspace inherits, so the version and the
 # licence are stated once.
 [workspace.package]
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Alireza Hajebrahimi <support@carp.dk>"]
 license = "MIT"
 edition = "2024"
@@ -30,9 +30,9 @@ uuid = { version = "1", features = ["v4", "serde"] }
 # The workspace crates depend on each other by path *and* version. The path is
 # what a local build uses; the version is what cargo substitutes when
 # publishing, and without it crates.io refuses the upload.
-carp-protocol = { path = "packages/carp-protocol", version = "0.2.0" }
-carp-catalog = { path = "packages/carp-catalog", version = "0.2.0" }
-carp-client = { path = "packages/carp-client", version = "0.2.0" }
+carp-protocol = { path = "packages/carp-protocol", version = "0.2.1" }
+carp-catalog = { path = "packages/carp-catalog", version = "0.2.1" }
+carp-client = { path = "packages/carp-client", version = "0.2.1" }
 
 [package]
 # Not `carp-cli`, which on crates.io is an unrelated and actively published
