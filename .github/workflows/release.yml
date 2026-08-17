@@ -114,7 +114,8 @@ jobs:
         include:
           # x86_64 Linux goes through `cross`: its images are built against an
           # older glibc than the GitHub runner's, so the binary also runs on
-          # older distros.
+          # older distros. Its compiler is as old as its glibc, which one of
+          # turso's C dependencies does not survive unaided - see Cross.toml.
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
             cross: true

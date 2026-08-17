@@ -1,0 +1,30 @@
+# How `cross` builds the x86_64 Linux binary. Only the release workflow uses
+# cross, and only for that one target; every other platform builds natively.
+#
+# The image behind cross 0.2.5 is Ubuntu 16.04 with GCC 5.4, and that is the
+# point: the binary links against glibc 2.23, so it runs on distributions far
+# older than the GitHub runner's. The cost is a compiler from 2016, and
+# `simsimd` - a C dependency of `turso`, through `turso_core` - is written for
+# a newer one.
+#
+# simsimd's build script compiles its C with warnings off, trying each SIMD
+# backend in turn and keeping the ones that compile. Under GCC 5.4 every
+# backend above AVX2 fails outright and is dropped; the AVX2 one ("haswell")
+# only appears to succeed. GCC 5.4 does not declare `_mm256_cvtss_f32`, so C99
+# takes it for an implicit function declaration and says so in a warning that
+# is switched off. The call survives into the object file, and the release
+# build dies at the final link of `carp`:
+#
+#     undefined reference to `_mm256_cvtss_f32'
+#
+# So it is turned off here, where it would have been dropped anyway had it
+# failed honestly. Nothing is lost by it: the other backends are already gone
+# on this compiler, so simsimd falls back to its portable implementations
+# either way, and carp uses turso as a local database rather than for the
+# vector search these serve. Every other target builds on a compiler that
+# handles simsimd whole and is untouched by this file.
+#
+# A `passthrough` entry may carry a value rather than forward the host's;
+# cross hands the whole string to `docker -e`.
+[target.x86_64-unknown-linux-gnu.env]
+passthrough = ["SIMSIMD_TARGET_HASWELL=0"]

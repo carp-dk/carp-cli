@@ -1,10 +1,8 @@
 # CARP CLI
 
-A client for the [Copenhagen Research Platform][carp]. Read your studies —
-participants, deployments, uploaded measurements, exports and files — from a
-shell, a script, a CI job or a Python notebook. Author the protocols those
-studies run on. And, when a screen full of them is easier than a flag, browse
-them interactively.
+A client for the [Copenhagen Research Platform][carp]. Read your studies, 
+participants, deployments, uploaded measurements, exports and files from a
+shell, a script, a CI job or a Python notebook.
 
 ```sh
 carp studies list
@@ -22,11 +20,7 @@ rows = client.data_stream(deployment=DEPLOYMENT, device="Primary Phone",
 frame = carp.to_pandas(rows)
 ```
 
-> **Breaking change:** bare `carp` used to open the interactive browser. It
-> prints help now; the browser is `carp tui`. Everything the browser could
-> reach has a command.
-
-## Installing
+## 🚀 Installing
 
 Every version tagged on `main` publishes a binary per platform under
 [Releases][releases]. Take the archive for your machine, unpack it, and put
@@ -53,10 +47,10 @@ what the workflow built:
 sha256sum --check --ignore-missing SHA256SUMS
 ```
 
-The binaries are not yet code-signed. macOS quarantines anything a browser
+The binaries are not yet code-signed thus macOS quarantines anything a browser
 downloaded, and `tar` carries that attribute onto the files it extracts, so an
-unsigned `carp` is killed on sight rather than warned about — no dialog, just
-`Killed: 9`. Clearing the attribute is what unblocks it:
+unsigned `carp` is killed on sight rather than warned about. 
+Clearing the attribute is what unblocks it or allow it from Settings -> Security & Privacy:
 
 ```sh
 xattr -d com.apple.quarantine /usr/local/bin/carp
@@ -79,16 +73,6 @@ pip install carp-cli
 pip install 'carp-cli[pandas]'    # adds to_pandas()
 ```
 
-One command, three names — the registries were not free to agree. `carp` and
-`carp-cli` were both already taken on crates.io, and `carp` on PyPI, all by
-unrelated projects. What you type is `carp` in every case:
-
-| | Install | Then |
-| --- | --- | --- |
-| crates.io | `cargo install carp-dk` | `carp` |
-| PyPI | `pip install carp-cli` | `import carp` |
-| Releases | unpack the archive | `carp` |
-
 The libraries underneath are published too, for anything that wants the client
 or the protocol model without the command:
 [`carp-client`](https://crates.io/crates/carp-client),
@@ -97,22 +81,19 @@ or the protocol model without the command:
 
 [releases]: https://github.com/carp-dk/carp-cli/releases
 
-## Signing in
+## 🔐 Signing in
 
 ```sh
 carp auth login              # opens a browser, once
 carp auth status
 ```
 
-The session is stored per deployment and refreshed as needed. Nothing else
-opens a browser: a command with no session fails and says to run `auth login`,
-because a tool that popped one open from inside a cron job or a pipe would hang
-where nobody could see it.
+The session is stored per deployment and refreshed as needed.
 
 `carp auth token` prints the bearer token, for a request made by hand. It is a
-credential — pipe it into what needs it rather than leaving it on screen.
+credential.
 
-## Commands
+## 🤖 Commands
 
 | | |
 | --- | --- |
@@ -147,8 +128,7 @@ carp data query $DEPLOYMENT \
 `--from` and `--to` take a date, a full timestamp, or an age — `7d`, `36h`,
 `90m`. `--to` defaults to now.
 
-The measurement payload is not described by CARP's OpenAPI document, so if what
-comes back looks wrong, `--raw` prints the server's response untouched.
+You can also use `--raw` to print the server's response directly.
 
 For the bulk of a study, ask for an export instead. The server packages one in
 the background:
@@ -221,9 +201,8 @@ rows = client.data_stream(
 frame = carp.to_pandas(rows)
 ```
 
-Calls block, and return plain lists and dictionaries exactly as CARP sent them
-— nothing is dropped when the server grows a field. Failures raise
-`CarpAuthError`, `CarpNotFoundError`, `CarpForbiddenError` or `CarpError`.
+Calls block, and return plain lists and dictionaries exactly as CARP sent them.
+Failures raise `CarpAuthError`, `CarpNotFoundError`, `CarpForbiddenError` or `CarpError`.
 
 See [`packages/carp-python/README.md`](packages/carp-python/README.md).
 
@@ -231,13 +210,8 @@ See [`packages/carp-python/README.md`](packages/carp-python/README.md).
 
 A CARP study is described by a `protocol.json`: which devices take part, what
 they measure, when each task runs, and what is asked of the participants.
-Until now those documents were produced by
-[`carp_study_app_configurations`][configs] — a Flutter project per study, whose
-`main()` assembles Dart objects and whose test serialises them. It works, but
-authoring a protocol means writing Dart, and reviewing one means reading JSON.
-
-`carp protocol edit` opens an editor for the same document. It shows devices,
-tasks and schedules rather than a tree of objects, and it writes exactly the
+You can use `carp protocol edit` to open an editor for the same document.
+It shows devices, tasks and schedules rather than a tree of objects, and it writes exactly the
 JSON the study app expects.
 
 ```
@@ -256,41 +230,9 @@ JSON the study app expects.
  a add · e edit · x remove · m measures · Enter survey · s save · z undo
 ```
 
-### Can handle:
-
-- Devices (both CARP namespaces, including the
-  CAMS 2.0 classes), background and app tasks, all nine trigger kinds, Research
-  Package surveys with branching, participant roles and expected data, and the
-  data endpoint.
-- A protocol is joined by name — a trigger names
-  its device, a task control names a task. Renaming a device moves every
-  reference with it; removing one takes the triggers and controls that could
-  only have referred to it, and says what it took. `z` undoes any of it.
-- The Checks tab reports what the schema cannot:
-  a name that does not resolve, an identifier used twice, a task nothing
-  starts, a survey branch that jumps to a step that no longer exists.
-- The Catalog tab lists the upstream studies;
-  `Enter` forks one into a new protocol of your own.
-- `u` stores the protocol as a new version under a version
-  tag, choosing `Add` or `AddVersion` by what CAWS already holds.
-
-The editor depends on the CARP study app configurations repository for its
-vocabulary and functionality availability.
-
-```
-$ carp protocol sync
-syncing from carp-dk/carp_study_app_configurations…
-catalogue downloaded at 74f543e (11 studies)
-  commit    74f543e65bc18300c61a967cf6c3f13e228eabf9 - Merge pull request #45…
-  dated     2026-08-11T12:38:39Z
-  learned   43 measure types, 33 health metrics, 16 device classes
-  templates 11
-```
-
-The Catalog tab names that commit, and says when upstream has moved past it.
-Syncing is something you ask for, never something that happens under you: a
-value that was in a picker a moment ago should not vanish mid-edit.
-
+To update the protocol vocabulary, run `carp protocol sync`. with the 
+`GITHUB_TOKEN` environment variable set to a token with access to the upstream repository.
+You need to have access to the `carp_study_app_configurations` repository.
 > The upstream repository is private. Set `GITHUB_TOKEN` to a token with access
 > to it — `export GITHUB_TOKEN=$(gh auth token)` if you use the GitHub CLI.
 
@@ -341,47 +283,21 @@ maturin develop
 pytest tests
 ```
 
-CI runs all of it on Linux, macOS and Windows, plus clippy, rustdoc, and
-`actionlint` over the workflows themselves.
-
-`packages/carp-protocol/tests/corpus/` holds the `protocol.json` of every study
-in `carp_study_app_configurations`, vendored at the commit named in
-`SOURCE.txt`. Those files are the specification this crate is written against,
-so they are what it is tested against:
-
-- every protocol is parsed, re-serialised and compared field for field
-- none may fall back to the preserve-verbatim path, which would let a modelling
-  gap pass the first test unnoticed
-- every protocol must validate cleanly, bar the upstream defects listed in
-  `KNOWN_UPSTREAM_DEFECTS`
-
-Refresh the corpus with `carp protocol sync` and copy the documents out of the
-snapshot it writes.
-
 ## Releasing
 
-Bump `[workspace.package] version` in `Cargo.toml` and merge to `main`. That is
-the whole procedure: the release workflow sees a version with no tag, builds
-the binaries and the wheels, publishes the four crates to crates.io and
-`carp-cli` to PyPI, and then creates the GitHub release and its tag. A push
-that does not change the version does nothing.
-
-Both registries use Trusted Publishing and store no credential, but each needs
-a one-time setup before the first release — and crates.io additionally requires
-each crate's first version to be published by hand, since it has no equivalent
-of PyPI's pending publishers. [`.github/PUBLISHING.md`](.github/PUBLISHING.md)
-has both, along with what to do when a release run dies partway.
+Bump `[workspace.package] version` in `Cargo.toml` and merge to `main`. 
+The release workflow sees a version with no tag, builds the binaries 
+and the wheels, publishes the four crates to crates.io and `carp-cli` 
+to PyPI, and then creates the GitHub release and its tag. A push that 
+does not change the version does nothing.
 
 ## Deployments
 
-Three CARP deployments are known by name, and a released binary talks to
-production unless told otherwise:
-
-| `--env` | Address | |
-| --- | --- | --- |
-| `production` | `https://carp.computerome.dk` | live data — the default |
-| `test` | `https://test.carp.dk` | staging: what production becomes next |
-| `dev` | `https://dev.carp.dk` | where server work lands first |
+| `--env` | Address |
+| --- | --- |
+| `production` | `https://carp.computerome.dk`  |
+| `test` | `https://test.carp.dk` |
+| `dev` | `https://dev.carp.dk` |
 
 ```sh
 carp --env dev studies list       # or CARP_ENV=dev

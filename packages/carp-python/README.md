@@ -51,16 +51,6 @@ client.create_export(STUDY)                       # packaged in the background
 path = client.download_export(STUDY, export["id"])
 ```
 
-## What it returns
-
-Plain lists and dictionaries, exactly as CARP sent them. Nothing is dropped
-when the server grows a field, and nothing needs a new release here to become
-visible. Keys are camelCase, as on the wire.
-
-`data_stream_raw` returns the server's own nested response instead of the flat
-rows — worth reaching for if a measurement type looks wrong, since CARP's
-OpenAPI document does not describe the measurement payload.
-
 ## Sessions
 
 The session lives in the same file `carp auth login` writes, keyed by the

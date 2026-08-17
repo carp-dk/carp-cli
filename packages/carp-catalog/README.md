@@ -1,7 +1,6 @@
 # carp-catalog
 
-The vocabulary a CARP study protocol can be written in, derived from the
-studies that already exist.
+The vocabulary a CARP study protocol can be written in.
 
 A protocol names measure types, device classes, health metrics and input types
 as fully qualified strings. Which of those a given CARP release actually

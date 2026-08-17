@@ -1,7 +1,6 @@
 # carp-protocol
 
-The [CARP][carp] study protocol as a Rust domain model: build one, read one,
-check one, write one.
+The [CARP][carp] study protocol as a Rust domain model
 
 A *study protocol* describes what a study measures — which devices take part,
 which tasks run on them, what triggers those tasks, and what is asked of the
