@@ -12,7 +12,7 @@ use std::collections::HashMap;
 
 use ratatui::widgets::TableState;
 
-use crate::api::models::{
+use carp_client::api::models::{
     Account, Export, ParticipantGroup, ParticipantGroupStatus, ParticipantSummary, StudyFile,
     StudyOverview,
 };
@@ -143,7 +143,7 @@ impl StudyState {
         clamp_selection(&mut self.exports_table, self.exports.len());
     }
 
-    pub fn selected_group(&self) -> Option<&crate::api::models::ParticipantGroup> {
+    pub fn selected_group(&self) -> Option<&carp_client::api::models::ParticipantGroup> {
         self.groups.groups.get(self.groups_table.selected()?)
     }
 

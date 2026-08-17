@@ -8,10 +8,10 @@
 
 //! Downloads, and the things this app opens outside the terminal.
 
-use crate::api::endpoints::{exports, files};
 use crate::app::App;
 use crate::app::state::{Route, Status, StudyState};
 use crate::app::tasks;
+use carp_client::api::endpoints::{exports, files};
 
 impl App {
     /// Download the selected export archive.

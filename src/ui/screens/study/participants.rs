@@ -14,11 +14,11 @@ use ratatui::layout::{Constraint, Rect};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::Row;
 
-use crate::api::models::{ParticipantSummary, format_instant};
 use crate::app::state::StudyState;
 use crate::ui::screens::study::{DETAIL_WEIGHT, LIST_WEIGHT, deployments, tab_title};
 use crate::ui::widgets::{detail, master_detail, table};
 use crate::ui::{icons, theme};
+use carp_client::api::models::{ParticipantSummary, format_instant};
 
 pub fn render(frame: &mut Frame, area: Rect, study: &mut StudyState, ticks: usize) {
     let (list_area, detail_area) = master_detail(area, LIST_WEIGHT, DETAIL_WEIGHT);

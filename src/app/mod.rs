@@ -16,15 +16,15 @@ use color_eyre::Result;
 use ratatui::DefaultTerminal;
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel};
 
-use crate::api::CarpClient;
 use crate::app::message::{LoadTarget, Message};
 use crate::app::state::{ParticipantState, Prompt, Route, Status, StudiesState, StudyState};
-use crate::config::Config;
 use crate::db::{Cache, DownloadRecord};
 use crate::download::DownloadManager;
 use crate::portal::Portal;
 use crate::tui;
 use crate::ui;
+use carp_client::api::CarpClient;
+use carp_client::config::Config;
 
 pub struct App {
     pub config: Config,

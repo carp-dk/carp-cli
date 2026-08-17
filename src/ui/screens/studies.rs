@@ -14,10 +14,10 @@ use ratatui::layout::{Constraint, Rect};
 use ratatui::text::Line;
 use ratatui::widgets::Row;
 
-use crate::api::models::{StudyOverview, format_instant};
 use crate::app::App;
 use crate::ui::widgets::{detail, master_detail, spinner, table};
 use crate::ui::{icons, theme};
+use carp_client::api::models::{StudyOverview, format_instant};
 
 pub fn render(frame: &mut Frame, area: Rect, app: &mut App) {
     crate::app::state::clamp_selection(&mut app.studies.table, app.studies.visible.len());

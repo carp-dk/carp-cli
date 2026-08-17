@@ -12,11 +12,11 @@
 use ratatui::Frame;
 use ratatui::layout::Rect;
 
-use crate::api::models::format_instant;
 use crate::app::state::ParticipantState;
 use crate::ui::screens::study::deployments;
 use crate::ui::widgets::{detail, master_detail};
 use crate::ui::{icons, theme};
+use carp_client::api::models::format_instant;
 
 pub fn render(frame: &mut Frame, area: Rect, state: &ParticipantState) {
     let (left, right) = master_detail(area, 3, 2);

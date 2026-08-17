@@ -25,8 +25,11 @@
 //! - [`actions`] - add, remove and edit, routed by section
 //! - [`pickers`] - the overlays that choose what to add
 //! - [`input`] - key handling
-//! - [`storage`] - reading and writing `protocol.json`
 //! - [`history`] - undo
+//!
+//! Reading and writing the document itself is [`crate::protocol_file`], which
+//! is not part of the editor: `carp protocol check` and `show` need it too,
+//! and they run in builds that have no editor at all.
 //!
 //! # Invariants
 //!
@@ -41,7 +44,6 @@ pub mod input;
 pub mod lists;
 pub mod pickers;
 pub mod section;
-pub mod storage;
 
 use std::path::PathBuf;
 

@@ -12,7 +12,7 @@ use std::collections::HashMap;
 
 use ratatui::widgets::TableState;
 
-use crate::api::models::{ParticipantQuery, ParticipantSummary, StudyOverview};
+use carp_client::api::models::{ParticipantQuery, ParticipantSummary, StudyOverview};
 
 use super::{StudySort, clamp_selection};
 

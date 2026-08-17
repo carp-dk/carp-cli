@@ -14,16 +14,16 @@ use ratatui::Terminal;
 use ratatui::backend::TestBackend;
 
 use super::*;
-use crate::api::CarpClient;
-use crate::api::models::deployment::{EXAMPLE_GROUPS, EXAMPLE_MEMBER_ID};
-use crate::api::models::{
+use crate::app::state::{ParticipantState, Prompt, PromptKind, StudyState, StudyTab};
+use crate::db::Cache;
+use carp_client::api::CarpClient;
+use carp_client::api::models::{
     Account, Export, ExportStatus, ParticipantGroupStatus, ParticipantSummary, StudyFile,
     StudyOverview,
 };
-use crate::app::state::{ParticipantState, Prompt, PromptKind, StudyState, StudyTab};
-use crate::auth::Authenticator;
-use crate::config::Config;
-use crate::db::Cache;
+use carp_client::auth::Authenticator;
+use carp_client::config::Config;
+use carp_client::fixtures::{PARTICIPANT_GROUP_MEMBER_ID, PARTICIPANT_GROUP_STATUS};
 
 fn app() -> App {
     let config = Config {
@@ -33,8 +33,7 @@ fn app() -> App {
         data_dir: std::env::temp_dir().join("carp-cli-tests"),
         download_dir: std::env::temp_dir().join("carp-cli-tests/downloads"),
         portal_url: None,
-        portal_study_path: crate::config::DEFAULT_PORTAL_STUDY_PATH.to_owned(),
-        icons: crate::ui::icons::IconSet::default(),
+        portal_study_path: carp_client::config::DEFAULT_PORTAL_STUDY_PATH.to_owned(),
     };
     let authenticator = Arc::new(Authenticator::new(&config).unwrap());
     let client = CarpClient::new(&config, authenticator).unwrap();
@@ -56,7 +55,7 @@ fn populated_study() -> StudyState {
     let mut state = StudyState::new(study());
     state.participants.set_items(
         vec![ParticipantSummary {
-            participant_id: EXAMPLE_MEMBER_ID.to_owned(),
+            participant_id: PARTICIPANT_GROUP_MEMBER_ID.to_owned(),
             first_name: Some("Ada".to_owned()),
             last_name: Some("Lovelace".to_owned()),
             account_identity: Some("ada@dtu.dk".to_owned()),
@@ -97,7 +96,9 @@ fn populated_study() -> StudyState {
         },
     ];
     state.exports_loaded = true;
-    state.set_groups(serde_json::from_str::<ParticipantGroupStatus>(EXAMPLE_GROUPS).unwrap());
+    state.set_groups(
+        serde_json::from_str::<ParticipantGroupStatus>(PARTICIPANT_GROUP_STATUS).unwrap(),
+    );
     state.details_loaded = true;
     state
 }

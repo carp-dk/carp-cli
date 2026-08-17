@@ -13,11 +13,11 @@ use std::path::PathBuf;
 
 use ratatui::crossterm::event::KeyEvent;
 
-use crate::api::models::{
-    Account, Export, ParticipantGroupStatus, ParticipantPage, StudyFile, StudyOverview,
-};
 use crate::db::DownloadRecord;
 use crate::download::JobId;
+use carp_client::api::models::{
+    Account, Export, ParticipantGroupStatus, ParticipantPage, StudyFile, StudyOverview,
+};
 
 /// What a background load was fetching, so a failure clears the right
 /// spinner without discarding what is already on screen.
@@ -55,7 +55,7 @@ pub enum Message {
     },
     CachedParticipants {
         study_id: String,
-        participants: Vec<crate::api::models::ParticipantSummary>,
+        participants: Vec<carp_client::api::models::ParticipantSummary>,
     },
     Participants {
         study_id: String,

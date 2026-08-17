@@ -105,7 +105,7 @@ impl App {
         };
 
         let path = studio.path.clone().unwrap_or_else(|| {
-            crate::studio::storage::default_path(&studio.protocol, &self.config.download_dir)
+            crate::protocol_file::default_path(&studio.protocol, &self.config.download_dir)
         });
         let protocol = studio.protocol.clone();
         studio_tasks::save_protocol(protocol, path, self.sender());

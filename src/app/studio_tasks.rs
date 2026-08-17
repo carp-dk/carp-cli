@@ -19,9 +19,9 @@ use tokio::sync::mpsc::UnboundedSender;
 
 use carp_protocol::StudyProtocol;
 
-use crate::api::CarpClient;
-use crate::api::endpoints::protocols;
 use crate::app::message::Message;
+use carp_client::api::CarpClient;
+use carp_client::api::endpoints::protocols;
 
 /// Load the stored catalogue, without touching the network.
 ///
@@ -89,7 +89,7 @@ pub fn save_protocol(protocol: StudyProtocol, path: PathBuf, tx: UnboundedSender
         // small, but a slow or full disk must not stall the event loop.
         let write = tokio::task::spawn_blocking({
             let path = path.clone();
-            move || crate::studio::storage::write(&protocol, &path)
+            move || crate::protocol_file::write(&protocol, &path)
         })
         .await;
 
@@ -107,7 +107,7 @@ pub fn open_protocol(path: PathBuf, tx: UnboundedSender<Message>) {
     tokio::spawn(async move {
         let read = tokio::task::spawn_blocking({
             let path = path.clone();
-            move || crate::studio::storage::read_checked(&path)
+            move || crate::protocol_file::read_checked(&path)
         })
         .await;
 

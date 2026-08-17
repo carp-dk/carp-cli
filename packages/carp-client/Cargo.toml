@@ -1,0 +1,42 @@
+[package]
+name = "carp-client"
+description = "Session handling and a typed client for the CARP web service"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+edition.workspace = true
+repository.workspace = true
+homepage.workspace = true
+rust-version.workspace = true
+readme = "README.md"
+keywords = ["carp", "research", "mhealth", "client", "science"]
+categories = ["api-bindings", "science"]
+
+[dependencies]
+carp-protocol.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+chrono.workspace = true
+thiserror.workspace = true
+
+# HTTP. `stream` is what lets an export be written to disk as it arrives
+# rather than buffered whole.
+reqwest = { version = "0.12", default-features = false, features = [
+    "json",
+    "stream",
+    "rustls-tls",
+    "charset",
+    "http2",
+] }
+futures-util = "0.3"
+tokio = { version = "1", features = ["fs", "io-util", "macros", "rt", "sync"] }
+
+# OAuth2 authorization code + PKCE against Keycloak.
+oauth2 = "5"
+subtle = "2"
+tiny_http = "0.12"
+url = "2"
+webbrowser = "1"
+base64 = "0.22"
+
+dirs = "6"

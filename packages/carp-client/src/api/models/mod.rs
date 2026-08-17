@@ -11,8 +11,6 @@
 //! Every struct is `#[serde(default)]` so a field the deployment does not send
 //! (or one added later) cannot fail a whole response.
 
-#![allow(dead_code, reason = "complete client surface for the CARP API")]
-
 pub mod account;
 pub mod common;
 pub mod data_stream;
@@ -29,7 +27,10 @@ pub mod study;
 mod prelude {
     pub use super::account::{Account, AccountRole};
     pub use super::common::{CarpInstant, CarpUuid, format_bytes, format_instant};
-    pub use super::data_stream::{DataStreamSummary, DeploymentStatistics};
+    pub use super::data_stream::{
+        DataPointCount, DataStreamBatch, DataStreamId, DataStreamSequence, DataStreamSummary,
+        DeploymentStatistic, DeploymentStatistics, Measurement, MeasurementRow, NamespacedId,
+    };
     pub use super::deployment::{
         DeploymentStatus, DeviceInfo, DeviceStatus, ParticipantGroup, ParticipantGroupStatus,
     };

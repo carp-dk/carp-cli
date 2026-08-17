@@ -129,7 +129,7 @@ icon!(/// Ready but not yet live.
 icon!(/// Something optional.
     optional, "◦", "➖");
 
-/// Stage of a study, as reported by [`crate::api::models::StudyOverview`].
+/// Stage of a study, as reported by [`carp_client::api::models::StudyOverview`].
 pub fn study_stage(stage: &str) -> &'static str {
     match stage {
         "live" => running(),

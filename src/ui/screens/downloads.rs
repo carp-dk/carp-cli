@@ -13,11 +13,11 @@ use ratatui::layout::{Constraint, Layout, Rect};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::Row;
 
-use crate::api::models::format_bytes;
 use crate::app::App;
 use crate::download::JobStatus;
 use crate::ui::widgets::table;
 use crate::ui::{icons, theme};
+use carp_client::api::models::format_bytes;
 
 /// Width of the textual progress bar.
 const BAR_WIDTH: usize = 20;

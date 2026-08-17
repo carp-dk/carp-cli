@@ -14,12 +14,11 @@ pub mod token;
 
 use std::path::PathBuf;
 
-use color_eyre::Result;
-use color_eyre::eyre::{Context, bail};
 use tokio::sync::{Mutex, RwLock};
 
 use crate::auth::token::TokenSet;
 use crate::config::Config;
+use crate::error::{Error, Result};
 
 pub struct Authenticator {
     config: Config,
@@ -58,16 +57,20 @@ impl Authenticator {
     }
 
     /// Log in if there is no usable session; a no-op otherwise.
-    pub async fn ensure_session(&self) -> Result<()> {
+    ///
+    /// `on_url` is called with the authorization URL before the browser is
+    /// opened, so a caller can show it — the browser may fail to open, or open
+    /// somewhere the user cannot see.
+    pub async fn ensure_session(&self, on_url: impl Fn(&str)) -> Result<()> {
         if self.has_session().await {
             return Ok(());
         }
-        self.login().await
+        self.login(on_url).await
     }
 
     /// Run the interactive browser login and persist the result.
-    pub async fn login(&self) -> Result<()> {
-        let tokens = oauth::login(&self.config, &self.http).await?;
+    pub async fn login(&self, on_url: impl Fn(&str)) -> Result<()> {
+        let tokens = oauth::login(&self.config, &self.http, on_url).await?;
         token::save(&self.token_path, &tokens)?;
         *self.tokens.write().await = Some(tokens);
         Ok(())
@@ -84,13 +87,13 @@ impl Authenticator {
     pub async fn access_token(&self) -> Result<String> {
         let current = self.tokens.read().await.clone();
         let Some(current) = current else {
-            bail!("not signed in - run `carp login`");
+            return Err(Error::no_session("not signed in - run `carp auth login`"));
         };
         if !current.needs_refresh() {
             return Ok(current.access_token);
         }
         let Some(refresh_token) = current.refresh_token.clone() else {
-            bail!("session expired - run `carp login`");
+            return Err(Error::no_session("session expired - run `carp auth login`"));
         };
 
         let _guard = self.refresh_guard.lock().await;
@@ -103,7 +106,11 @@ impl Authenticator {
 
         let refreshed = oauth::refresh(&self.config, &self.http, &refresh_token)
             .await
-            .context("session expired and could not be renewed - run `carp login`")?;
+            .map_err(|error| {
+                Error::no_session(format!(
+                    "session expired and could not be renewed ({error}) - run `carp auth login`"
+                ))
+            })?;
         token::save(&self.token_path, &refreshed)?;
         let access_token = refreshed.access_token.clone();
         *self.tokens.write().await = Some(refreshed);

@@ -13,12 +13,9 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use color_eyre::Result;
-use color_eyre::eyre::{Context, eyre};
 use url::Url;
 
-use crate::cli::Args;
-use crate::ui::icons::IconSet;
+use crate::error::{Error, IoContext, Result};
 
 /// The CARP deployments the CLI knows by name. Any other one is still
 /// reachable by giving its address to `--server`.
@@ -82,6 +79,26 @@ pub const DEFAULT_REALM: &str = "Carp";
 /// `{study}` is replaced with the study id.
 pub const DEFAULT_PORTAL_STUDY_PATH: &str = "/studies/{study}";
 
+/// What a caller may override, before the environment gets a say.
+///
+/// The command line fills this from its flags and the Python module from its
+/// keyword arguments; anything left `None` falls through to `CARP_*`, then to
+/// `.env`, then to a default. Keeping it a plain struct is what lets both do
+/// that without either knowing about the other's argument parser.
+#[derive(Debug, Clone, Default)]
+pub struct Settings {
+    /// A CARP server by address. Outranks `environment`.
+    pub server: Option<String>,
+    /// A deployment by name; see [`Environment::parse`].
+    pub environment: Option<String>,
+    /// Where tokens and the local cache are kept.
+    pub data_dir: Option<PathBuf>,
+    /// Where exports and study files are written.
+    pub download_dir: Option<PathBuf>,
+    /// Base address of the CARP web portal.
+    pub portal: Option<String>,
+}
+
 /// Everything the app needs to know before it starts talking to CARP.
 #[derive(Debug, Clone)]
 pub struct Config {
@@ -100,14 +117,12 @@ pub struct Config {
     pub portal_url: Option<Url>,
     /// Path template for a study in the portal.
     pub portal_study_path: String,
-    /// Which icon set the interface draws.
-    pub icons: IconSet,
 }
 
 impl Config {
-    /// Resolve configuration from (in order of precedence) CLI flags,
+    /// Resolve configuration from (in order of precedence) `settings`,
     /// environment variables, `.env` in the working directory, and defaults.
-    pub fn load(args: &Args) -> Result<Self> {
+    pub fn load(settings: &Settings) -> Result<Self> {
         let dotenv = read_dotenv(Path::new(".env"));
         let setting = |key: &str| -> Option<String> {
             std::env::var(key).ok().or_else(|| dotenv.get(key).cloned())
@@ -116,25 +131,31 @@ impl Config {
         let server_setting = setting("CARP_SERVER");
         let environment_setting = setting("CARP_ENV");
         let server = resolve_server(
-            args.server.as_deref(),
-            args.environment.as_deref(),
+            settings.server.as_deref(),
+            settings.environment.as_deref(),
             server_setting.as_deref(),
             environment_setting.as_deref(),
         )?;
         let server = Url::parse(server.trim_end_matches('/'))
-            .with_context(|| format!("invalid CARP server URL: {server}"))?;
+            .map_err(|error| Error::config(format!("invalid CARP server URL {server}: {error}")))?;
 
         let realm = setting("CARP_REALM").unwrap_or_else(|| DEFAULT_REALM.to_owned());
         let client_id = setting("CARP_CLIENT_ID").unwrap_or_else(|| DEFAULT_CLIENT_ID.to_owned());
 
-        let data_dir = match setting("CARP_DATA_DIR") {
-            Some(dir) => PathBuf::from(dir),
+        let data_dir = match settings
+            .data_dir
+            .clone()
+            .or_else(|| setting("CARP_DATA_DIR").map(PathBuf::from))
+        {
+            Some(dir) => dir,
             None => dirs::data_dir()
-                .ok_or_else(|| eyre!("cannot determine a data directory for this platform"))?
+                .ok_or_else(|| {
+                    Error::config("cannot determine a data directory for this platform")
+                })?
                 .join("carp"),
         };
 
-        let download_dir = args
+        let download_dir = settings
             .download_dir
             .clone()
             .or_else(|| setting("CARP_DOWNLOAD_DIR").map(PathBuf::from))
@@ -144,28 +165,20 @@ impl Config {
                     .join("carp")
             });
 
-        let portal_url = args
+        let portal_url = settings
             .portal
             .clone()
             .or_else(|| setting("CARP_PORTAL_URL"))
-            .map(|url| Url::parse(&url).with_context(|| format!("invalid CARP portal URL: {url}")))
+            .map(|url| {
+                Url::parse(&url).map_err(|error| {
+                    Error::config(format!("invalid CARP portal URL {url}: {error}"))
+                })
+            })
             .transpose()?;
         let portal_study_path = setting("CARP_PORTAL_STUDY_PATH")
             .unwrap_or_else(|| DEFAULT_PORTAL_STUDY_PATH.to_owned());
 
-        let icons = args
-            .icons
-            .clone()
-            .or_else(|| setting("CARP_ICONS"))
-            .map(|value| {
-                IconSet::parse(&value)
-                    .ok_or_else(|| eyre!("unknown icon set: {value} (symbols, emoji or none)"))
-            })
-            .transpose()?
-            .unwrap_or_default();
-
-        fs::create_dir_all(&data_dir)
-            .with_context(|| format!("creating data directory {}", data_dir.display()))?;
+        fs::create_dir_all(&data_dir).at("creating data directory", &data_dir)?;
 
         Ok(Self {
             server,
@@ -175,7 +188,15 @@ impl Config {
             download_dir,
             portal_url,
             portal_study_path,
-            icons,
+        })
+    }
+
+    /// A configuration addressing one of the known deployments, taking
+    /// everything else from the environment.
+    pub fn for_environment(environment: Environment) -> Result<Self> {
+        Self::load(&Settings {
+            environment: Some(environment.name().to_owned()),
+            ..Settings::default()
         })
     }
 
@@ -234,10 +255,10 @@ fn resolve_server(
         Environment::parse(value)
             .map(|environment| environment.url().to_owned())
             .ok_or_else(|| {
-                eyre!(
+                Error::config(format!(
                     "unknown CARP environment: {value} (expected {})",
                     Environment::names()
-                )
+                ))
             })
     };
 
@@ -397,7 +418,6 @@ mod tests {
                     download_dir: PathBuf::from("/tmp/carp"),
                     portal_url: None,
                     portal_study_path: DEFAULT_PORTAL_STUDY_PATH.to_owned(),
-                    icons: IconSet::default(),
                 };
                 (config.token_file(), config.db_path())
             })

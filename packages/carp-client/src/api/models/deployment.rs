@@ -246,58 +246,14 @@ pub struct ParticipantStatus {
     pub assigned_primary_device_role_names: Vec<String>,
 }
 
-/// A trimmed copy of a real `participantGroup/status` response, shared by
-/// every test that exercises the participant/deployment join.
-#[cfg(test)]
-pub(crate) const EXAMPLE_GROUPS: &str = r#"{
-      "groups": [{
-        "participantGroupId": "df98d925-3ab4-4b78-8139-fea86d809dc5",
-        "deploymentStatus": {
-          "__type": "dk.cachet.carp.deployments.application.StudyDeploymentStatus.Invited",
-          "createdOn": "2024-10-16T14:22:48.017632727Z",
-          "studyDeploymentId": "df98d925-3ab4-4b78-8139-fea86d809dc5",
-          "deviceStatusList": [
-            {
-              "__type": "dk.cachet.carp.deployments.application.DeviceDeploymentStatus.Unregistered",
-              "device": {
-                "__type": "dk.cachet.carp.common.application.devices.Smartphone",
-                "isPrimaryDevice": true,
-                "roleName": "Primary Phone"
-              },
-              "canBeDeployed": true,
-              "remainingDevicesToRegisterToObtainDeployment": ["Primary Phone"]
-            },
-            {
-              "__type": "dk.cachet.carp.deployments.application.DeviceDeploymentStatus.Unregistered",
-              "device": {
-                "__type": "dk.cachet.carp.common.application.devices.LocationService",
-                "roleName": "Location Service",
-                "isOptional": true
-              },
-              "canBeDeployed": false
-            }
-          ],
-          "participantStatusList": [
-            {
-              "participantId": "0c1b0e6c-1111-2222-3333-444455556666",
-              "assignedPrimaryDeviceRoleNames": ["Primary Phone"]
-            }
-          ]
-        }
-      }]
-    }"#;
-
-/// The participant that [`EXAMPLE_GROUPS`] lists as a member.
-#[cfg(test)]
-pub(crate) const EXAMPLE_MEMBER_ID: &str = "0c1b0e6c-1111-2222-3333-444455556666";
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn group_status_is_summarised_not_dumped() {
-        let status: ParticipantGroupStatus = serde_json::from_str(EXAMPLE_GROUPS).unwrap();
+        let status: ParticipantGroupStatus =
+            serde_json::from_str(crate::fixtures::PARTICIPANT_GROUP_STATUS).unwrap();
         let group = &status.groups[0];
 
         assert_eq!(group.state(), "Invited");
@@ -320,17 +276,21 @@ mod tests {
 
     #[test]
     fn a_participant_resolves_to_their_deployment() {
-        let status: ParticipantGroupStatus = serde_json::from_str(EXAMPLE_GROUPS).unwrap();
+        let status: ParticipantGroupStatus =
+            serde_json::from_str(crate::fixtures::PARTICIPANT_GROUP_STATUS).unwrap();
         let index = status.index_by_participant();
 
         let position = index
-            .get(EXAMPLE_MEMBER_ID)
+            .get(crate::fixtures::PARTICIPANT_GROUP_MEMBER_ID)
             .copied()
             .expect("the participant is a member of the group");
         let group = &status.groups[position];
 
         assert_eq!(group.short_id(), "df98d925");
-        assert_eq!(group.assigned_devices(EXAMPLE_MEMBER_ID), ["Primary Phone"]);
+        assert_eq!(
+            group.assigned_devices(crate::fixtures::PARTICIPANT_GROUP_MEMBER_ID),
+            ["Primary Phone"]
+        );
         // A participant of another study is not in this study's index.
         assert!(!index.contains_key("ffffffff-0000-0000-0000-000000000000"));
     }

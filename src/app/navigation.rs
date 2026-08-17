@@ -8,10 +8,10 @@
 
 //! Moving between screens, and loading what a screen needs.
 
-use crate::api::models::{ParticipantSummary, StudyOverview};
 use crate::app::App;
 use crate::app::state::{ParticipantState, Route, StudyState, StudyTab};
 use crate::app::{state, tasks};
+use carp_client::api::models::{ParticipantSummary, StudyOverview};
 
 impl App {
     pub fn open_study(&mut self, study: StudyOverview) {

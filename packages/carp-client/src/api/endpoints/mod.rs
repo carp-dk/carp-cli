@@ -10,9 +10,7 @@
 //! operation in `api-docs.json`.
 //!
 //! The set is deliberately complete per controller, so an operation is here
-//! before a screen needs it.
-
-#![allow(dead_code, reason = "complete client surface for the CARP API")]
+//! before a caller needs it.
 
 pub mod accounts;
 pub mod data_streams;
