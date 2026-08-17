@@ -5,15 +5,23 @@ name: Release
 # ordinary pushes cost one cheap job and nothing else. Bump the version, merge,
 # and the release builds itself.
 #
-# One version, two channels:
+# One version, three channels:
 #
-#   GitHub  the `carp` binary, one archive per platform, plus SHA256SUMS
-#   PyPI    `carp-cli`, one wheel per platform plus an sdist
+#   crates.io  the four Rust crates, in dependency order
+#   PyPI       `carp-cli`, one wheel per platform plus an sdist
+#   GitHub     the `carp` binary, one archive per platform, plus SHA256SUMS
 #
-# Both take their version from [workspace.package] in Cargo.toml, so they
-# cannot disagree. PyPI goes first and the git tag is created last — an upload
-# to PyPI can never be undone or repeated, whereas a missing tag just means the
-# run can be tried again.
+# All three take their version from [workspace.package] in Cargo.toml, so they
+# cannot disagree. They publish in that order, least recoverable last: neither
+# registry will ever let a version be replaced, so crates.io — four uploads,
+# any of which can fail — goes before PyPI's single one, and the git tag is
+# created after both. A missing tag only means the run can be tried again; a
+# version spent on a registry is spent for good.
+#
+# That makes re-running a half-finished release safe, which is the property
+# that matters most here: each publishing step asks whether its version is
+# already up and does nothing if it is, so a run that died anywhere can simply
+# be run again.
 #
 # Publishing to PyPI uses Trusted Publishing and stores no credential. It needs
 # a one-time setup on pypi.org before the first release; see
@@ -412,51 +420,23 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-  # PyPI first, the GitHub release last. An upload cannot be undone and a
-  # version cannot be re-used, but the git tag can simply not exist yet - so
-  # the step that is hard to repeat runs while a re-run is still possible.
-  publish-pypi:
-    name: pypi ${{ needs.gate.outputs.version }}
-    # `build` too, though no artifact of it is used here: a PyPI upload cannot
-    # be taken back, so nothing is published until every part of the release
-    # exists. A binary that fails to build after the wheels went out would
-    # leave a version on PyPI that GitHub has no release for.
-    needs: [gate, build, wheels, sdist]
-    runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/p/carp-cli
-    permissions:
-      # Trusted Publishing: GitHub mints a short-lived OIDC token that PyPI
-      # verifies against the publisher configured for this repository. No API
-      # token is stored anywhere. See .github/PUBLISHING.md.
-      id-token: write
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          path: dist
-          pattern: python-*
-          merge-multiple: true
-
-      - name: What is about to be published
-        run: ls -la dist/
-
-      - uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          packages-dir: dist
-          # A run that died after uploading some files can be re-run: the files
-          # already on PyPI are left alone rather than failing the whole job.
-          # Publishing a version twice is prevented by the gate, not by this.
-          skip-existing: true
-
   # crates.io, in dependency order. A crate cannot be published until every
   # crate it depends on is already on the index, because cargo resolves the
   # published version rather than the path.
+  #
+  # First of the three channels: it is four uploads rather than one, so it is
+  # the likeliest to stop halfway, and none of them can be taken back. Going
+  # first means a crates.io failure costs nothing elsewhere - the version is
+  # still free on PyPI, and the tag does not exist yet.
   #
   # carp-python is not here: it is `publish = false`, being a cdylib for one
   # interpreter ABI rather than something a Rust crate could depend on.
   publish-crates:
     name: crates.io ${{ needs.gate.outputs.version }}
+    # `build` too, though no artifact of it is used here: nothing is published
+    # until every part of the release exists, because a binary that failed to
+    # build after the crates went out would leave a version on crates.io that
+    # GitHub has no release for.
     needs: [gate, build, wheels, sdist]
     runs-on: ubuntu-latest
     environment:
@@ -491,6 +471,30 @@ jobs:
           VERSION: ${{ needs.gate.outputs.version }}
         run: |
           set -euo pipefail
+
+          # Is this exact version already on crates.io?
+          #
+          # The sparse index rather than `cargo search`, which was wrong three
+          # ways: it reports only a crate's newest version, so it cannot answer
+          # about an older one; its full-text index lags behind a publish; and
+          # CARGO_TERM_COLOR=always - set for this whole workflow - wraps the
+          # crate name in escape codes, so a fixed-string grep never matched at
+          # all. That is what failed the 0.2.0 release after the crates were
+          # already up.
+          #
+          # The index is what cargo itself resolves against, it is exact about
+          # versions, and it is current the moment a publish returns. It serves
+          # one JSON object per line, one per version.
+          #
+          # A 404 here is the ordinary answer for a crate whose first release
+          # this is, so curl stays quiet rather than printing an error on the
+          # normal path. Anything else that goes wrong reads as "not published
+          # yet", and the `cargo publish` below then fails with a real message.
+          published() {
+            curl -sf --retry 3 "https://index.crates.io/${1:0:2}/${1:2:2}/$1" \
+              | jq -e --arg v "$2" 'select(.vers == $v)' > /dev/null
+          }
+
           # One at a time rather than `--workspace`, so that a re-run after a
           # partial release can get past the crates that already succeeded —
           # the same property `skip-existing` gives the PyPI job. `cargo
@@ -502,11 +506,15 @@ jobs:
           # this ordering is the right one.
           for crate in carp-protocol carp-catalog carp-client carp-dk; do
             echo "::group::$crate"
-            if cargo publish --locked --package "$crate"; then
+            if published "$crate" "$VERSION"; then
+              # Left over from an earlier attempt at this same version. A
+              # different version reaching here is prevented by the gate.
+              echo "::notice::$crate $VERSION is already on crates.io"
+            elif cargo publish --locked --package "$crate"; then
               echo "published $crate $VERSION"
-            elif cargo search "$crate" | grep -qF "$crate = \"$VERSION\""; then
-              # Already on crates.io at this version, from an earlier attempt.
-              # Publishing a version twice is prevented by the gate, not here.
+            elif published "$crate" "$VERSION"; then
+              # The index answered before it had caught up; the publish itself
+              # found the version already there.
               echo "::notice::$crate $VERSION was already published"
             else
               echo "::error::publishing $crate failed, and it is not on crates.io at $VERSION"
@@ -514,6 +522,39 @@ jobs:
             fi
             echo "::endgroup::"
           done
+
+  # PyPI second, once crates.io is completely done. A version cannot be
+  # replaced here either, so it is not spent until the failure-prone half of
+  # the release has already succeeded.
+  publish-pypi:
+    name: pypi ${{ needs.gate.outputs.version }}
+    needs: [gate, build, wheels, sdist, publish-crates]
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/carp-cli
+    permissions:
+      # Trusted Publishing: GitHub mints a short-lived OIDC token that PyPI
+      # verifies against the publisher configured for this repository. No API
+      # token is stored anywhere. See .github/PUBLISHING.md.
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: python-*
+          merge-multiple: true
+
+      - name: What is about to be published
+        run: ls -la dist/
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist
+          # A run that died after uploading some files can be re-run: the files
+          # already on PyPI are left alone rather than failing the whole job.
+          # Publishing a version twice is prevented by the gate, not by this.
+          skip-existing: true
 
   publish:
     name: publish ${{ needs.gate.outputs.tag }}
