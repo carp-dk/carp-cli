@@ -81,6 +81,29 @@ fn flags_still_parse_alongside_a_command() {
 }
 
 #[test]
+fn a_deployment_can_be_named_instead_of_addressed() {
+    assert_eq!(
+        parse(&["--env", "test"]).unwrap().environment.as_deref(),
+        Some("test")
+    );
+    assert_eq!(
+        parse(&["-e", "dev"]).unwrap().environment.as_deref(),
+        Some("dev")
+    );
+    assert_eq!(parse(&[]).unwrap().environment, None);
+
+    // The name is not validated here; config.rs owns which names exist.
+    let args = parse(&["-e", "prod", "protocol", "sync"]).unwrap();
+    assert_eq!(args.command, Command::ProtocolSync);
+    assert_eq!(args.environment.as_deref(), Some("prod"));
+}
+
+#[test]
+fn env_without_a_name_is_an_error() {
+    assert!(parse(&["--env"]).is_err());
+}
+
+#[test]
 fn an_unknown_subcommand_is_refused() {
     assert!(parse(&["protocol", "--nonsense"]).is_err());
     assert!(parse(&["nonsense"]).is_err());

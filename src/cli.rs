@@ -39,7 +39,10 @@ COMMANDS:
     carp/resources/protocol.json.
 
 OPTIONS:
-    -s, --server <URL>  CARP server (default: https://dev.carp.dk, env CARP_SERVER)
+    -e, --env <NAME>    Deployment: production (default), test or dev
+                        (env CARP_ENV)
+    -s, --server <URL>  A CARP server by address, for a deployment --env does
+                        not name; overrides it (env CARP_SERVER)
     -o, --output <DIR>  Download directory (env CARP_DOWNLOAD_DIR)
     -p, --portal <URL>  CARP web portal opened by `o` (env CARP_PORTAL_URL)
     -i, --icons <SET>   symbols (default), emoji or none (env CARP_ICONS)
@@ -49,7 +52,13 @@ OPTIONS:
 ENVIRONMENT:
     GITHUB_TOKEN        Raises the GitHub API rate limit used by
                         `protocol sync`; only needed on a shared address
-    CARP_SERVER         Base URL of the CARP web service
+    CARP_ENV            Which deployment to talk to:
+                          production  https://carp.computerome.dk  (default)
+                          test        https://test.carp.dk
+                          dev         https://dev.carp.dk
+                        Each keeps its own session and cache, so switching
+                        neither logs you out of the other nor mixes them up.
+    CARP_SERVER         Base URL of the CARP web service; overrides CARP_ENV
     CARP_REALM          Keycloak realm (default: Carp)
     CARP_CLIENT_ID      Public OAuth2 client id (default: carp-cli)
     CARP_DATA_DIR       Where tokens and the local cache are stored
@@ -92,6 +101,8 @@ pub enum Command {
 pub struct Args {
     pub command: Command,
     pub server: Option<String>,
+    /// A deployment by name; see `carp::config::Environment`.
+    pub environment: Option<String>,
     pub download_dir: Option<PathBuf>,
     pub portal: Option<String>,
     pub icons: Option<String>,
@@ -102,6 +113,7 @@ impl Default for Args {
         Self {
             command: Command::Tui,
             server: None,
+            environment: None,
             download_dir: None,
             portal: None,
             icons: None,
@@ -127,6 +139,12 @@ impl Args {
                         bail!("--server requires a URL");
                     };
                     args.server = Some(value);
+                }
+                "-e" | "--env" | "--environment" => {
+                    let Some(value) = iter.next() else {
+                        bail!("--env requires production, test or dev");
+                    };
+                    args.environment = Some(value);
                 }
                 "-o" | "--output" => {
                     let Some(value) = iter.next() else {

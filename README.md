@@ -1,4 +1,4 @@
-# carp-cli
+# CARP CLI
 
 A terminal client for the [Copenhagen Research Platform][carp]: browse studies,
 participants, deployments and exports — and author the study protocols those
@@ -8,6 +8,52 @@ studies run on.
 carp                       # the study browser
 carp protocol              # the protocol editor
 ```
+
+## Installing
+
+Every version tagged on `main` publishes a binary per platform under
+[Releases][releases]. Take the archive for your machine, unpack it, and put
+`carp` on your `PATH`:
+
+| Platform | Archive |
+| --- | --- |
+| Linux, Intel/AMD | `carp-<version>-x86_64-unknown-linux-gnu.tar.gz` |
+| Linux, ARM | `carp-<version>-aarch64-unknown-linux-gnu.tar.gz` |
+| macOS, Apple silicon | `carp-<version>-aarch64-apple-darwin.tar.gz` |
+| macOS, Intel | `carp-<version>-x86_64-apple-darwin.tar.gz` |
+| Windows | `carp-<version>-x86_64-pc-windows-msvc.zip` |
+
+```sh
+tar -xzf carp-0.2.0-aarch64-apple-darwin.tar.gz
+install carp-0.2.0-aarch64-apple-darwin/carp /usr/local/bin/
+carp --version
+```
+
+`SHA256SUMS` ships beside the archives, so a download can be checked against
+what the workflow built:
+
+```sh
+sha256sum --check --ignore-missing SHA256SUMS
+```
+
+The binaries are not yet code-signed. macOS quarantines anything a browser
+downloaded, and `tar` carries that attribute onto the files it extracts, so an
+unsigned `carp` is killed on sight rather than warned about — no dialog, just
+`Killed: 9`. Clearing the attribute is what unblocks it:
+
+```sh
+xattr -d com.apple.quarantine /usr/local/bin/carp
+```
+
+Downloading with `curl`, or building from source, avoids it entirely.
+
+Building it yourself needs a Rust toolchain and nothing else:
+
+```sh
+cargo install --path .
+```
+
+[releases]: https://github.com/carp-dk/carp-cli/releases
 
 ## The protocol editor
 
@@ -38,34 +84,25 @@ study app expects.
  a add · e edit · x remove · m measures · Enter survey · s save · z undo
 ```
 
-### What it does
+### Can handle:
 
-- **Every part of a protocol.** Devices (both CARP namespaces, including the
+- Devices (both CARP namespaces, including the
   CAMS 2.0 classes), background and app tasks, all nine trigger kinds, Research
   Package surveys with branching, participant roles and expected data, and the
   data endpoint.
-- **Keeps references intact.** A protocol is joined by name — a trigger names
+- A protocol is joined by name — a trigger names
   its device, a task control names a task. Renaming a device moves every
   reference with it; removing one takes the triggers and controls that could
   only have referred to it, and says what it took. `z` undoes any of it.
-- **Checks before you deploy.** The Checks tab reports what the schema cannot:
+- The Checks tab reports what the schema cannot:
   a name that does not resolve, an identifier used twice, a task nothing
   starts, a survey branch that jumps to a step that no longer exists.
-- **Starts from a real study.** The Catalog tab lists the upstream studies;
+- The Catalog tab lists the upstream studies;
   `Enter` forks one into a new protocol of your own.
-- **Uploads to CARP.** `u` stores the protocol as a new version under a version
+- `u` stores the protocol as a new version under a version
   tag, choosing `Add` or `AddVersion` by what CAWS already holds.
 
-### Where its vocabulary comes from
-
-Which measure types exist, which health metrics can be read, which question
-types a survey supports — none of that is fixed in this tool. Every sampling
-package a study app links in contributes its own, and the set changes release
-to release.
-
-So it is not hard-coded: it is **derived** from the protocols in
-`carp_study_app_configurations`, and pinned to the commit it was derived from.
-
+The cli depends on the CARP study app configurations repository for its vocabs and functionality availability.
 ```
 $ carp protocol sync
 syncing from carp-dk/carp_study_app_configurations…
@@ -108,7 +145,7 @@ carp protocol check studies/sleep || exit 1
 ## Layout
 
 ```
-carp-cli-rust
+carp-cli
 ├── src/                     the terminal application
 │   ├── api/                 HTTP client, typed models, one fn per operation
 │   ├── app/                 state, key handling, background tasks
@@ -143,11 +180,34 @@ so they are what it is tested against:
 Refresh the corpus with `carp protocol sync` and copy the documents out of the
 snapshot it writes.
 
+## Deployments
+
+Three CARP deployments are known by name, and a released binary talks to
+production unless told otherwise:
+
+| `--env` | Address | |
+| --- | --- | --- |
+| `production` | `https://carp.computerome.dk` | live data — the default |
+| `test` | `https://test.carp.dk` | staging: what production becomes next |
+| `dev` | `https://dev.carp.dk` | where server work lands first |
+
+```sh
+carp --env dev            # or CARP_ENV=dev
+carp --env test protocol sync
+carp                      # production
+```
+
+Each deployment keeps its own session and its own cache, keyed by host, so
+moving between them neither signs you out of the other nor mixes their studies
+together. Anywhere else is reachable by address with `--server`, which
+overrides `--env`.
+
 ## Configuration
 
 | Variable | Meaning |
 | --- | --- |
-| `CARP_SERVER` | Base URL of the CARP web service |
+| `CARP_ENV` | `production` (default), `test` or `dev` |
+| `CARP_SERVER` | Base URL of the CARP web service; overrides `CARP_ENV` |
 | `CARP_REALM` | Keycloak realm (default `Carp`) |
 | `CARP_CLIENT_ID` | Public OAuth2 client id (default `carp-cli`) |
 | `CARP_DATA_DIR` | Where tokens, the cache and the catalogue are stored |
@@ -161,10 +221,9 @@ binary.
 
 ## License
 
-Copyright (c) Alireza Hajebrahimi <6937697+iarata@users.noreply.github.com>
+Copyright (c) Copenhagen Research Platform
 
 Licensed under the MIT license ([LICENSE](./LICENSE) or
 <http://opensource.org/licenses/MIT>).
 
-[carp]: https://carp.cachet.dk
-[configs]: https://github.com/carp-dk/carp_study_app_configurations
+[carp]: https://carp.dk
