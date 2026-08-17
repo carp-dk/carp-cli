@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Copenhagen Research Platform
 // All rights reserved.
 //
-// Authors: Alireza Hajebrahimi (alihaj [at] dtu.dk)
+// Authors: Alireza Hajebrahimi (support@carp.dk)
 //
 // This file is part of CARP CLI.
 // Unauthorized copying, modification, or distribution is prohibited.
