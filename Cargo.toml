@@ -10,7 +10,7 @@ members = [
 # licence are stated once.
 [workspace.package]
 version = "0.2.0"
-authors = ["Alireza Hajebrahimi <6937697+iarata@users.noreply.github.com>"]
+authors = ["Alireza Hajebrahimi <support@carp.dk>"]
 license = "MIT"
 edition = "2024"
 repository = "https://github.com/carp-dk/carp-cli"
