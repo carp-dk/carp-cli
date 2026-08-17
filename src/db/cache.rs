@@ -21,8 +21,8 @@ use color_eyre::Result;
 use color_eyre::eyre::Context;
 use turso::{Builder, Connection, Database, Value};
 
-use crate::api::models::{ParticipantSummary, StudyOverview};
 use crate::db::schema::MIGRATIONS;
+use carp_client::api::models::{ParticipantSummary, StudyOverview};
 
 /// A completed download, as recorded in the cache.
 #[derive(Debug, Clone)]

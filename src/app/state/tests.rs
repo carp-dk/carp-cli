@@ -9,15 +9,15 @@
 //! Tests for [`super`].
 
 use super::*;
-use crate::api::models::deployment::{EXAMPLE_GROUPS, EXAMPLE_MEMBER_ID};
-use crate::api::models::{ParticipantSummary, StudyOverview};
+use carp_client::api::models::{ParticipantSummary, StudyOverview};
+use carp_client::fixtures::{PARTICIPANT_GROUP_MEMBER_ID, PARTICIPANT_GROUP_STATUS};
 
 fn study_with_one_deployed_participant() -> StudyState {
     let mut state = StudyState::new(StudyOverview::default());
-    state.set_groups(serde_json::from_str(EXAMPLE_GROUPS).unwrap());
+    state.set_groups(serde_json::from_str(PARTICIPANT_GROUP_STATUS).unwrap());
     state.participants.set_items(
         vec![ParticipantSummary {
-            participant_id: EXAMPLE_MEMBER_ID.to_owned(),
+            participant_id: PARTICIPANT_GROUP_MEMBER_ID.to_owned(),
             first_name: Some("Ada".to_owned()),
             last_name: Some("Lovelace".to_owned()),
             ..ParticipantSummary::default()
@@ -35,10 +35,13 @@ fn the_join_works_in_both_directions() {
     let state = study_with_one_deployed_participant();
 
     let group = state
-        .group_for(EXAMPLE_MEMBER_ID)
+        .group_for(PARTICIPANT_GROUP_MEMBER_ID)
         .expect("the participant is a member of the fixture group");
     assert_eq!(group.short_id(), "df98d925");
-    assert_eq!(group.assigned_devices(EXAMPLE_MEMBER_ID), ["Primary Phone"]);
+    assert_eq!(
+        group.assigned_devices(PARTICIPANT_GROUP_MEMBER_ID),
+        ["Primary Phone"]
+    );
     assert_eq!(state.group_members(group), ["Ada Lovelace"]);
 }
 
@@ -69,6 +72,6 @@ fn the_directory_survives_paging() {
 
     // Page two is what is shown, but page one is still resolvable.
     assert_eq!(state.participants.items.len(), 1);
-    let group = state.group_for(EXAMPLE_MEMBER_ID).unwrap();
+    let group = state.group_for(PARTICIPANT_GROUP_MEMBER_ID).unwrap();
     assert_eq!(state.group_members(group), ["Ada Lovelace"]);
 }

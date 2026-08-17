@@ -1,13 +1,30 @@
 # CARP CLI
 
-A terminal client for the [Copenhagen Research Platform][carp]: browse studies,
-participants, deployments and exports — and author the study protocols those
-studies run on.
+A client for the [Copenhagen Research Platform][carp]. Read your studies —
+participants, deployments, uploaded measurements, exports and files — from a
+shell, a script, a CI job or a Python notebook. Author the protocols those
+studies run on. And, when a screen full of them is easier than a flag, browse
+them interactively.
 
+```sh
+carp studies list
+carp participants list $STUDY --format csv > participants.csv
+carp data query $DEPLOYMENT --device "Primary Phone" \
+     --type dk.cachet.carp.heartrate --from 7d --format ndjson
 ```
-carp                       # the study browser
-carp protocol              # the protocol editor
+
+```python
+import carp
+
+client = carp.Client(env="production")
+rows = client.data_stream(deployment=DEPLOYMENT, device="Primary Phone",
+                          data_type="dk.cachet.carp.heartrate", start="7d")
+frame = carp.to_pandas(rows)
 ```
+
+> **Breaking change:** bare `carp` used to open the interactive browser. It
+> prints help now; the browser is `carp tui`. Everything the browser could
+> reach has a command.
 
 ## Installing
 
@@ -47,13 +64,168 @@ xattr -d com.apple.quarantine /usr/local/bin/carp
 
 Downloading with `curl`, or building from source, avoids it entirely.
 
-Building it yourself needs a Rust toolchain and nothing else:
+Or from crates.io, which needs a Rust toolchain and nothing else:
 
 ```sh
-cargo install --path .
+cargo install carp-dk
+cargo install carp-dk --no-default-features   # without the browser
+cargo install --path .                        # from a checkout
 ```
 
+The Python module is on PyPI, a wheel per platform plus a source distribution:
+
+```sh
+pip install carp-cli
+pip install 'carp-cli[pandas]'    # adds to_pandas()
+```
+
+One command, three names — the registries were not free to agree. `carp` and
+`carp-cli` were both already taken on crates.io, and `carp` on PyPI, all by
+unrelated projects. What you type is `carp` in every case:
+
+| | Install | Then |
+| --- | --- | --- |
+| crates.io | `cargo install carp-dk` | `carp` |
+| PyPI | `pip install carp-cli` | `import carp` |
+| Releases | unpack the archive | `carp` |
+
+The libraries underneath are published too, for anything that wants the client
+or the protocol model without the command:
+[`carp-client`](https://crates.io/crates/carp-client),
+[`carp-protocol`](https://crates.io/crates/carp-protocol),
+[`carp-catalog`](https://crates.io/crates/carp-catalog).
+
 [releases]: https://github.com/carp-dk/carp-cli/releases
+
+## Signing in
+
+```sh
+carp auth login              # opens a browser, once
+carp auth status
+```
+
+The session is stored per deployment and refreshed as needed. Nothing else
+opens a browser: a command with no session fails and says to run `auth login`,
+because a tool that popped one open from inside a cron job or a pipe would hang
+where nobody could see it.
+
+`carp auth token` prints the bearer token, for a request made by hand. It is a
+credential — pipe it into what needs it rather than leaving it on screen.
+
+## Commands
+
+| | |
+| --- | --- |
+| `carp studies list` | Studies you can see |
+| `carp studies show <study>` | One, with its staff and participant groups |
+| `carp participants list <study>` | Who is enrolled. `--all` walks every page |
+| `carp deployments list <study>` | Deployments and how far each has got |
+| `carp deployments show <study> <id>` | Every device and participant on one |
+| `carp data summary <study>` | How much was collected, by task and day |
+| `carp data query <deployment>` | The measurements themselves |
+| `carp data statistics <deployment>…` | Upload counts |
+| `carp export list\|create\|download\|delete` | Study data exports |
+| `carp files list\|download <study>` | Uploaded study files |
+| `carp protocol check\|show\|sync\|catalog\|edit` | Study protocols |
+| `carp tui` | The interactive browser |
+| `carp completions <shell>` | A completion script |
+
+`carp <command> --help` has the flags.
+
+### Getting measurements out
+
+A *data stream* is one kind of measurement from one device in one deployment,
+and that is the level at which you ask for it:
+
+```sh
+carp data query $DEPLOYMENT \
+    --device "Primary Phone" \
+    --type dk.cachet.carp.heartrate \
+    --from 2026-08-01 --to 2026-08-08
+```
+
+`--from` and `--to` take a date, a full timestamp, or an age — `7d`, `36h`,
+`90m`. `--to` defaults to now.
+
+The measurement payload is not described by CARP's OpenAPI document, so if what
+comes back looks wrong, `--raw` prints the server's response untouched.
+
+For the bulk of a study, ask for an export instead. The server packages one in
+the background:
+
+```sh
+carp export create $STUDY --wait
+carp export download $STUDY $EXPORT_ID
+```
+
+### Output
+
+Results print as a table when you are looking at them and as JSON when
+something else is:
+
+```sh
+carp studies list                 # a table, at a terminal
+carp studies list | jq '.[].name' # JSON, into a pipe
+```
+
+`--format table|json|ndjson|csv` overrides the guess, and `--json` is shorthand
+for the second. The table shows selected columns and shortens long values;
+`json` has every field the server sent. `ndjson` gives one record per line,
+which is what to reach for when a result is large enough that you would rather
+not hold it whole.
+
+Anything that is not the result — progress, confirmations, warnings — goes to
+stderr, so a pipe carries only the record.
+
+### Exit codes
+
+| | |
+| --- | --- |
+| `0` | success |
+| `1` | failed |
+| `2` | the arguments did not parse |
+| `3` | not signed in |
+| `4` | no such study, deployment, export or file |
+| `5` | signed in, but not allowed |
+
+So a script can tell the cases apart without reading the message:
+
+```sh
+carp auth status >/dev/null 2>&1 || carp auth login
+```
+
+Under `--format json` a failure prints `{"error": {...}}` on stderr, naming the
+same cases as `kind`.
+
+## From Python
+
+`pip install carp-cli` gives the same client as a module. It shares the CLI's
+session — `carp auth login` in a terminal signs in the notebook beside it, and
+`Client.login()` does the reverse:
+
+```python
+import carp
+
+client = carp.Client(env="test")
+client.login()                                    # only if not already signed in
+
+for study in client.studies():
+    print(study["studyId"], study["name"])
+
+rows = client.data_stream(
+    deployment=DEPLOYMENT,
+    device="Primary Phone",
+    data_type="dk.cachet.carp.heartrate",
+    start="7d",
+)
+frame = carp.to_pandas(rows)
+```
+
+Calls block, and return plain lists and dictionaries exactly as CARP sent them
+— nothing is dropped when the server grows a field. Failures raise
+`CarpAuthError`, `CarpNotFoundError`, `CarpForbiddenError` or `CarpError`.
+
+See [`packages/carp-python/README.md`](packages/carp-python/README.md).
 
 ## The protocol editor
 
@@ -64,9 +236,9 @@ Until now those documents were produced by
 `main()` assembles Dart objects and whose test serialises them. It works, but
 authoring a protocol means writing Dart, and reviewing one means reading JSON.
 
-`carp protocol` opens an editor for the same document. It shows devices, tasks
-and schedules rather than a tree of objects, and it writes exactly the JSON the
-study app expects.
+`carp protocol edit` opens an editor for the same document. It shows devices,
+tasks and schedules rather than a tree of objects, and it writes exactly the
+JSON the study app expects.
 
 ```
  Overview  Devices  Tasks  Triggers  Survey  Participants  Catalog  Checks
@@ -102,7 +274,9 @@ study app expects.
 - `u` stores the protocol as a new version under a version
   tag, choosing `Add` or `AddVersion` by what CAWS already holds.
 
-The cli depends on the CARP study app configurations repository for its vocabs and functionality availability.
+The editor depends on the CARP study app configurations repository for its
+vocabulary and functionality availability.
+
 ```
 $ carp protocol sync
 syncing from carp-dk/carp_study_app_configurations…
@@ -120,21 +294,6 @@ value that was in a picker a moment ago should not vanish mid-edit.
 > The upstream repository is private. Set `GITHUB_TOKEN` to a token with access
 > to it — `export GITHUB_TOKEN=$(gh auth token)` if you use the GitHub CLI.
 
-### Commands
-
-| Command | What it does |
-| --- | --- |
-| `carp protocol` | Open the editor on a new protocol |
-| `carp protocol <path>` | Open the editor on an existing one |
-| `carp protocol check <path>` | Validate; exits non-zero on any error |
-| `carp protocol show <path>` | Print its devices, tasks and schedules |
-| `carp protocol sync` | Download the upstream studies, record the commit |
-| `carp protocol catalog` | Report what the stored catalogue holds, offline |
-
-`<path>` is a `protocol.json`, or a study directory containing
-`carp/resources/protocol.json` — the layout `carp_study_app_configurations`
-uses.
-
 `check` needs no CARP session and no network, so it works as a pre-commit hook
 or a CI step:
 
@@ -142,29 +301,48 @@ or a CI step:
 carp protocol check studies/sleep || exit 1
 ```
 
+`<path>` is a `protocol.json`, or a study directory containing
+`carp/resources/protocol.json` — the layout `carp_study_app_configurations`
+uses.
+
 ## Layout
 
 ```
 carp-cli
-├── src/                     the terminal application
-│   ├── api/                 HTTP client, typed models, one fn per operation
-│   ├── app/                 state, key handling, background tasks
-│   │   └── form/            the editing surface: fields, forms, pickers
-│   ├── studio/              the protocol editor's own state and actions
-│   └── ui/                  rendering, one module per screen
+├── src/                     the `carp` command
+│   ├── cli.rs               the argument surface
+│   ├── commands/            what each one does, one module per noun
+│   ├── output/              table, JSON, NDJSON and CSV
+│   ├── app/  ui/  studio/   the interactive browser (feature = "tui")
+│   └── db/                  its local cache
 └── packages/
+    ├── carp-client/         session, HTTP client, typed models, transfers
     ├── carp-protocol/       the protocol document: model, serde, validation
-    └── carp-catalog/        upstream sync, versioning, derived vocabulary
+    ├── carp-catalog/        upstream sync, versioning, derived vocabulary
+    └── carp-python/         the Python extension module
 ```
 
-`carp-protocol` and `carp-catalog` are libraries with no dependency on the
-terminal, so the protocol model can be reused by anything else that needs it.
+Everything that talks to CARP is in `carp-client`, with no dependency on a
+terminal. That is what lets the command line and the Python module be two front
+ends onto one client rather than two implementations of one.
 
 ## Testing
 
 ```sh
 cargo test --workspace
+cargo test --no-default-features   # the command line without the browser
 ```
+
+The Python bindings have their own suite, against a built wheel:
+
+```sh
+cd packages/carp-python
+maturin develop
+pytest tests
+```
+
+CI runs all of it on Linux, macOS and Windows, plus clippy, rustdoc, and
+`actionlint` over the workflows themselves.
 
 `packages/carp-protocol/tests/corpus/` holds the `protocol.json` of every study
 in `carp_study_app_configurations`, vendored at the commit named in
@@ -180,6 +358,20 @@ so they are what it is tested against:
 Refresh the corpus with `carp protocol sync` and copy the documents out of the
 snapshot it writes.
 
+## Releasing
+
+Bump `[workspace.package] version` in `Cargo.toml` and merge to `main`. That is
+the whole procedure: the release workflow sees a version with no tag, builds
+the binaries and the wheels, publishes the four crates to crates.io and
+`carp-cli` to PyPI, and then creates the GitHub release and its tag. A push
+that does not change the version does nothing.
+
+Both registries use Trusted Publishing and store no credential, but each needs
+a one-time setup before the first release — and crates.io additionally requires
+each crate's first version to be published by hand, since it has no equivalent
+of PyPI's pending publishers. [`.github/PUBLISHING.md`](.github/PUBLISHING.md)
+has both, along with what to do when a release run dies partway.
+
 ## Deployments
 
 Three CARP deployments are known by name, and a released binary talks to
@@ -192,9 +384,9 @@ production unless told otherwise:
 | `dev` | `https://dev.carp.dk` | where server work lands first |
 
 ```sh
-carp --env dev            # or CARP_ENV=dev
+carp --env dev studies list       # or CARP_ENV=dev
 carp --env test protocol sync
-carp                      # production
+carp studies list                 # production
 ```
 
 Each deployment keeps its own session and its own cache, keyed by host, so
@@ -210,14 +402,15 @@ overrides `--env`.
 | `CARP_SERVER` | Base URL of the CARP web service; overrides `CARP_ENV` |
 | `CARP_REALM` | Keycloak realm (default `Carp`) |
 | `CARP_CLIENT_ID` | Public OAuth2 client id (default `carp-cli`) |
-| `CARP_DATA_DIR` | Where tokens, the cache and the catalogue are stored |
+| `CARP_DATA_DIR` | Where the session, the cache and the catalogue are stored |
 | `CARP_DOWNLOAD_DIR` | Where exports, study files and protocols are written |
 | `CARP_PORTAL_URL` | Base address of the CARP web portal |
 | `CARP_ICONS` | `symbols` (default), `emoji` or `none` |
 | `GITHUB_TOKEN` | Access to the private upstream configurations repository |
 
-`carp --help` lists the flags. Values may also be put in a `.env` beside the
-binary.
+Flags outrank the environment, an address outranks a name, and the last resort
+is production. `carp --help` lists the flags. Values may also be put in a `.env`
+beside the binary.
 
 ## License
 
@@ -227,3 +420,4 @@ Licensed under the MIT license ([LICENSE](./LICENSE) or
 <http://opensource.org/licenses/MIT>).
 
 [carp]: https://carp.dk
+[configs]: https://github.com/carp-dk/carp_study_app_configurations

@@ -13,12 +13,12 @@ use std::path::PathBuf;
 
 use tokio::sync::mpsc::UnboundedSender;
 
-use crate::api::CarpClient;
-use crate::api::endpoints::{accounts, exports, files, participants, studies};
-use crate::api::models::{ParticipantQuery, SummaryExportRequest};
 use crate::app::message::{LoadTarget, Message};
 use crate::db::Cache;
 use crate::download::{self, JobId};
+use carp_client::api::CarpClient;
+use carp_client::api::endpoints::{accounts, exports, files, participants, studies};
+use carp_client::api::models::{ParticipantQuery, SummaryExportRequest};
 
 type Tx = UnboundedSender<Message>;
 

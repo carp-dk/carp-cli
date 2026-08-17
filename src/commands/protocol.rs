@@ -6,18 +6,18 @@
 // This file is part of CARP CLI.
 // Unauthorized copying, modification, or distribution is prohibited.
 
-//! The non-interactive protocol commands.
+//! `carp protocol` - authoring, validating and publishing a study protocol.
 //!
-//! The editor is the interface, but three things are better done from a shell
-//! than from a TUI, because they belong in a script or a CI job rather than in
-//! someone's hands:
+//! Four of these belong in a script or a CI job rather than in someone's hands:
 //!
-//! - `carp protocol sync` keeps the catalogue current, and can run unattended
-//! - `carp protocol check` validates a protocol and exits non-zero when it is
-//!   broken, which is what makes it usable as a pre-commit or CI check
-//! - `carp protocol show` prints a protocol's shape without opening anything
+//! - `sync` keeps the catalogue current, and can run unattended
+//! - `check` validates a protocol and exits non-zero when it is broken, which
+//!   is what makes it usable as a pre-commit or CI check
+//! - `show` prints a protocol's shape without opening anything
+//! - `catalog` reports what is stored, offline
 //!
-//! None of them need a CARP session, because none of them talk to CAWS.
+//! None of them need a CARP session, because none of them talk to CAWS. `edit`
+//! is the odd one out: it opens the interactive editor.
 
 use std::path::Path;
 
@@ -25,7 +25,29 @@ use carp_protocol::validate::Severity;
 use color_eyre::Result;
 use color_eyre::eyre::bail;
 
-use crate::config::Config;
+use carp_client::config::Config;
+
+use crate::cli::{Global, ProtocolCommand};
+
+/// Run the commands that never need a session or a terminal.
+///
+/// `edit` is not among them, so it is not handled here: it needs the whole
+/// interactive app, which `main` owns. Returns `false` when `command` is one
+/// `main` has to take on itself.
+pub async fn run(command: Option<&ProtocolCommand>, global: &Global) -> Result<bool> {
+    let Some(command) = command else {
+        // Bare `carp protocol` opens the editor on a new protocol.
+        return Ok(false);
+    };
+    match command {
+        ProtocolCommand::Check { path } => check(path)?,
+        ProtocolCommand::Show { path } => show(path)?,
+        ProtocolCommand::Sync => sync(&Config::load(&global.settings())?).await?,
+        ProtocolCommand::Catalog => catalog_status(&Config::load(&global.settings())?).await?,
+        ProtocolCommand::Edit { .. } => return Ok(false),
+    }
+    Ok(true)
+}
 
 /// Download the upstream studies and rebuild the catalogue.
 pub async fn sync(config: &Config) -> Result<()> {
@@ -97,7 +119,7 @@ pub async fn catalog_status(config: &Config) -> Result<()> {
 /// Warnings do not fail the check: they are legal protocols that are probably
 /// a mistake, and a CI job that failed on them would be turned off.
 pub fn check(path: &Path) -> Result<()> {
-    let (protocol, resolved) = crate::studio::storage::read_checked(path)?;
+    let (protocol, resolved) = crate::protocol_file::read_checked(path)?;
     println!("{} - {}", protocol.name, protocol.summary());
     println!("{}", resolved.display());
 
@@ -132,7 +154,7 @@ pub fn check(path: &Path) -> Result<()> {
 /// A summary rather than the JSON, because `cat` already prints the JSON and
 /// what is hard to see there is how the pieces connect.
 pub fn show(path: &Path) -> Result<()> {
-    let (protocol, resolved) = crate::studio::storage::read_checked(path)?;
+    let (protocol, resolved) = crate::protocol_file::read_checked(path)?;
 
     println!("{}", protocol.name);
     println!("  file      {}", resolved.display());

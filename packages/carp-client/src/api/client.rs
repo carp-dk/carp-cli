@@ -15,8 +15,6 @@
 use std::sync::Arc;
 use std::time::Duration;
 
-use color_eyre::Result;
-use color_eyre::eyre::Context;
 use reqwest::{Method, RequestBuilder, Response, StatusCode};
 use serde::Serialize;
 use serde::de::DeserializeOwned;
@@ -25,6 +23,7 @@ use url::Url;
 use crate::api::error::{ApiError, ApiResult};
 use crate::auth::Authenticator;
 use crate::config::Config;
+use crate::error::{Error, Result};
 
 /// Connection setup budget. Deliberately no overall request timeout: exports
 /// can take a while to stream.
@@ -50,7 +49,7 @@ impl CarpClient {
             .connect_timeout(CONNECT_TIMEOUT)
             .read_timeout(READ_TIMEOUT)
             .build()
-            .context("building the CARP HTTP client")?;
+            .map_err(|error| Error::config(format!("building the CARP HTTP client: {error}")))?;
 
         Ok(Self {
             inner: Arc::new(Inner {
@@ -92,6 +91,25 @@ impl CarpClient {
         body: &B,
     ) -> ApiResult<T> {
         let request = self.request(Method::POST, path).await?.json(body);
+        let response = self.send(request).await?;
+        decode(response).await
+    }
+
+    /// `POST path?query` with a JSON body, decoding the JSON response.
+    ///
+    /// Both at once is unusual, but `query-by-time` takes its window in the
+    /// query string and the stream it applies to in the body.
+    pub async fn post_json_with_query<B: Serialize + ?Sized, T: DeserializeOwned>(
+        &self,
+        path: &str,
+        body: &B,
+        query: &[(&str, String)],
+    ) -> ApiResult<T> {
+        let request = self
+            .request(Method::POST, path)
+            .await?
+            .query(query)
+            .json(body);
         let response = self.send(request).await?;
         decode(response).await
     }

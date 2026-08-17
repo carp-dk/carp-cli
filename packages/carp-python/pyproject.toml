@@ -1,0 +1,39 @@
+[build-system]
+requires = ["maturin>=1.7,<2.0"]
+build-backend = "maturin"
+
+[project]
+# The distribution is `carp-cli`; the module it installs is `carp`. PyPI's
+# `carp` was taken in 2012 by an unrelated, abandoned package, and a
+# distribution name has never had to match what you import.
+name = "carp-cli"
+description = "Read Copenhagen Research Platform study data from Python"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Alireza Hajebrahimi", email = "alihaj@dtu.dk" }]
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+# `to_pandas()` imports pandas lazily, so it is a convenience rather than a
+# requirement: everything works on plain lists of dicts without it.
+pandas = ["pandas>=1.5"]
+
+[dependency-groups]
+dev = ["pytest>=7"]
+
+[project.urls]
+Repository = "https://github.com/carp-dk/carp-cli"
+
+[tool.maturin]
+# A mixed layout: the compiled extension lands inside the pure-Python package
+# as `carp._carp`, so `carp/__init__.py` can wrap it.
+python-source = "python"
+module-name = "carp._carp"
+features = ["extension-module"]

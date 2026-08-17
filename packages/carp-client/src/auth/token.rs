@@ -14,9 +14,9 @@ use std::path::Path;
 use base64::Engine;
 use base64::engine::general_purpose::URL_SAFE_NO_PAD;
 use chrono::{DateTime, Duration, Utc};
-use color_eyre::Result;
-use color_eyre::eyre::Context;
 use serde::{Deserialize, Serialize};
+
+use crate::error::{Error, IoContext, Result};
 
 /// Refresh this long before the access token actually expires, so a request
 /// never races the expiry.
@@ -82,10 +82,11 @@ pub fn load(path: &Path) -> Option<TokenSet> {
 
 pub fn save(path: &Path, tokens: &TokenSet) -> Result<()> {
     if let Some(parent) = path.parent() {
-        fs::create_dir_all(parent).with_context(|| format!("creating {}", parent.display()))?;
+        fs::create_dir_all(parent).at("creating", parent)?;
     }
-    let json = serde_json::to_string_pretty(tokens)?;
-    fs::write(path, json).with_context(|| format!("writing {}", path.display()))?;
+    let json = serde_json::to_string_pretty(tokens)
+        .map_err(|error| Error::login(format!("serialising the session: {error}")))?;
+    fs::write(path, json).at("writing", path)?;
     restrict_permissions(path);
     Ok(())
 }
@@ -94,7 +95,7 @@ pub fn clear(path: &Path) -> Result<()> {
     match fs::remove_file(path) {
         Ok(()) => Ok(()),
         Err(err) if err.kind() == std::io::ErrorKind::NotFound => Ok(()),
-        Err(err) => Err(err).with_context(|| format!("removing {}", path.display())),
+        Err(err) => Err(Error::at_path("removing", path, err)),
     }
 }
 

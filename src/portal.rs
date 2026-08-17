@@ -26,7 +26,7 @@ use std::collections::HashMap;
 
 use url::Url;
 
-use crate::config::Config;
+use carp_client::config::Config;
 
 /// Placeholder replaced with the study id in the study path template.
 const STUDY_PLACEHOLDER: &str = "{study}";
@@ -120,8 +120,7 @@ mod tests {
             data_dir: std::env::temp_dir(),
             download_dir: std::env::temp_dir(),
             portal_url: None,
-            portal_study_path: crate::config::DEFAULT_PORTAL_STUDY_PATH.to_owned(),
-            icons: crate::ui::icons::IconSet::default(),
+            portal_study_path: carp_client::config::DEFAULT_PORTAL_STUDY_PATH.to_owned(),
         }
     }
 

@@ -18,6 +18,16 @@
 //! Writes go through a temporary file and a rename. A protocol is often the
 //! only record of an afternoon's work, and a half-written one would be worse
 //! than no write at all.
+//!
+//! Reading is what `carp protocol check` and `show` need; writing is the
+//! editor's. A build without the `tui` feature therefore uses only half of
+//! this, which is a fact about that build rather than a reason to drop the
+//! other half - the tests exercise both either way.
+
+#![cfg_attr(
+    not(feature = "tui"),
+    allow(dead_code, reason = "the write half belongs to the editor")
+)]
 
 use std::path::{Path, PathBuf};
 

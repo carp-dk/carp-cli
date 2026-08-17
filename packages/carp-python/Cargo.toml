@@ -1,0 +1,44 @@
+[package]
+name = "carp-python"
+description = "Python bindings for the CARP web service client"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+edition.workspace = true
+repository.workspace = true
+homepage.workspace = true
+rust-version.workspace = true
+# This one ships to PyPI as `carp-cli`, not to crates.io: a cdylib for one
+# interpreter ABI is of no use to a Rust dependency, and `cargo publish
+# --workspace` would otherwise try to send it.
+publish = false
+
+[lib]
+name = "_carp"
+# cdylib is what Python imports. rlib is kept so `cargo test --workspace`
+# can build this crate like any other; without it, cargo has nothing to
+# compile a test target from.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+carp-client.workspace = true
+chrono.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio = { version = "1", features = ["rt-multi-thread"] }
+
+# abi3 builds one wheel per platform that every Python from 3.9 up can load,
+# rather than one per interpreter version.
+pyo3 = { version = "0.27", features = ["abi3-py39", "chrono"] }
+pythonize = "0.27"
+
+[features]
+# Enabled by maturin when it builds the wheel: it tells pyo3 not to link
+# libpython, which is what makes the extension loadable by any interpreter.
+#
+# Off by default, and it must stay that way — this is a linking directive, not
+# functionality. With it on, nothing links libpython, so the test binary cargo
+# builds from the rlib has undefined `Py*` symbols and fails on Linux. That is
+# why CI runs `cargo test --workspace` and never `--all-features`; macOS
+# resolves those symbols lazily and would not catch it.
+extension-module = ["pyo3/extension-module"]

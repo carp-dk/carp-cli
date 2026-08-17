@@ -8,20 +8,17 @@
 
 //! Download queue.
 //!
-//! [`DownloadManager`] is plain state owned by the app; the actual transfer
-//! runs in a background task ([`run`]) that streams the response to disk and
-//! reports progress as messages.
+//! [`DownloadManager`] is plain state owned by the app; the transfer itself is
+//! `carp_client::transfer`, run in a background task ([`run`]) that turns its
+//! progress callback into messages the render loop can act on.
 
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
-use futures_util::StreamExt;
-use tokio::fs;
-use tokio::io::AsyncWriteExt;
 use tokio::sync::mpsc::UnboundedSender;
 
-use crate::api::CarpClient;
-use crate::api::error::{ApiError, ApiResult};
-use crate::api::models::format_bytes;
+use carp_client::api::CarpClient;
+use carp_client::api::models::format_bytes;
+
 use crate::app::message::Message;
 
 /// Identifies a queued transfer.
@@ -159,12 +156,27 @@ pub async fn run(
     job_id: JobId,
     tx: UnboundedSender<Message>,
 ) {
-    let result = transfer(&client, &api_path, &directory, &fallback_name, job_id, &tx).await;
-    let message = match result {
-        Ok((path, bytes)) => Message::DownloadFinished {
+    let progress = |received, total| {
+        let _ = tx.send(Message::DownloadProgress {
             job_id,
-            path,
-            bytes,
+            received,
+            total,
+        });
+    };
+
+    let message = match carp_client::transfer::download(
+        &client,
+        &api_path,
+        &directory,
+        &fallback_name,
+        progress,
+    )
+    .await
+    {
+        Ok(transfer) => Message::DownloadFinished {
+            job_id,
+            path: transfer.path,
+            bytes: transfer.bytes,
         },
         Err(error) => Message::DownloadFailed {
             job_id,
@@ -172,115 +184,4 @@ pub async fn run(
         },
     };
     let _ = tx.send(message);
-}
-
-async fn transfer(
-    client: &CarpClient,
-    api_path: &str,
-    directory: &Path,
-    fallback_name: &str,
-    job_id: JobId,
-    tx: &UnboundedSender<Message>,
-) -> ApiResult<(PathBuf, u64)> {
-    let response = client.get_stream(api_path).await?;
-    let total = response.content_length();
-    let name = content_disposition_name(&response).unwrap_or_else(|| fallback_name.to_owned());
-
-    fs::create_dir_all(directory).await?;
-    let destination = unique_path(directory, &sanitize(&name)).await;
-
-    let _ = tx.send(Message::DownloadProgress {
-        job_id,
-        received: 0,
-        total,
-    });
-
-    let mut file = fs::File::create(&destination).await?;
-    let mut stream = response.bytes_stream();
-    let mut received = 0_u64;
-    let mut last_report = 0_u64;
-
-    while let Some(chunk) = stream.next().await {
-        let chunk = chunk.map_err(ApiError::from)?;
-        file.write_all(&chunk).await?;
-        received += chunk.len() as u64;
-        // Report roughly every 256 KiB rather than per chunk.
-        if received - last_report >= 256 * 1024 {
-            last_report = received;
-            let _ = tx.send(Message::DownloadProgress {
-                job_id,
-                received,
-                total,
-            });
-        }
-    }
-    file.flush().await?;
-
-    Ok((destination, received))
-}
-
-/// Read the file name out of a `Content-Disposition` header.
-fn content_disposition_name(response: &reqwest::Response) -> Option<String> {
-    let header = response
-        .headers()
-        .get(reqwest::header::CONTENT_DISPOSITION)?
-        .to_str()
-        .ok()?;
-    for part in header.split(';') {
-        let part = part.trim();
-        if let Some(value) = part.strip_prefix("filename=") {
-            let value = value.trim_matches('"').trim();
-            if !value.is_empty() {
-                return Some(value.to_owned());
-            }
-        }
-    }
-    None
-}
-
-/// Keep the name a single, harmless path segment.
-fn sanitize(name: &str) -> String {
-    let name: String = name
-        .chars()
-        .map(|c| match c {
-            '/' | '\\' | ':' | '\0' => '_',
-            c if c.is_control() => '_',
-            c => c,
-        })
-        .collect();
-    let name = name.trim().trim_matches('.').to_owned();
-    if name.is_empty() {
-        "carp-download".to_owned()
-    } else {
-        name
-    }
-}
-
-/// Never overwrite an existing download: `report.zip` becomes `report (2).zip`.
-async fn unique_path(directory: &Path, name: &str) -> PathBuf {
-    let candidate = directory.join(name);
-    if !candidate.exists() {
-        return candidate;
-    }
-    let path = Path::new(name);
-    let stem = path
-        .file_stem()
-        .map(|value| value.to_string_lossy().into_owned())
-        .unwrap_or_else(|| name.to_owned());
-    let extension = path
-        .extension()
-        .map(|value| format!(".{}", value.to_string_lossy()))
-        .unwrap_or_default();
-
-    for index in 2..1000 {
-        let candidate = directory.join(format!("{stem} ({index}){extension}"));
-        if !candidate.exists() {
-            return candidate;
-        }
-    }
-    // Suffix of last resort when a thousand copies already exist.
-    directory.join(format!(
-        "{stem}-{}{extension}",
-        chrono::Utc::now().timestamp()
-    ))
 }

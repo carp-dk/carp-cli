@@ -13,11 +13,11 @@ use ratatui::layout::{Constraint, Rect};
 use ratatui::text::Line;
 use ratatui::widgets::Row;
 
-use crate::api::models::{StudyFile, format_instant};
 use crate::app::state::StudyState;
 use crate::ui::screens::study::{DETAIL_WEIGHT, LIST_WEIGHT, tab_title};
 use crate::ui::widgets::{detail, master_detail, table};
 use crate::ui::{icons, theme};
+use carp_client::api::models::{StudyFile, format_instant};
 
 /// How much of a file's metadata document to show.
 const METADATA_LINES: usize = 12;

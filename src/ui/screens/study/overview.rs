@@ -11,11 +11,11 @@
 use ratatui::Frame;
 use ratatui::layout::Rect;
 
-use crate::api::models::format_instant;
 use crate::app::state::StudyState;
 use crate::ui::screens::study::{DETAIL_WEIGHT, LIST_WEIGHT};
 use crate::ui::widgets::{detail, master_detail};
 use crate::ui::{icons, theme};
+use carp_client::api::models::format_instant;
 
 pub fn render(frame: &mut Frame, area: Rect, study: &StudyState) {
     let (left, right) = master_detail(area, LIST_WEIGHT, DETAIL_WEIGHT);

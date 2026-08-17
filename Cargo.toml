@@ -1,5 +1,10 @@
 [workspace]
-members = ["packages/carp-protocol", "packages/carp-catalog"]
+members = [
+    "packages/carp-protocol",
+    "packages/carp-catalog",
+    "packages/carp-client",
+    "packages/carp-python",
+]
 
 # Settings every crate in the workspace inherits, so the version and the
 # licence are stated once.
@@ -9,6 +14,8 @@ authors = ["Alireza Hajebrahimi <6937697+iarata@users.noreply.github.com>"]
 license = "MIT"
 edition = "2024"
 repository = "https://github.com/carp-dk/carp-cli"
+homepage = "https://carp.dk"
+rust-version = "1.90"
 
 # Dependencies shared by the binary and the packages. Pinning them here keeps
 # a single version of serde/chrono in the tree, which matters because the
@@ -20,29 +27,56 @@ chrono = { version = "0.4", features = ["serde"] }
 thiserror = "2"
 uuid = { version = "1", features = ["v4", "serde"] }
 
+# The workspace crates depend on each other by path *and* version. The path is
+# what a local build uses; the version is what cargo substitutes when
+# publishing, and without it crates.io refuses the upload.
+carp-protocol = { path = "packages/carp-protocol", version = "0.2.0" }
+carp-catalog = { path = "packages/carp-catalog", version = "0.2.0" }
+carp-client = { path = "packages/carp-client", version = "0.2.0" }
+
 [package]
-name = "carp-cli-rust"
+# Not `carp-cli`, which on crates.io is an unrelated and actively published
+# crate, and not `carp`, which was taken in 2016. `carp-dk` matches the
+# organisation. The command is `carp` either way - that is what people type,
+# and what the README documents throughout.
+name = "carp-dk"
 version.workspace = true
-description = "CARP Cli in Rust"
+description = "Command line client for the Copenhagen Research Platform: studies, participants, data and protocols"
 authors.workspace = true
 license.workspace = true
 edition.workspace = true
 repository.workspace = true
+homepage.workspace = true
+rust-version.workspace = true
+readme = "README.md"
+keywords = ["carp", "research", "mhealth", "cli", "science"]
+categories = ["command-line-utilities", "science"]
+# This package's root is the repository root, so it otherwise sweeps up the
+# repository's own machinery. None of it is part of the crate, and all of it
+# would be downloaded by every `cargo install`.
+exclude = [".github/", "HEADER.txt", "api-docs*", "carp.db*", "packages/"]
 
-# The crate is named after the repository, the command is not: what users type,
-# and what the README documents throughout, is `carp`.
 [[bin]]
 name = "carp"
 path = "src/main.rs"
 
 [dependencies]
-# Workspace packages: the protocol domain model and the upstream catalogue.
-carp-protocol = { path = "packages/carp-protocol" }
-carp-catalog = { path = "packages/carp-catalog" }
+# Workspace packages: the CARP client, the protocol domain model and the
+# upstream catalogue. Everything that talks to CARP lives in carp-client, so
+# the Python extension module can link against the same code.
+carp-client.workspace = true
+carp-protocol.workspace = true
+carp-catalog.workspace = true
 
 # Terminal UI
-ratatui = "0.30.2"
-crossterm = { version = "0.29.0", features = ["event-stream"] }
+ratatui = { version = "0.30.2", optional = true }
+crossterm = { version = "0.29.0", features = ["event-stream"], optional = true }
+
+# Text measurement: emoji occupy two cells, so padding cannot count chars
+unicode-width = "0.2"
+
+# Local cache: an optimisation for the browser, not something the CLI needs
+turso = { version = "0.7.2", optional = true }
 
 # Async runtime + HTTP
 tokio = { version = "1.53.1", features = ["full"] }
@@ -55,29 +89,33 @@ reqwest = { version = "0.12", default-features = false, features = [
 ] }
 futures-util = "0.3"
 
-# Text measurement: emoji occupy two cells, so padding cannot count chars
-unicode-width = "0.2"
+# Command line
+clap = { version = "4", features = ["derive", "env", "wrap_help"] }
+clap_complete = "4"
 
 # Serialization
 serde.workspace = true
 serde_json.workspace = true
 chrono.workspace = true
 uuid.workspace = true
-
-# Auth (OAuth2 authorization code + PKCE against Keycloak)
-oauth2 = "5"
-subtle = "2"
-tiny_http = "0.12"
 url = "2"
-webbrowser = "1"
-base64 = "0.22"
 
-# Local cache
-turso = "0.7.2"
+# Opening the portal and the download folder from the browser's `o`
+webbrowser = "1"
 
 # Errors + paths
 color-eyre = "0.6.5"
 dirs = "6"
+
+# Restoring the default SIGPIPE disposition, so `carp … | head` ends quietly
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[features]
+default = ["tui"]
+# The interactive browser and protocol editor. Off, `carp` is a plain command
+# line tool and the build drops ratatui, crossterm and the local cache.
+tui = ["dep:ratatui", "dep:crossterm", "dep:turso"]
 
 # Read the optimization guideline for more details: https://ratatui.rs/recipes/apps/release-your-app/#optimizations
 [profile.release]

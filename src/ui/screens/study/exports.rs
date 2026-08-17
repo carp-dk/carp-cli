@@ -14,11 +14,11 @@ use ratatui::style::Style;
 use ratatui::text::Line;
 use ratatui::widgets::Row;
 
-use crate::api::models::{Export, ExportStatus, format_instant};
 use crate::app::state::StudyState;
 use crate::ui::screens::study::{DETAIL_WEIGHT, LIST_WEIGHT, tab_title};
 use crate::ui::widgets::{detail, master_detail, table};
 use crate::ui::{icons, theme};
+use carp_client::api::models::{Export, ExportStatus, format_instant};
 
 pub fn render(frame: &mut Frame, area: Rect, study: &mut StudyState, ticks: usize) {
     let (list_area, detail_area) = master_detail(area, LIST_WEIGHT, DETAIL_WEIGHT);

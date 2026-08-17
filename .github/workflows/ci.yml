@@ -1,90 +1,191 @@
 name: CI
 
+# What has to be true before a change lands. The release workflow re-runs the
+# Linux test job on the commit it is about to publish, so this is the wider net
+# and that is the last gate.
 on:
   pull_request:
   push:
     branches:
       - main
-      - master
-      - develop
+
+permissions:
+  contents: read
 
 env:
   CARGO_TERM_COLOR: always
 
-# ensure that the workflow is only triggered once per PR, subsequent pushes to the PR will cancel
-# and restart the workflow. See https://docs.github.com/en/actions/using-jobs/using-concurrency
+# One run per pull request: a new push cancels the run for the commit it
+# replaced, which nobody is waiting on any more.
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:
+  # The release workflow only ever runs on main, where a mistake in it is
+  # found by a release failing. Linting it here is the one chance to catch a
+  # bad expression or a broken `run:` block before that.
+  workflows:
+    name: workflows
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # The image carries shellcheck, so every `run:` block is checked too.
+      - uses: docker://rhysd/actionlint:1.7.7
+        with:
+          args: -color
+
   fmt:
     name: fmt
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt
-      - name: check formatting
-        run: cargo fmt -- --check
-      - name: Cache Cargo dependencies
-        uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all --check
+
   clippy:
     name: clippy
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      checks: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy
-      - name: Run clippy action
-        uses: clechasseur/rs-clippy-check@v3
-      - name: Cache Cargo dependencies
-        uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@v2
+      # --all-targets so tests and examples are linted too, and -D warnings so
+      # a lint that is only a warning locally still stops a merge.
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
+
+  test:
+    name: test ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # Every platform's result is worth having even when one has already
+      # failed: a Windows-only path bug should not be hidden by a Linux one.
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.os }}
+
+      # --workspace, because the packages hold most of the code and the root
+      # package alone would not test them.
+      #
+      # Deliberately NOT --all-features: `extension-module` on carp-python
+      # tells pyo3 not to link libpython, which is right for the wheel and
+      # wrong for a test binary. See packages/carp-python/Cargo.toml.
+      - name: cargo test --workspace
+        run: cargo test --locked --workspace --all-targets
+
+      # --all-targets skips doctests, and carp-protocol's are the documentation
+      # people read first.
+      - name: cargo test --doc
+        run: cargo test --locked --workspace --doc
+
+  # The command line has to build and pass its tests with no interactive
+  # browser at all - that is what makes the `tui` feature genuinely optional,
+  # and what the Python wheel's dependency tree relies on.
+  cli-only:
+    name: cli without the browser
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test --locked --no-default-features --all-targets
+      - run: cargo build --locked --no-default-features
+
+      # A build with no browser must still say so intelligibly rather than
+      # failing to parse the argument.
+      - name: "`carp tui` explains itself"
+        run: |
+          set -euo pipefail
+          output=$(./target/debug/carp tui 2>&1 || true)
+          echo "$output"
+          grep -q "compiled without the .tui. feature" <<<"$output"
+
+  # The wheel, built and imported the way a user would get it. Building it is
+  # not enough: an extension module can compile and still fail to load.
+  python:
+    name: python ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: python-${{ matrix.os }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the wheel
+        uses: PyO3/maturin-action@v1
+        with:
+          command: build
+          working-directory: packages/carp-python
+          args: --out dist --locked
+
+      - name: Install and test it
+        shell: bash
+        working-directory: packages/carp-python
+        run: |
+          set -euo pipefail
+          # By distribution name, from the wheel just built and nothing else,
+          # so a stale or public `carp-cli` cannot satisfy it.
+          pip install --find-links dist --no-index carp-cli
+          pip install pytest pandas
+          pytest tests -q
+
+      # The wheel is tagged cp39-abi3, which promises every CPython from 3.9 up
+      # can load it. It was built against 3.12, so the promise is only worth
+      # anything if something actually tries the other end of the range.
+      - name: It loads on the oldest Python it claims
+        if: runner.os == 'Linux'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
+      - name: Import the 3.12-built wheel on 3.9
+        if: runner.os == 'Linux'
+        shell: bash
+        working-directory: packages/carp-python
+        run: |
+          set -euo pipefail
+          python --version
+          shopt -s nullglob
+          abi3=(dist/*cp39-abi3*.whl)
+          if [ ${#abi3[@]} -eq 0 ]; then
+            echo "::error::no cp39-abi3 wheel - abi3-py39 is not taking effect"
+            ls -la dist/
+            exit 1
+          fi
+          pip install --find-links dist --no-index carp-cli
+          python -c "
+          import carp
+          assert carp.Client(env='test').server == 'https://test.carp.dk'
+          print('the abi3 wheel loads on', __import__('sys').version.split()[0])
+          "
+
+  # Rustdoc on nightly, for doc_cfg: without it the `tui`-gated modules are
+  # simply missing from the docs rather than marked as conditional.
   doc:
-    # run docs generation on nightly rather than stable. This enables features like
-    # https://doc.rust-lang.org/beta/unstable-book/language-features/doc-cfg.html which allows an
-    # API be documented as only available in some specific platforms.
     name: doc
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Rust nightly
-        uses: dtolnay/rust-toolchain@nightly
-      - name: Run cargo doc
-        run: cargo doc --no-deps --all-features
+      - uses: dtolnay/rust-toolchain@nightly
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo doc --workspace --no-deps
         env:
-          RUSTDOCFLAGS: --cfg docsrs
-  test:
-    runs-on: ${{ matrix.os }}
-    name: test ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-latest, windows-latest]
-    steps:
-      # if your project needs OpenSSL, uncomment this to fix Windows builds.
-      # it's commented out by default as the install command takes 5-10m.
-      # - run: echo "VCPKG_ROOT=$env:VCPKG_INSTALLATION_ROOT" | Out-File -FilePath $env:GITHUB_ENV -Append
-      #   if: runner.os == 'Windows'
-      # - run: vcpkg install openssl:x64-windows-static-md
-      #   if: runner.os == 'Windows'
-      - uses: actions/checkout@v4
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-      # enable this ci template to run regardless of whether the lockfile is checked in or not
-      - name: cargo generate-lockfile
-        if: hashFiles('Cargo.lock') == ''
-        run: cargo generate-lockfile
-      - name: cargo test --locked
-        run: cargo test --locked --all-features --all-targets
-      - name: Cache Cargo dependencies
-        uses: Swatinem/rust-cache@v2
+          RUSTDOCFLAGS: --cfg docsrs -D warnings
