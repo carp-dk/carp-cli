@@ -35,8 +35,8 @@ Every version tagged on `main` publishes a binary per platform under
 | Windows | `carp-<version>-x86_64-pc-windows-msvc.zip` |
 
 ```sh
-tar -xzf carp-0.2.0-aarch64-apple-darwin.tar.gz
-install carp-0.2.0-aarch64-apple-darwin/carp /usr/local/bin/
+tar -xzf carp-<version>-aarch64-apple-darwin.tar.gz
+install carp-<version>-aarch64-apple-darwin/carp /usr/local/bin/
 carp --version
 ```
 
