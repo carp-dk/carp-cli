@@ -20,7 +20,62 @@ use url::Url;
 use crate::cli::Args;
 use crate::ui::icons::IconSet;
 
-pub const DEFAULT_SERVER: &str = "https://carp.computerome.dk";
+/// The CARP deployments the CLI knows by name. Any other one is still
+/// reachable by giving its address to `--server`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Environment {
+    /// Live data and live participants.
+    Production,
+    /// The staging deployment, which is what production becomes next.
+    Test,
+    /// Where unreleased server work lands first.
+    Dev,
+}
+
+impl Environment {
+    /// In the order a change travels through them.
+    pub const ALL: [Self; 3] = [Self::Dev, Self::Test, Self::Production];
+
+    /// Accepts the shorthands people actually type for these.
+    pub fn parse(value: &str) -> Option<Self> {
+        match value.trim().to_ascii_lowercase().as_str() {
+            "production" | "prod" => Some(Self::Production),
+            "test" | "staging" | "stage" => Some(Self::Test),
+            "dev" | "development" => Some(Self::Dev),
+            _ => None,
+        }
+    }
+
+    pub const fn name(self) -> &'static str {
+        match self {
+            Self::Production => "production",
+            Self::Test => "test",
+            Self::Dev => "dev",
+        }
+    }
+
+    pub const fn url(self) -> &'static str {
+        match self {
+            Self::Production => "https://carp.computerome.dk",
+            Self::Test => "https://test.carp.dk",
+            Self::Dev => "https://dev.carp.dk",
+        }
+    }
+
+    /// The accepted names, for an error message that says what to type.
+    fn names() -> String {
+        Self::ALL
+            .iter()
+            .map(|environment| environment.name())
+            .collect::<Vec<_>>()
+            .join(", ")
+    }
+}
+
+/// What a build talks to when nothing selects otherwise. Released binaries
+/// carry this, so it has to stay production - `the_default_is_production`
+/// fails the release if it ever does not.
+pub const DEFAULT_ENVIRONMENT: Environment = Environment::Production;
 pub const DEFAULT_CLIENT_ID: &str = "carp-cli";
 pub const DEFAULT_REALM: &str = "Carp";
 /// Path of a study in the CARP web portal, relative to its base address.
@@ -58,11 +113,14 @@ impl Config {
             std::env::var(key).ok().or_else(|| dotenv.get(key).cloned())
         };
 
-        let server = args
-            .server
-            .clone()
-            .or_else(|| setting("CARP_SERVER"))
-            .unwrap_or_else(|| DEFAULT_SERVER.to_owned());
+        let server_setting = setting("CARP_SERVER");
+        let environment_setting = setting("CARP_ENV");
+        let server = resolve_server(
+            args.server.as_deref(),
+            args.environment.as_deref(),
+            server_setting.as_deref(),
+            environment_setting.as_deref(),
+        )?;
         let server = Url::parse(server.trim_end_matches('/'))
             .with_context(|| format!("invalid CARP server URL: {server}"))?;
 
@@ -159,6 +217,45 @@ impl Config {
     }
 }
 
+/// Which deployment to talk to.
+///
+/// An address is more specific than a name, and a flag is more deliberate than
+/// something inherited from the environment, so they rank in that order. The
+/// last resort is [`DEFAULT_ENVIRONMENT`], never whatever was used last: a
+/// command that does not say which deployment it means has to be the safe one
+/// to guess at.
+fn resolve_server(
+    server_flag: Option<&str>,
+    environment_flag: Option<&str>,
+    server_setting: Option<&str>,
+    environment_setting: Option<&str>,
+) -> Result<String> {
+    let named = |value: &str| -> Result<String> {
+        Environment::parse(value)
+            .map(|environment| environment.url().to_owned())
+            .ok_or_else(|| {
+                eyre!(
+                    "unknown CARP environment: {value} (expected {})",
+                    Environment::names()
+                )
+            })
+    };
+
+    if let Some(url) = server_flag {
+        return Ok(url.to_owned());
+    }
+    if let Some(name) = environment_flag {
+        return named(name);
+    }
+    if let Some(url) = server_setting {
+        return Ok(url.to_owned());
+    }
+    if let Some(name) = environment_setting {
+        return named(name);
+    }
+    Ok(DEFAULT_ENVIRONMENT.url().to_owned())
+}
+
 /// Minimal `.env` reader: `KEY=VALUE` per line, `#` comments, no interpolation.
 ///
 /// The values are returned rather than exported: mutating the environment of a
@@ -205,5 +302,108 @@ mod tests {
     #[test]
     fn missing_dotenv_is_not_an_error() {
         assert!(read_dotenv(Path::new("/nonexistent/.env")).is_empty());
+    }
+
+    /// The release workflow builds whatever this constant says, so a binary
+    /// handed to a researcher points at live CARP. Changing the default to a
+    /// test deployment for local convenience would ship that to everyone;
+    /// this test is what stops it reaching a release.
+    #[test]
+    fn the_default_is_production() {
+        assert_eq!(DEFAULT_ENVIRONMENT, Environment::Production);
+        assert_eq!(
+            resolve_server(None, None, None, None).unwrap(),
+            "https://carp.computerome.dk"
+        );
+    }
+
+    #[test]
+    fn each_environment_has_its_own_address() {
+        assert_eq!(Environment::Production.url(), "https://carp.computerome.dk");
+        assert_eq!(Environment::Test.url(), "https://test.carp.dk");
+        assert_eq!(Environment::Dev.url(), "https://dev.carp.dk");
+
+        let addresses: Vec<_> = Environment::ALL.iter().map(|e| e.url()).collect();
+        let unique: std::collections::HashSet<_> = addresses.iter().collect();
+        assert_eq!(unique.len(), addresses.len(), "two share an address");
+    }
+
+    #[test]
+    fn environments_are_named_by_their_shorthands() {
+        assert_eq!(Environment::parse("prod"), Some(Environment::Production));
+        assert_eq!(
+            Environment::parse("PRODUCTION"),
+            Some(Environment::Production)
+        );
+        assert_eq!(Environment::parse(" staging "), Some(Environment::Test));
+        assert_eq!(Environment::parse("test"), Some(Environment::Test));
+        assert_eq!(Environment::parse("development"), Some(Environment::Dev));
+        assert_eq!(Environment::parse("prd"), None);
+    }
+
+    /// A typo must not quietly fall back to a deployment the user did not
+    /// name - least of all to production.
+    #[test]
+    fn an_unknown_environment_is_refused() {
+        let error = resolve_server(None, Some("prod-eu"), None, None)
+            .unwrap_err()
+            .to_string();
+        assert!(error.contains("unknown CARP environment"), "{error}");
+        assert!(error.contains("production"), "{error}");
+    }
+
+    #[test]
+    fn an_address_outranks_a_name_and_a_flag_outranks_the_environment() {
+        // --server beats --env.
+        assert_eq!(
+            resolve_server(Some("https://carp.example.org"), Some("dev"), None, None).unwrap(),
+            "https://carp.example.org"
+        );
+        // --env beats both variables.
+        assert_eq!(
+            resolve_server(
+                None,
+                Some("test"),
+                Some("https://carp.example.org"),
+                Some("dev")
+            )
+            .unwrap(),
+            "https://test.carp.dk"
+        );
+        // CARP_SERVER beats CARP_ENV.
+        assert_eq!(
+            resolve_server(None, None, Some("https://carp.example.org"), Some("dev")).unwrap(),
+            "https://carp.example.org"
+        );
+        // CARP_ENV alone still selects.
+        assert_eq!(
+            resolve_server(None, None, None, Some("dev")).unwrap(),
+            "https://dev.carp.dk"
+        );
+    }
+
+    /// Tokens and cache are keyed by host, so moving between deployments
+    /// neither reuses a session nor mixes cached studies.
+    #[test]
+    fn deployments_do_not_share_a_session() {
+        let files: Vec<_> = Environment::ALL
+            .iter()
+            .map(|environment| {
+                let config = Config {
+                    server: Url::parse(environment.url()).unwrap(),
+                    realm: DEFAULT_REALM.to_owned(),
+                    client_id: DEFAULT_CLIENT_ID.to_owned(),
+                    data_dir: PathBuf::from("/tmp/carp"),
+                    download_dir: PathBuf::from("/tmp/carp"),
+                    portal_url: None,
+                    portal_study_path: DEFAULT_PORTAL_STUDY_PATH.to_owned(),
+                    icons: IconSet::default(),
+                };
+                (config.token_file(), config.db_path())
+            })
+            .collect();
+
+        let unique: std::collections::HashSet<_> = files.iter().collect();
+        assert_eq!(unique.len(), files.len(), "two deployments share state");
     }
 }

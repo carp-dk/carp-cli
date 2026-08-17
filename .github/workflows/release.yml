@@ -1,0 +1,304 @@
+name: Release
+
+# A push to main releases only when it carries a new version. The gate job
+# reads the version out of Cargo.toml and stops if that tag already exists, so
+# ordinary pushes cost one cheap job and nothing else. Bump the version, merge,
+# and the release builds itself.
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  # Release builds are cold far more often than not, and the cache does not
+  # help the LTO link step at all. Fail loudly instead of hanging on a fetch.
+  CARGO_NET_RETRY: 3
+
+# Releases must not be cancelled half-published: a run that has uploaded some
+# assets but not others leaves a broken release behind.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    name: version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+      tag: ${{ steps.check.outputs.tag }}
+      release: ${{ steps.check.outputs.release }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Decide whether this commit is a release
+        id: check
+        run: |
+          set -euo pipefail
+          # `cargo metadata` rather than a grep: the package inherits its
+          # version from [workspace.package], so Cargo.toml has no literal
+          # `version = "x.y.z"` under [package] to match on.
+          version=$(cargo metadata --format-version 1 --no-deps \
+            | jq -r '.packages[] | select(.name == "carp-cli-rust") | .version')
+          if [ -z "$version" ] || [ "$version" = "null" ]; then
+            echo "::error::could not read the package version from Cargo.toml"
+            exit 1
+          fi
+          tag="v$version"
+          {
+            echo "version=$version"
+            echo "tag=$tag"
+          } >> "$GITHUB_OUTPUT"
+
+          # Ask the remote rather than the checkout, which is shallow and has
+          # no tags. A tag exists only once its release was published, so a run
+          # that died midway can simply be re-run.
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1; then
+            echo "release=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::$tag is already released - nothing to build."
+          else
+            echo "release=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::$tag is new - building the release."
+          fi
+
+  test:
+    name: test
+    needs: gate
+    if: needs.gate.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      # CI covers macOS and Windows; this is the Linux run, and it is what
+      # stands between a red commit and published binaries.
+      #
+      # It also carries `the_default_is_production`, which asserts that a
+      # binary with no flags set talks to https://carp.computerome.dk. A
+      # default changed to dev or test for local convenience fails here rather
+      # than reaching someone's machine.
+      - name: cargo test --locked
+        run: cargo test --locked --workspace --all-targets
+
+  build:
+    name: ${{ matrix.target }}
+    needs: [gate, test]
+    runs-on: ${{ matrix.os }}
+    # One missing platform makes the release incomplete, so stop the whole
+    # matrix rather than publishing a partial set of binaries.
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          # Both Linux targets go through `cross`. Beyond giving us aarch64
+          # without an ARM runner, its images are built against an older glibc
+          # than the GitHub runner's, so the binaries also run on older distros.
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            cross: true
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+            cross: true
+          # macos-latest is arm64; the x86_64 slice cross-compiles on it
+          # because the Xcode SDK carries headers for both architectures.
+          - target: aarch64-apple-darwin
+            os: macos-latest
+          - target: x86_64-apple-darwin
+            os: macos-latest
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      - name: Install cross
+        if: matrix.cross
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cross
+
+      - name: Build
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ matrix.cross }}" = "true" ]; then
+            cross build --release --locked --bin carp --target "${{ matrix.target }}"
+          else
+            cargo build --release --locked --bin carp --target "${{ matrix.target }}"
+          fi
+
+      # Kept out of the build step's environment on purpose: only the steps
+      # that need the certificate should be able to read it.
+      - name: Is macOS signing configured?
+        id: signing
+        if: runner.os == 'macOS'
+        env:
+          CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+        run: |
+          set -euo pipefail
+          if [ -n "${CERTIFICATE:-}" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::APPLE_CERTIFICATE_P12 is unset - publishing an \
+            unsigned macOS binary. See .github/MACOS_SIGNING.md."
+          fi
+
+      # Signs in place, before Package copies the binary: the signature is
+      # embedded in the Mach-O, so it survives the copy and the tar.
+      - name: Sign and notarize
+        if: steps.signing.outputs.enabled == 'true'
+        env:
+          CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          API_KEY: ${{ secrets.APPLE_API_KEY_P8 }}
+          API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+        run: |
+          set -euo pipefail
+          binary="target/${{ matrix.target }}/release/carp"
+          keychain="$RUNNER_TEMP/signing.keychain-db"
+          keychain_password=$(uuidgen)
+
+          # A throwaway keychain: the certificate never touches the runner's
+          # login keychain, and it is deleted before the job ends.
+          security create-keychain -p "$keychain_password" "$keychain"
+          security set-keychain-settings -lut 900 "$keychain"
+          security unlock-keychain -p "$keychain_password" "$keychain"
+          security list-keychains -d user -s "$keychain" \
+            $(security list-keychains -d user | tr -d '"')
+
+          printf '%s' "$CERTIFICATE" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security import "$RUNNER_TEMP/cert.p12" -k "$keychain" \
+            -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign -x
+          rm -f "$RUNNER_TEMP/cert.p12"
+          # Without this, codesign blocks on a GUI prompt that never comes.
+          security set-key-partition-list -S apple-tool:,apple:,codesign: \
+            -s -k "$keychain_password" "$keychain" > /dev/null
+
+          # --options runtime and --timestamp are both required by
+          # notarization, and it rejects the binary unhelpfully without them.
+          codesign --sign "$SIGNING_IDENTITY" --keychain "$keychain" \
+            --options runtime --timestamp --force "$binary"
+          codesign --verify --strict --verbose=2 "$binary"
+
+          # notarytool takes an archive, never a bare Mach-O.
+          printf '%s' "$API_KEY" | base64 --decode > "$RUNNER_TEMP/key.p8"
+          ditto -c -k --keepParent "$binary" "$RUNNER_TEMP/carp.zip"
+          set +e
+          xcrun notarytool submit "$RUNNER_TEMP/carp.zip" \
+            --key "$RUNNER_TEMP/key.p8" --key-id "$API_KEY_ID" \
+            --issuer "$API_ISSUER_ID" --wait --timeout 30m \
+            --output-format json > "$RUNNER_TEMP/notarize.json"
+          submitted=$?
+          set -e
+
+          # `notarytool submit --wait` can exit 0 on a rejected submission, so
+          # the status is what decides, and the log is the only place that says
+          # why a rejection happened.
+          status=$(jq -r '.status // "unknown"' "$RUNNER_TEMP/notarize.json")
+          id=$(jq -r '.id // empty' "$RUNNER_TEMP/notarize.json")
+          echo "notarization: $status (submit exit $submitted)"
+          if [ "$status" != "Accepted" ]; then
+            if [ -n "$id" ]; then
+              xcrun notarytool log "$id" --key "$RUNNER_TEMP/key.p8" \
+                --key-id "$API_KEY_ID" --issuer "$API_ISSUER_ID" || true
+            fi
+            rm -f "$RUNNER_TEMP/key.p8"
+            security delete-keychain "$keychain"
+            echo "::error::notarization did not succeed: $status"
+            exit 1
+          fi
+
+          rm -f "$RUNNER_TEMP/key.p8"
+          security delete-keychain "$keychain"
+
+          # A bare CLI binary cannot be stapled - only bundles, .dmg and .pkg
+          # carry a ticket - so Gatekeeper resolves this one against Apple
+          # online the first time it runs.
+          codesign -dvv "$binary" 2>&1 | grep -E 'Authority|TeamIdentifier'
+
+      # The keychain outlives the step only if the step died partway.
+      - name: Discard the signing keychain
+        if: always() && steps.signing.outputs.enabled == 'true'
+        run: security delete-keychain "$RUNNER_TEMP/signing.keychain-db" || true
+
+      - name: Package
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${{ needs.gate.outputs.version }}"
+          target="${{ matrix.target }}"
+          stage="carp-$version-$target"
+          mkdir "$stage"
+          cp README.md LICENSE "$stage/"
+
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            cp "target/$target/release/carp.exe" "$stage/"
+            archive="$stage.zip"
+            7z a -bso0 "$archive" "$stage"
+          else
+            cp "target/$target/release/carp" "$stage/"
+            archive="$stage.tar.gz"
+            tar -czf "$archive" "$stage"
+          fi
+
+          echo "archive=$archive" >> "$GITHUB_OUTPUT"
+          echo "::notice::$archive is $(du -h "$archive" | cut -f1)"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: ${{ steps.package.outputs.archive }}
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: publish ${{ needs.gate.outputs.tag }}
+    needs: [gate, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Checksums
+        working-directory: dist
+        run: |
+          set -euo pipefail
+          # Before SHA256SUMS exists, so it does not checksum itself.
+          sha256sum -- * > SHA256SUMS
+          cat SHA256SUMS
+
+      # `gh release create` also creates the tag, at this commit. Leaving the
+      # tag to the last step keeps the gate honest: no tag is left behind by a
+      # run that failed to build, so re-running it is not blocked.
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create "${{ needs.gate.outputs.tag }}" \
+            --target "$GITHUB_SHA" \
+            --title "carp ${{ needs.gate.outputs.version }}" \
+            --generate-notes \
+            dist/*

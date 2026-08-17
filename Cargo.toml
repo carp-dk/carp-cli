@@ -8,7 +8,7 @@ version = "0.2.0"
 authors = ["Alireza Hajebrahimi <6937697+iarata@users.noreply.github.com>"]
 license = "MIT"
 edition = "2024"
-repository = "https://github.com/carp-dk/carp-cli-rust"
+repository = "https://github.com/carp-dk/carp-cli"
 
 # Dependencies shared by the binary and the packages. Pinning them here keeps
 # a single version of serde/chrono in the tree, which matters because the
@@ -28,6 +28,12 @@ authors.workspace = true
 license.workspace = true
 edition.workspace = true
 repository.workspace = true
+
+# The crate is named after the repository, the command is not: what users type,
+# and what the README documents throughout, is `carp`.
+[[bin]]
+name = "carp"
+path = "src/main.rs"
 
 [dependencies]
 # Workspace packages: the protocol domain model and the upstream catalogue.
