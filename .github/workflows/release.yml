@@ -103,21 +103,28 @@ jobs:
     name: ${{ matrix.target }}
     needs: [gate, test]
     runs-on: ${{ matrix.os }}
-    # One missing platform makes the release incomplete, so stop the whole
-    # matrix rather than publishing a partial set of binaries.
+    # A missing platform still stops the release - nothing publishes until
+    # every job here has succeeded, which the job graph already guarantees.
+    # So letting the rest of the matrix finish costs only runner minutes, and
+    # buys the answer to "what else is broken?" in one run instead of one run
+    # per platform.
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         include:
-          # Both Linux targets go through `cross`. Beyond giving us aarch64
-          # without an ARM runner, its images are built against an older glibc
-          # than the GitHub runner's, so the binaries also run on older distros.
+          # x86_64 Linux goes through `cross`: its images are built against an
+          # older glibc than the GitHub runner's, so the binary also runs on
+          # older distros.
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
             cross: true
+          # aarch64 Linux is built natively on an ARM runner rather than
+          # cross-compiled. `turso` pulls in `simsimd`, whose build script
+          # emits a native library that the cross toolchain then cannot find
+          # (`cannot find -lsimsimd`). Nothing is cross-compiled here, so
+          # there is nothing to go wrong.
           - target: aarch64-unknown-linux-gnu
-            os: ubuntu-latest
-            cross: true
+            os: ubuntu-24.04-arm
           # macos-latest is arm64; the x86_64 slice cross-compiles on it
           # because the Xcode SDK carries headers for both architectures.
           - target: aarch64-apple-darwin
@@ -295,17 +302,21 @@ jobs:
     name: wheel ${{ matrix.target }}
     needs: [gate, test]
     runs-on: ${{ matrix.os }}
-    # A missing wheel is a platform that cannot `pip install carp`, which is
-    # the same kind of incomplete release as a missing binary.
+    # As with the binaries: a missing wheel stops the release either way, so
+    # the matrix runs to completion and reports every platform at once.
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         include:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
             manylinux: auto
+          # Natively, on an ARM runner. Cross-compiling this one fails in
+          # `ring`, whose pregenerated ARM assembly the cross toolchain's gcc
+          # rejects with `ARM assembler must define __ARM_ARCH`. Building on
+          # the architecture it targets sidesteps the whole question.
           - target: aarch64-unknown-linux-gnu
-            os: ubuntu-latest
+            os: ubuntu-24.04-arm
             manylinux: auto
           - target: aarch64-apple-darwin
             os: macos-latest
@@ -329,10 +340,11 @@ jobs:
           args: --release --out dist --locked
 
       # Proves the wheel imports and passes its tests before it is published.
-      # Only where the runner can run what it just built - a cross-compiled
-      # aarch64 wheel cannot be loaded on the x86_64 runner that produced it.
+      # Skipped only where the runner cannot run what it just built: the
+      # x86_64 macOS wheel is cross-compiled on an ARM mac. Every other target
+      # is now built on its own architecture.
       - name: Test it
-        if: matrix.target != 'aarch64-unknown-linux-gnu' && matrix.target != 'x86_64-apple-darwin'
+        if: matrix.target != 'x86_64-apple-darwin'
         shell: bash
         working-directory: packages/carp-python
         run: |
