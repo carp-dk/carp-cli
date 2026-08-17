@@ -1,0 +1,572 @@
+name: Release
+
+# A push to main releases only when it carries a new version. The gate job
+# reads the version out of Cargo.toml and stops if that tag already exists, so
+# ordinary pushes cost one cheap job and nothing else. Bump the version, merge,
+# and the release builds itself.
+#
+# One version, two channels:
+#
+#   GitHub  the `carp` binary, one archive per platform, plus SHA256SUMS
+#   PyPI    `carp-cli`, one wheel per platform plus an sdist
+#
+# Both take their version from [workspace.package] in Cargo.toml, so they
+# cannot disagree. PyPI goes first and the git tag is created last — an upload
+# to PyPI can never be undone or repeated, whereas a missing tag just means the
+# run can be tried again.
+#
+# Publishing to PyPI uses Trusted Publishing and stores no credential. It needs
+# a one-time setup on pypi.org before the first release; see
+# .github/PUBLISHING.md.
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  # Release builds are cold far more often than not, and the cache does not
+  # help the LTO link step at all. Fail loudly instead of hanging on a fetch.
+  CARGO_NET_RETRY: 3
+
+# Releases must not be cancelled half-published: a run that has uploaded some
+# assets but not others leaves a broken release behind.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    name: version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+      tag: ${{ steps.check.outputs.tag }}
+      release: ${{ steps.check.outputs.release }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Decide whether this commit is a release
+        id: check
+        run: |
+          set -euo pipefail
+          # `cargo metadata` rather than a grep: the package inherits its
+          # version from [workspace.package], so Cargo.toml has no literal
+          # `version = "x.y.z"` under [package] to match on.
+          version=$(cargo metadata --format-version 1 --no-deps \
+            | jq -r '.packages[] | select(.name == "carp-dk") | .version')
+          if [ -z "$version" ] || [ "$version" = "null" ]; then
+            echo "::error::could not read the package version from Cargo.toml"
+            exit 1
+          fi
+          tag="v$version"
+          {
+            echo "version=$version"
+            echo "tag=$tag"
+          } >> "$GITHUB_OUTPUT"
+
+          # Ask the remote rather than the checkout, which is shallow and has
+          # no tags. A tag exists only once its release was published, so a run
+          # that died midway can simply be re-run.
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1; then
+            echo "release=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::$tag is already released - nothing to build."
+          else
+            echo "release=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::$tag is new - building the release."
+          fi
+
+  test:
+    name: test
+    needs: gate
+    if: needs.gate.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      # CI covers macOS and Windows; this is the Linux run, and it is what
+      # stands between a red commit and published binaries.
+      #
+      # It also carries `the_default_is_production`, which asserts that a
+      # binary with no flags set talks to https://carp.computerome.dk. A
+      # default changed to dev or test for local convenience fails here rather
+      # than reaching someone's machine.
+      - name: cargo test --locked
+        run: cargo test --locked --workspace --all-targets
+
+  build:
+    name: ${{ matrix.target }}
+    needs: [gate, test]
+    runs-on: ${{ matrix.os }}
+    # One missing platform makes the release incomplete, so stop the whole
+    # matrix rather than publishing a partial set of binaries.
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          # Both Linux targets go through `cross`. Beyond giving us aarch64
+          # without an ARM runner, its images are built against an older glibc
+          # than the GitHub runner's, so the binaries also run on older distros.
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            cross: true
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+            cross: true
+          # macos-latest is arm64; the x86_64 slice cross-compiles on it
+          # because the Xcode SDK carries headers for both architectures.
+          - target: aarch64-apple-darwin
+            os: macos-latest
+          - target: x86_64-apple-darwin
+            os: macos-latest
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      - name: Install cross
+        if: matrix.cross
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cross
+
+      - name: Build
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ matrix.cross }}" = "true" ]; then
+            cross build --release --locked --bin carp --target "${{ matrix.target }}"
+          else
+            cargo build --release --locked --bin carp --target "${{ matrix.target }}"
+          fi
+
+      # Kept out of the build step's environment on purpose: only the steps
+      # that need the certificate should be able to read it.
+      - name: Is macOS signing configured?
+        id: signing
+        if: runner.os == 'macOS'
+        env:
+          CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+        run: |
+          set -euo pipefail
+          if [ -n "${CERTIFICATE:-}" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::APPLE_CERTIFICATE_P12 is unset - publishing an \
+            unsigned macOS binary. See .github/MACOS_SIGNING.md."
+          fi
+
+      # Signs in place, before Package copies the binary: the signature is
+      # embedded in the Mach-O, so it survives the copy and the tar.
+      - name: Sign and notarize
+        if: steps.signing.outputs.enabled == 'true'
+        env:
+          CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          API_KEY: ${{ secrets.APPLE_API_KEY_P8 }}
+          API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+        run: |
+          set -euo pipefail
+          binary="target/${{ matrix.target }}/release/carp"
+          keychain="$RUNNER_TEMP/signing.keychain-db"
+          keychain_password=$(uuidgen)
+
+          # A throwaway keychain: the certificate never touches the runner's
+          # login keychain, and it is deleted before the job ends.
+          security create-keychain -p "$keychain_password" "$keychain"
+          security set-keychain-settings -lut 900 "$keychain"
+          security unlock-keychain -p "$keychain_password" "$keychain"
+          # The word splitting is the point: `list-keychains -s` takes the new
+          # search list as separate arguments, so the existing keychains have
+          # to arrive as several words rather than one. Quoting would set the
+          # search list to a single path made of all of them joined.
+          # shellcheck disable=SC2046
+          security list-keychains -d user -s "$keychain" \
+            $(security list-keychains -d user | tr -d '"')
+
+          printf '%s' "$CERTIFICATE" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security import "$RUNNER_TEMP/cert.p12" -k "$keychain" \
+            -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign -x
+          rm -f "$RUNNER_TEMP/cert.p12"
+          # Without this, codesign blocks on a GUI prompt that never comes.
+          security set-key-partition-list -S apple-tool:,apple:,codesign: \
+            -s -k "$keychain_password" "$keychain" > /dev/null
+
+          # --options runtime and --timestamp are both required by
+          # notarization, and it rejects the binary unhelpfully without them.
+          codesign --sign "$SIGNING_IDENTITY" --keychain "$keychain" \
+            --options runtime --timestamp --force "$binary"
+          codesign --verify --strict --verbose=2 "$binary"
+
+          # notarytool takes an archive, never a bare Mach-O.
+          printf '%s' "$API_KEY" | base64 --decode > "$RUNNER_TEMP/key.p8"
+          ditto -c -k --keepParent "$binary" "$RUNNER_TEMP/carp.zip"
+          set +e
+          xcrun notarytool submit "$RUNNER_TEMP/carp.zip" \
+            --key "$RUNNER_TEMP/key.p8" --key-id "$API_KEY_ID" \
+            --issuer "$API_ISSUER_ID" --wait --timeout 30m \
+            --output-format json > "$RUNNER_TEMP/notarize.json"
+          submitted=$?
+          set -e
+
+          # `notarytool submit --wait` can exit 0 on a rejected submission, so
+          # the status is what decides, and the log is the only place that says
+          # why a rejection happened.
+          status=$(jq -r '.status // "unknown"' "$RUNNER_TEMP/notarize.json")
+          id=$(jq -r '.id // empty' "$RUNNER_TEMP/notarize.json")
+          echo "notarization: $status (submit exit $submitted)"
+          if [ "$status" != "Accepted" ]; then
+            if [ -n "$id" ]; then
+              xcrun notarytool log "$id" --key "$RUNNER_TEMP/key.p8" \
+                --key-id "$API_KEY_ID" --issuer "$API_ISSUER_ID" || true
+            fi
+            rm -f "$RUNNER_TEMP/key.p8"
+            security delete-keychain "$keychain"
+            echo "::error::notarization did not succeed: $status"
+            exit 1
+          fi
+
+          rm -f "$RUNNER_TEMP/key.p8"
+          security delete-keychain "$keychain"
+
+          # A bare CLI binary cannot be stapled - only bundles, .dmg and .pkg
+          # carry a ticket - so Gatekeeper resolves this one against Apple
+          # online the first time it runs.
+          codesign -dvv "$binary" 2>&1 | grep -E 'Authority|TeamIdentifier'
+
+      # The keychain outlives the step only if the step died partway.
+      - name: Discard the signing keychain
+        if: always() && steps.signing.outputs.enabled == 'true'
+        run: security delete-keychain "$RUNNER_TEMP/signing.keychain-db" || true
+
+      - name: Package
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${{ needs.gate.outputs.version }}"
+          target="${{ matrix.target }}"
+          stage="carp-$version-$target"
+          mkdir "$stage"
+          cp README.md LICENSE "$stage/"
+
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            cp "target/$target/release/carp.exe" "$stage/"
+            archive="$stage.zip"
+            7z a -bso0 "$archive" "$stage"
+          else
+            cp "target/$target/release/carp" "$stage/"
+            archive="$stage.tar.gz"
+            tar -czf "$archive" "$stage"
+          fi
+
+          echo "archive=$archive" >> "$GITHUB_OUTPUT"
+          echo "::notice::$archive is $(du -h "$archive" | cut -f1)"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          # Prefixed so the publish job can ask for the binaries alone: the
+          # GitHub release carries those, and PyPI carries the wheels.
+          name: binary-${{ matrix.target }}
+          path: ${{ steps.package.outputs.archive }}
+          if-no-files-found: error
+          retention-days: 7
+
+  # The Python extension module, one wheel per platform. `abi3-py39` means each
+  # wheel is loadable by every CPython from 3.9 up, so the matrix is platforms
+  # rather than platforms × interpreter versions.
+  wheels:
+    name: wheel ${{ matrix.target }}
+    needs: [gate, test]
+    runs-on: ${{ matrix.os }}
+    # A missing wheel is a platform that cannot `pip install carp`, which is
+    # the same kind of incomplete release as a missing binary.
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            manylinux: auto
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+            manylinux: auto
+          - target: aarch64-apple-darwin
+            os: macos-latest
+          - target: x86_64-apple-darwin
+            os: macos-latest
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the wheel
+        uses: PyO3/maturin-action@v1
+        with:
+          target: ${{ matrix.target }}
+          manylinux: ${{ matrix.manylinux }}
+          working-directory: packages/carp-python
+          args: --release --out dist --locked
+
+      # Proves the wheel imports and passes its tests before it is published.
+      # Only where the runner can run what it just built - a cross-compiled
+      # aarch64 wheel cannot be loaded on the x86_64 runner that produced it.
+      - name: Test it
+        if: matrix.target != 'aarch64-unknown-linux-gnu' && matrix.target != 'x86_64-apple-darwin'
+        shell: bash
+        working-directory: packages/carp-python
+        run: |
+          set -euo pipefail
+          pip install --find-links dist --no-index carp-cli
+          pip install pytest pandas
+          pytest tests -q
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-wheel-${{ matrix.target }}
+          path: packages/carp-python/dist/*.whl
+          if-no-files-found: error
+          retention-days: 7
+
+  # The source distribution. PyPI expects one, and it is what `pip install`
+  # falls back to on a platform with no wheel - so it has to carry the sibling
+  # crates carp-python depends on by path, not just its own source.
+  sdist:
+    name: sdist
+    needs: [gate, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Building *from* the sdist compiles the whole client, so the toolchain
+      # is pinned rather than left to whatever the runner image happens to
+      # ship this month.
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the sdist
+        uses: PyO3/maturin-action@v1
+        with:
+          command: sdist
+          working-directory: packages/carp-python
+          args: --out dist
+
+      # An sdist that does not build is worse than none: pip would find it,
+      # try it, and fail where it would otherwise have said "no wheel".
+      - name: Build from it, with nothing else present
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Outside the checkout, so a path dependency resolved from the repo
+          # rather than from inside the archive cannot make this pass.
+          mkdir -p "$RUNNER_TEMP/from-sdist"
+          cp packages/carp-python/dist/*.tar.gz "$RUNNER_TEMP/from-sdist/"
+          cd "$RUNNER_TEMP/from-sdist"
+          python -m venv venv
+          ./venv/bin/pip install ./*.tar.gz
+          ./venv/bin/python -c "
+          import carp
+          assert carp.Client(env='dev').server == 'https://dev.carp.dk'
+          print('the sdist builds and imports:', carp.__version__)
+          "
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-sdist
+          path: packages/carp-python/dist/*.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+
+  # PyPI first, the GitHub release last. An upload cannot be undone and a
+  # version cannot be re-used, but the git tag can simply not exist yet - so
+  # the step that is hard to repeat runs while a re-run is still possible.
+  publish-pypi:
+    name: pypi ${{ needs.gate.outputs.version }}
+    # `build` too, though no artifact of it is used here: a PyPI upload cannot
+    # be taken back, so nothing is published until every part of the release
+    # exists. A binary that fails to build after the wheels went out would
+    # leave a version on PyPI that GitHub has no release for.
+    needs: [gate, build, wheels, sdist]
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/carp-cli
+    permissions:
+      # Trusted Publishing: GitHub mints a short-lived OIDC token that PyPI
+      # verifies against the publisher configured for this repository. No API
+      # token is stored anywhere. See .github/PUBLISHING.md.
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: python-*
+          merge-multiple: true
+
+      - name: What is about to be published
+        run: ls -la dist/
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist
+          # A run that died after uploading some files can be re-run: the files
+          # already on PyPI are left alone rather than failing the whole job.
+          # Publishing a version twice is prevented by the gate, not by this.
+          skip-existing: true
+
+  # crates.io, in dependency order. A crate cannot be published until every
+  # crate it depends on is already on the index, because cargo resolves the
+  # published version rather than the path.
+  #
+  # carp-python is not here: it is `publish = false`, being a cdylib for one
+  # interpreter ABI rather than something a Rust crate could depend on.
+  publish-crates:
+    name: crates.io ${{ needs.gate.outputs.version }}
+    needs: [gate, build, wheels, sdist]
+    runs-on: ubuntu-latest
+    environment:
+      name: crates-io
+      url: https://crates.io/crates/carp-dk
+    permissions:
+      # Trusted Publishing, as with PyPI: the OIDC token is exchanged for one
+      # valid for thirty minutes, and revoked when the job ends.
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Get a crates.io token
+        id: auth
+        uses: rust-lang/crates-io-auth-action@v1
+
+      # Everything, packaged and compiled as it would be once published,
+      # against a temporary registry holding the siblings. Nothing is uploaded.
+      # Worth the couple of minutes: a metadata or packaging error found after
+      # carp-protocol is already up leaves a half-published version behind, and
+      # a crates.io version cannot be replaced.
+      - name: Verify all four package and build
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+        run: cargo publish --dry-run --locked --workspace
+
+      - name: Publish, in dependency order
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+          VERSION: ${{ needs.gate.outputs.version }}
+        run: |
+          set -euo pipefail
+          # One at a time rather than `--workspace`, so that a re-run after a
+          # partial release can get past the crates that already succeeded —
+          # the same property `skip-existing` gives the PyPI job. `cargo
+          # publish` waits for the index to carry each crate before returning,
+          # so the next one can already depend on it.
+          #
+          # The order is dependency order: protocol, then the two that use it,
+          # then the binary. `cargo publish --workspace` above verifies that
+          # this ordering is the right one.
+          for crate in carp-protocol carp-catalog carp-client carp-dk; do
+            echo "::group::$crate"
+            if cargo publish --locked --package "$crate"; then
+              echo "published $crate $VERSION"
+            elif cargo search "$crate" | grep -qF "$crate = \"$VERSION\""; then
+              # Already on crates.io at this version, from an earlier attempt.
+              # Publishing a version twice is prevented by the gate, not here.
+              echo "::notice::$crate $VERSION was already published"
+            else
+              echo "::error::publishing $crate failed, and it is not on crates.io at $VERSION"
+              exit 1
+            fi
+            echo "::endgroup::"
+          done
+
+  publish:
+    name: publish ${{ needs.gate.outputs.tag }}
+    # Last, after both registries: this step creates the tag, and the tag is
+    # what stops the gate from letting a re-run happen. Anything that might
+    # need re-running has to have finished before it.
+    needs: [gate, build, publish-pypi, publish-crates]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # The binaries only. The wheels went to PyPI, which is where `pip` looks;
+      # attaching them here as well would offer two channels for the same
+      # thing, one of which nothing consults.
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: binary-*
+          merge-multiple: true
+
+      - name: Checksums
+        working-directory: dist
+        run: |
+          set -euo pipefail
+          # Before SHA256SUMS exists, so it does not checksum itself.
+          sha256sum -- * > SHA256SUMS
+          cat SHA256SUMS
+
+      # `gh release create` also creates the tag, at this commit. Leaving the
+      # tag to the last step keeps the gate honest: no tag is left behind by a
+      # run that failed to build, so re-running it is not blocked.
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.gate.outputs.version }}
+        run: |
+          set -euo pipefail
+          # Prepended to the generated changelog, because a release page that
+          # lists only archives does not say the Python package exists.
+          cat > notes.md <<EOF
+          ### Install
+
+          The command line — take the archive for your platform below, or:
+
+          \`\`\`sh
+          cargo install carp-dk@$VERSION
+          \`\`\`
+
+          From Python:
+
+          \`\`\`sh
+          pip install carp-cli==$VERSION
+          \`\`\`
+
+          \`SHA256SUMS\` covers every archive on this page. macOS quarantines
+          anything a browser downloaded — see the README if \`carp\` is killed
+          on sight.
+
+          ---
+          EOF
+
+          gh release create "${{ needs.gate.outputs.tag }}" \
+            --target "$GITHUB_SHA" \
+            --title "carp $VERSION" \
+            --notes-file notes.md \
+            --generate-notes \
+            dist/*
