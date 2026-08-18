@@ -59,7 +59,7 @@ jobs:
       tag: ${{ steps.check.outputs.tag }}
       release: ${{ steps.check.outputs.release }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Decide whether this commit is a release
         id: check
@@ -97,7 +97,7 @@ jobs:
     if: needs.gate.outputs.release == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       # CI covers macOS and Windows; this is the Linux run, and it is what
@@ -146,7 +146,7 @@ jobs:
           - target: x86_64-pc-windows-msvc
             os: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -337,7 +337,7 @@ jobs:
           - target: x86_64-pc-windows-msvc
             os: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v5
         with:
@@ -380,7 +380,7 @@ jobs:
     needs: [gate, test]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Building *from* the sdist compiles the whole client, so the toolchain
       # is pinned rather than left to whatever the runner image happens to
@@ -450,7 +450,7 @@ jobs:
       # valid for thirty minutes, and revoked when the job ends.
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
 
@@ -569,7 +569,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # The binaries only. The wheels went to PyPI, which is where `pip` looks;
       # attaching them here as well would offer two channels for the same
@@ -650,7 +650,7 @@ jobs:
     needs: [gate, publish]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Asked before minting anything, because create-github-app-token fails
       # outright on a missing key, and a tap nobody has set up yet should warn
