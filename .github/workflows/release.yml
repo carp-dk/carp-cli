@@ -5,18 +5,21 @@ name: Release
 # ordinary pushes cost one cheap job and nothing else. Bump the version, merge,
 # and the release builds itself.
 #
-# One version, three channels:
+# One version, four channels:
 #
 #   crates.io  the four Rust crates, in dependency order
 #   PyPI       `carp-cli`, one wheel per platform plus an sdist
 #   GitHub     the `carp` binary, one archive per platform, plus SHA256SUMS
+#   Homebrew   a formula in carp-dk/homebrew-tap, pointing at those archives
 #
-# All three take their version from [workspace.package] in Cargo.toml, so they
+# All four take their version from [workspace.package] in Cargo.toml, so they
 # cannot disagree. They publish in that order, least recoverable last: neither
 # registry will ever let a version be replaced, so crates.io — four uploads,
 # any of which can fail — goes before PyPI's single one, and the git tag is
 # created after both. A missing tag only means the run can be tried again; a
-# version spent on a registry is spent for good.
+# version spent on a registry is spent for good. Homebrew comes last of all,
+# both because it needs the release to exist and because it is the only one
+# that can be corrected afterwards.
 #
 # That makes re-running a half-finished release safe, which is the property
 # that matters most here: each publishing step asks whether its version is
@@ -602,7 +605,8 @@ jobs:
           The command line — take the archive for your platform below, or:
 
           \`\`\`sh
-          cargo install carp-dk@$VERSION
+          brew install carp-dk/tap/carp     # macOS and Linux
+          cargo install carp-dk@$VERSION    # with a Rust toolchain
           \`\`\`
 
           From Python:
@@ -624,3 +628,71 @@ jobs:
             --notes-file notes.md \
             --generate-notes \
             dist/*
+
+  # The Homebrew tap, after everything else. It is the one channel that cannot
+  # go first: the formula names the release's own archives by URL and checks
+  # each against the sha256 the release published, so there is nothing to write
+  # until `publish` has created it.
+  #
+  # It is also the one channel that is repairable. crates.io and PyPI spend a
+  # version permanently; a formula is a file in another repository, and a bad
+  # one is fixed by pushing a better one. So it runs last, after the steps that
+  # get one attempt, and a failure here costs nothing that was not already out.
+  # Writing the formula means writing to another repository, which the default
+  # token cannot reach - its authority ends at this one. That credential comes
+  # from a GitHub App installed on the tap and nothing else: it is owned by the
+  # organisation rather than by a person, its private key does not expire, and
+  # what the job actually holds is an installation token that lasts an hour and
+  # is revoked when the job ends. A personal access token would have none of
+  # those three properties. See .github/PUBLISHING.md.
+  homebrew:
+    name: homebrew ${{ needs.gate.outputs.version }}
+    needs: [gate, publish]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Asked before minting anything, because create-github-app-token fails
+      # outright on a missing key, and a tap nobody has set up yet should warn
+      # rather than end the run red. The release is already published by now.
+      - name: Is the tap app configured?
+        id: app
+        env:
+          CLIENT_ID: ${{ vars.HOMEBREW_TAP_CLIENT_ID }}
+          PRIVATE_KEY: ${{ secrets.HOMEBREW_TAP_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -n "${CLIENT_ID:-}" ] && [ -n "${PRIVATE_KEY:-}" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::the Homebrew tap app is not set up - the tap \
+            still installs the previous release. See .github/PUBLISHING.md."
+          fi
+
+      - name: Get an installation token for the tap
+        id: token
+        if: steps.app.outputs.configured == 'true'
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.HOMEBREW_TAP_CLIENT_ID }}
+          private-key: ${{ secrets.HOMEBREW_TAP_PRIVATE_KEY }}
+          # Without these two the token would be scoped to this repository,
+          # which is the one place it is not needed. `repositories` names the
+          # tap alone, so an app later installed more widely still mints a
+          # token that can only reach it.
+          owner: ${{ github.repository_owner }}
+          repositories: homebrew-tap
+          # Likewise for what the token may do: pushing a formula is a write to
+          # contents and nothing else, whatever the app is granted later.
+          permission-contents: write
+
+      - name: Point carp-dk/homebrew-tap at this release
+        if: steps.app.outputs.configured == 'true'
+        env:
+          # Reading the release, on this repository: the default token.
+          GH_TOKEN: ${{ github.token }}
+          # Writing the formula, on the tap: the app's, good for an hour.
+          HOMEBREW_TAP_TOKEN: ${{ steps.token.outputs.token }}
+          VERSION: ${{ needs.gate.outputs.version }}
+        run: .github/homebrew/tap.sh "$VERSION"

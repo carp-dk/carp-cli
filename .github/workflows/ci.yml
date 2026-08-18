@@ -35,6 +35,11 @@ jobs:
         with:
           args: -color
 
+      # actionlint covers the `run:` blocks but not the scripts they call, and
+      # those only ever run on a release. shellcheck comes with the runner.
+      - name: shellcheck the scripts they call
+        run: shellcheck .github/homebrew/*.sh
+
   fmt:
     name: fmt
     runs-on: ubuntu-latest
