@@ -542,7 +542,7 @@ jobs:
       # token is stored anywhere. See .github/PUBLISHING.md.
       id-token: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           path: dist
           pattern: python-*
@@ -574,7 +574,7 @@ jobs:
       # The binaries only. The wheels went to PyPI, which is where `pip` looks;
       # attaching them here as well would offer two channels for the same
       # thing, one of which nothing consults.
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           path: dist
           pattern: binary-*
