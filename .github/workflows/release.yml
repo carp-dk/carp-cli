@@ -298,7 +298,7 @@ jobs:
           echo "archive=$archive" >> "$GITHUB_OUTPUT"
           echo "::notice::$archive is $(du -h "$archive" | cut -f1)"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           # Prefixed so the publish job can ask for the binaries alone: the
           # GitHub release carries those, and PyPI carries the wheels.
@@ -365,7 +365,7 @@ jobs:
           pip install pytest pandas
           pytest tests -q
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: python-wheel-${{ matrix.target }}
           path: packages/carp-python/dist/*.whl
@@ -416,7 +416,7 @@ jobs:
           print('the sdist builds and imports:', carp.__version__)
           "
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: python-sdist
           path: packages/carp-python/dist/*.tar.gz
