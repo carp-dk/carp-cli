@@ -130,7 +130,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           key: python-${{ matrix.os }}
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -157,7 +157,7 @@ jobs:
       # anything if something actually tries the other end of the range.
       - name: It loads on the oldest Python it claims
         if: runner.os == 'Linux'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.9"
 
